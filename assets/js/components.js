@@ -216,8 +216,15 @@ function createPricingCard(course) {
 }
 
 // Componente para otros cursos
-function createOtherCoursesCard() {
-    const otherCourses = getOtherCourses();
+function createOtherCoursesCard(otherCourses = []) {
+    if (!otherCourses || otherCourses.length === 0) {
+        return `
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Otros cursos</h3>
+                <p class="text-muted-foreground">No hay otros cursos disponibles.</p>
+            </div>
+        `;
+    }
     const coursesHTML = otherCourses.map(course => `
         <div class="flex items-start gap-3 p-3 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors" onclick="selectCourse('${course.id}')">
             ${createImageWithFallback(course.image, course.title, 'w-16 h-12 object-cover rounded')}
@@ -245,3 +252,20 @@ function createOtherCoursesCard() {
         </div>
     `;
 }
+
+// Exportar todas las funciones de componentes
+export {
+    createStarIcon,
+    createClockIcon,
+    createChevronRightIcon,
+    createBadge,
+    createImageWithFallback,
+    createButton,
+    createCourseCard,
+    createCourseDetails,
+    createInstructorCard,
+    createCourseContentCard,
+    createSkillsCard,
+    createPricingCard,
+    createOtherCoursesCard
+};

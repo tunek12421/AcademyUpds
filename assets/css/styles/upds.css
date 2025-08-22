@@ -1,0 +1,25 @@
+/*Estilos de la pagina de la UPDS*/
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.3');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/themes/hello-elementor/style.min.css?ver=2.6.1');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/widget-social-icons.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/lib/animations/styles/e-animation-bounce-in.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/plugins/wpb-elementor-addons/assets/css/grid.min.css?ver=4.0.0');
+
+/*Estilos de la pagina que empiezan con post*/
+@import url('https://www.upds.edu.bo/wp-content/uploads/elementor/css/post-645.css?ver=1755117087');
+@import url('https://www.upds.edu.bo/wp-content/uploads/elementor/css/post-18.css?ver=1755117085');
+@import url('https://www.upds.edu.bo/wp-content/uploads/elementor/css/post-4031.css?ver=1755117086');
+@import url('https://www.upds.edu.bo/wp-content/uploads/elementor/css/post-5518.css?ver=1755117087');
+
+
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/widget-image.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor-pro/assets/css/widget-nav-menu.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/widget-divider.min.css?ver=3.31.2');
+
+@import url('https://www.upds.edu.bo/wp-content/plugins/dynamic-content-for-elementor/assets/node/animate.css/animate.min.css?ver=3.3.10');
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/widget-heading.min.css?ver=3.31.2');
+
+
+@import url('https://www.upds.edu.bo/wp-content/plugins/elementor/assets/css/conditionals/e-swiper.min.css?ver=3.31.2');
+@import url('https://www.upds.edu.bo/wp-content/plugins/dynamic-content-for-elementor/assets/css/dynamic-posts-skin-grid.min.css?ver=3.3.10');

@@ -76,21 +76,86 @@ const courses = [
 
 // Estado global de la aplicación
 let appState = {
-    selectedCourse: courses[0],
+    selectedCourse: null,
     activeTab: 'general'
 };
 
-// Función para obtener curso por ID
+// Funciones de estado
+function updateState(newState) {
+    appState = { ...appState, ...newState };
+}
+
+function getState() {
+    return appState;
+}
+
+// Funciones de utilidad para trabajar con cursos
 function getCourseById(id) {
     return courses.find(course => course.id === id);
 }
 
-// Función para obtener otros cursos (excluye el seleccionado)
-function getOtherCourses() {
-    return courses.filter(course => course.id !== appState.selectedCourse.id);
+function getCoursesByCategory(category) {
+    return courses.filter(course => course.category === category);
 }
 
-// Función para actualizar el estado
-function updateState(newState) {
-    appState = { ...appState, ...newState };
+// Función para obtener otros cursos (excluyendo el curso seleccionado)
+function getOtherCourses(excludeCourseId = null) {
+    // Si no se especifica ID, usar el curso seleccionado del estado
+    const excludeId = excludeCourseId || (appState.selectedCourse ? appState.selectedCourse.id : null);
+    
+    if (!excludeId) {
+        // Si no hay curso a excluir, devolver los primeros 3 cursos
+        return courses.slice(0, 3);
+    }
+    
+    // Filtrar el curso seleccionado y devolver máximo 3 cursos
+    return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
+const navLinks = [
+    { name: 'Inicio', href: '#' },
+    { name: 'Cursos', href: '#courses' },
+    { name: 'Microtik', href: '#instructors' },
+    { name: 'Contacto', href: '#contact' }
+];
+
+// Secciones HTML a cargar
+const sections = [
+    ['header-section', '/assets/sections/header.html', (parent) => {
+        let nav = parent.querySelector("nav");
+        nav.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
+    }],
+    ['footer-section', '/assets/sections/footer.html', ()=>{}]
+];
+
+// Función para cargar secciones HTML
+async function loadSection(parent, url) {
+    await fetch(url)
+        .then(res => res.text())
+        .then(html => { parent.innerHTML = html; });
+}
+
+async function loadAllSections() {
+    await Promise.all(sections.map(async ([id, url, init]) => {
+        let parent = document.getElementById(id);
+        if(parent){
+            await loadSection(parent, url);
+            init(parent);
+        }else{
+            console.error(`No se encontró el elemento con ID: ${id}`);
+        }
+    }));
+}
+
+// Exportar datos y funciones
+export {
+    courses,
+    appState,
+    updateState,
+    getState,
+    getCourseById,
+    getCoursesByCategory,
+    getOtherCourses,
+    sections,
+    loadSection,
+    loadAllSections
+};

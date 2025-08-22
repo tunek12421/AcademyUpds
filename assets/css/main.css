@@ -1,0 +1,49 @@
+@import url("variables.css");
+
+/*Estilos generales*/
+@import url("styles/styles.css");
+@import url("styles/header.css");
+@import url("styles/upds.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+
+/* Variables CSS */
+:root {
+  /* Colores principales */
+  --color-primary: #06165b;
+  --color-secondary: #fbba00;
+  --color-accent: #ee1c25;
+  --color-success: #25d366;
+  --color-info: #007bff;
+  
+  /* Colores de texto */
+  --text-color: rgba(24, 24, 24, 0.8);
+  --text-light: #ffffff;
+  
+  /* Colores de fondo */
+  --bg-color: #ffffff;
+  --bg-light: #f8f9fa;
+  
+  /* Fuentes */
+  --font-primary: 'Roboto', 'Roboto-Light', Arial, Tahoma, Verdana, sans-serif;
+  --font-heading: 'Montserrat', 'Montserrat-Black', Arial, Tahoma, Verdana, sans-serif;
+  --font-bold: 'Montserrat', 'Montserrat-Bold', Arial, Tahoma, Verdana, sans-serif;
+  
+  /* Tamaños de fuente */
+  --font-size-base: 17px;
+  --font-size-h1: 50px;
+  --font-size-h2: 32px;
+  --font-size-h3: 22px;
+  
+  /* Espaciado */
+  --spacing-xs: 5px;
+  --spacing-sm: 10px;
+  --spacing-md: 20px;
+  --spacing-lg: 40px;
+  --spacing-xl: 60px;
+  
+  /* Breakpoints */
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+}

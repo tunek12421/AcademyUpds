@@ -4,89 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechAcademy - Página de Academia con Cursos</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/styles.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        border: "hsl(214.3 31.8% 91.4%)",
-                        input: "hsl(214.3 31.8% 91.4%)",
-                        ring: "hsl(222.2 84% 4.9%)",
-                        background: "hsl(0 0% 100%)",
-                        foreground: "hsl(222.2 84% 4.9%)",
-                        primary: {
-                            DEFAULT: "hsl(222.2 47.4% 11.2%)",
-                            foreground: "hsl(210 40% 98%)",
-                        },
-                        secondary: {
-                            DEFAULT: "hsl(210 40% 96%)",
-                            foreground: "hsl(222.2 84% 4.9%)",
-                        },
-                        destructive: {
-                            DEFAULT: "hsl(0 62.8% 30.6%)",
-                            foreground: "hsl(210 40% 98%)",
-                        },
-                        muted: {
-                            DEFAULT: "hsl(210 40% 96%)",
-                            foreground: "hsl(215.4 16.3% 46.9%)",
-                        },
-                        accent: {
-                            DEFAULT: "hsl(210 40% 96%)",
-                            foreground: "hsl(222.2 84% 4.9%)",
-                        },
-                        popover: {
-                            DEFAULT: "hsl(0 0% 100%)",
-                            foreground: "hsl(222.2 84% 4.9%)",
-                        },
-                        card: {
-                            DEFAULT: "hsl(0 0% 100%)",
-                            foreground: "hsl(222.2 84% 4.9%)",
-                        },
-                    },
-                }
-            }
-        }
-    </script>
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script>const INDEX=1;</script>
+    <script src="/assets/js/main.js" type="module"></script>
 </head>
 <body class="min-h-screen bg-background">
     <!-- Header -->
-    <header class="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <svg class="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
-                    </svg>
-                    <h1 class="text-xl font-bold">TechAcademy</h1>
-                </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#" class="text-muted-foreground hover:text-foreground">Cursos</a>
-                    <a href="#" class="text-muted-foreground hover:text-foreground">Instructores</a>
-                    <a href="#" class="text-muted-foreground hover:text-foreground">Sobre nosotros</a>
-                    <a href="#" class="text-muted-foreground hover:text-foreground">Contacto</a>
-                </nav>
-                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4">
-                    Iniciar sesión
-                </button>
-            </div>
-        </div>
-    </header>
-
+    <section id="header-section"></section>
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-8 hidden">
         <!-- Tabs -->
         <div class="w-full">
-            <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground grid w-full grid-cols-2 mb-8">
-                <button id="tab-general" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm bg-background text-foreground shadow-sm" data-state="active">
-                    Información General
-                </button>
-                <button id="tab-curso" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" data-state="inactive">
-                    Detalles del Curso
-                </button>
-            </div>
-
             <!-- General Tab Content -->
             <div id="content-general" class="tab-content space-y-8">
                 <!-- Hero Section -->
@@ -251,58 +182,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-muted mt-16">
-        <div class="container mx-auto px-4 py-8">
-            <div class="grid md:grid-cols-4 gap-8">
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
-                        </svg>
-                        <span class="font-bold">TechAcademy</span>
-                    </div>
-                    <p class="text-muted-foreground text-sm">
-                        Transformamos carreras a través de la educación tecnológica de calidad.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-medium mb-4">Cursos</h4>
-                    <ul class="space-y-2 text-sm text-muted-foreground">
-                        <li><a href="#" class="hover:text-foreground">Desarrollo Web</a></li>
-                        <li><a href="#" class="hover:text-foreground">Diseño UX/UI</a></li>
-                        <li><a href="#" class="hover:text-foreground">Marketing Digital</a></li>
-                        <li><a href="#" class="hover:text-foreground">Data Science</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-medium mb-4">Empresa</h4>
-                    <ul class="space-y-2 text-sm text-muted-foreground">
-                        <li><a href="#" class="hover:text-foreground">Sobre nosotros</a></li>
-                        <li><a href="#" class="hover:text-foreground">Instructores</a></li>
-                        <li><a href="#" class="hover:text-foreground">Blog</a></li>
-                        <li><a href="#" class="hover:text-foreground">Contacto</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-medium mb-4">Soporte</h4>
-                    <ul class="space-y-2 text-sm text-muted-foreground">
-                        <li><a href="#" class="hover:text-foreground">Centro de ayuda</a></li>
-                        <li><a href="#" class="hover:text-foreground">Política de privacidad</a></li>
-                        <li><a href="#" class="hover:text-foreground">Términos de uso</a></li>
-                        <li><a href="#" class="hover:text-foreground">FAQ</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-                <p>&copy; 2024 TechAcademy. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/data.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/app.js"></script>
+    <section id="footer-section"></section>
 </body>
 </html>

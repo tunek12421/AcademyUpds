@@ -1,3 +1,25 @@
+// Importar dependencias
+import { 
+    courses, 
+    updateState, 
+    getState,
+    appState,
+    getCourseById, 
+    getCoursesByCategory,
+    getOtherCourses,
+    loadAllSections 
+} from '../data.js';
+
+import {
+    createCourseCard,
+    createCourseDetails,
+    createInstructorCard,
+    createCourseContentCard,
+    createSkillsCard,
+    createPricingCard,
+    createOtherCoursesCard
+} from '../components.js';
+
 // Aplicación principal - Manejo de estado y eventos
 
 // Función para cambiar de tab
@@ -31,12 +53,17 @@ function switchTab(tabName) {
 }
 
 // Función para seleccionar curso
-function selectCourse(courseId) {
+function selectCourse(courseId, switchToTab = true) {
     const course = getCourseById(courseId);
     if (course) {
-        updateState({ selectedCourse: course, activeTab: 'curso' });
-        switchTab('curso');
+        updateState({ selectedCourse: course });
+        if (switchToTab) {
+            updateState({ activeTab: 'curso' });
+            switchTab('curso');
+        }
         renderCourseDetails();
+    } else {
+        console.error(`Curso ${courseId} no encontrado`);
     }
 }
 
@@ -52,7 +79,10 @@ function renderCoursesGrid() {
 // Función para renderizar los detalles del curso
 function renderCourseDetails() {
     const course = appState.selectedCourse;
-    if (!course) return;
+    if (!course) {
+        console.error('No hay curso seleccionado');
+        return;
+    }
     
     // Renderizar tarjeta principal del curso
     const courseMainCard = document.getElementById('course-main-card');
@@ -87,7 +117,19 @@ function renderCourseDetails() {
     // Renderizar otros cursos
     const otherCoursesCard = document.getElementById('other-courses-card');
     if (otherCoursesCard) {
-        otherCoursesCard.innerHTML = createOtherCoursesCard();
+        try {
+            const otherCourses = getOtherCourses();
+            const otherCoursesHTML = createOtherCoursesCard(otherCourses);
+            otherCoursesCard.innerHTML = otherCoursesHTML;
+        } catch (error) {
+            console.error('Error al renderizar otros cursos:', error);
+            otherCoursesCard.innerHTML = `
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-4">Otros cursos</h3>
+                    <p class="text-muted-foreground">Error al cargar otros cursos.</p>
+                </div>
+            `;
+        }
     }
 }
 
@@ -111,8 +153,6 @@ function initializeApp() {
     
     // Configurar tab inicial
     switchTab(appState.activeTab);
-    
-    console.log('TechAcademy app initialized successfully!');
 }
 
 // Event listeners para cuando el DOM esté listo
@@ -167,9 +207,54 @@ function login() {
 
 // Exportar funciones globales para uso en HTML
 window.selectCourse = selectCourse;
-window.switchTab = switchTab;
-window.enrollInCourse = enrollInCourse;
-window.previewCourse = previewCourse;
-window.exploreAllCourses = exploreAllCourses;
-window.login = login;
-window.handleImageError = handleImageError;
+// Función de inicialización principal
+async function loadPageContent() {
+    try {
+        // Cargar secciones HTML
+        await loadAllSections();
+        // Seleccionar el primer curso por defecto (sin cambiar de tab)
+        if (courses.length > 0) {
+            selectCourse(courses[0].id, false);
+        }
+        // Test: verificar que getOtherCourses funciona
+        const testOtherCourses = getOtherCourses();
+
+        // Renderizar contenido inicial
+        renderCoursesGrid();
+        // Configurar event listeners
+        setupEventListeners();
+        // Configurar tab inicial
+        switchTab(appState.activeTab);
+    } catch (error) {
+        console.error('Error al inicializar la aplicación:', error);
+    }
+}
+
+// Configurar event listeners
+function setupEventListeners() {
+    // Event listeners para tabs
+    document.getElementById('tab-general')?.addEventListener('click', () => switchTab('general'));
+    document.getElementById('tab-curso')?.addEventListener('click', () => switchTab('curso'));
+    
+    // Event listeners para botones de cursos (se añaden dinámicamente)
+    document.addEventListener('click', (e) => {
+        if (e.target.matches('[data-course-id]')) {
+            const courseId = e.target.getAttribute('data-course-id');
+            selectCourse(courseId);
+        }
+    });
+}
+
+// Exportar funciones principales
+export {
+    switchTab,
+    selectCourse,
+    renderCoursesGrid,
+    renderCourseDetails,
+    enrollInCourse,
+    previewCourse,
+    exploreAllCourses,
+    login,
+    handleImageError,
+    loadPageContent
+};

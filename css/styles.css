@@ -1,0 +1,236 @@
+/* Estilos adicionales para complementar Tailwind CSS */
+
+/* Mejoras para la línea truncada */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Mejoras para transiciones suaves */
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Estilos para el backdrop blur en navegadores que no lo soporten nativamente */
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* Mejoras para el hover de las tarjetas */
+.group:hover .group-hover\:scale-105 {
+    transform: scale(1.05);
+}
+
+.group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+}
+
+/* Estilos para las pestañas activas */
+.tab-trigger[data-state="active"] {
+    background-color: hsl(0 0% 100%);
+    color: hsl(222.2 84% 4.9%);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.tab-trigger[data-state="inactive"] {
+    color: hsl(215.4 16.3% 46.9%);
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos para notificaciones */
+.notification-enter {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.notification-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease-out;
+}
+
+.notification-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-exit-active {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease-in;
+}
+
+/* Mejoras para imágenes */
+img {
+    transition: all 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.02);
+}
+
+/* Estilos para mejorar la accesibilidad */
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid hsl(222.2 84% 4.9%);
+    outline-offset: 2px;
+}
+
+/* Estilos para el scrollbar en navegadores webkit */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: hsl(210 40% 96%);
+}
+
+::-webkit-scrollbar-thumb {
+    background: hsl(215.4 16.3% 46.9%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(222.2 84% 4.9%);
+}
+
+/* Mejoras para la responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .lg\:col-span-2 {
+        grid-column: span 1;
+    }
+}
+
+/* Estilos para mejorar la legibilidad */
+.text-balance {
+    text-wrap: balance;
+}
+
+/* Animación para los botones */
+button {
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para las tarjetas con mejor sombra */
+.card-hover:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Mejora para el sticky header */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid hsl(214.3 31.8% 91.4%);
+}
+
+/* Estilos para loading states (por si se implementan) */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, hsl(210 40% 96%) 25%, hsl(214.3 31.8% 91.4%) 50%, hsl(210 40% 96%) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Estilos para mejorar la interacción con las pestañas */
+.tab-trigger {
+    cursor: pointer;
+    user-select: none;
+}
+
+.tab-trigger:hover {
+    background-color: hsl(210 40% 96%);
+}
+
+/* Estilos para mejorar las transiciones de contenido */
+.tab-content {
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Mejoras para los badges */
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.badge:hover {
+    transform: scale(1.05);
+}
+
+/* Estilos para mejorar la experiencia móvil */
+@media (max-width: 640px) {
+    .hero-content h2 {
+        font-size: 2rem;
+        line-height: 2.5rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .courses-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}

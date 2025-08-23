@@ -123,6 +123,13 @@ const sections = [
     ['header-section', '/assets/sections/header.html', (parent) => {
         let nav = parent.querySelector("nav");
         nav.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
+
+        let link=document.body.querySelectorAll('.upds-nav-top a')[INDEX];
+        let center=link.offsetLeft;
+        let elementorHeader = document.getElementById("elementor-header");
+        console.log(center,elementorHeader);
+        elementorHeader.style.left = `${center}px`;
+
     }],
     ['footer-section', '/assets/sections/footer.html', ()=>{}]
 ];

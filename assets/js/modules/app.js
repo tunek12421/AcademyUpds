@@ -54,7 +54,9 @@ function switchTab(tabName) {
 
 // Función para seleccionar curso
 function selectCourse(courseId, switchToTab = true) {
-    const course = getCourseById(courseId);
+    window.location.href = `/cursos/${courseId}`; // Navegar a la página del curso
+
+/*    const course = getCourseById(courseId);
     if (course) {
         updateState({ selectedCourse: course });
         if (switchToTab) {
@@ -64,7 +66,7 @@ function selectCourse(courseId, switchToTab = true) {
         renderCourseDetails();
     } else {
         console.error(`Curso ${courseId} no encontrado`);
-    }
+    }*/
 }
 
 // Función para renderizar la grilla de cursos
@@ -212,10 +214,6 @@ async function loadPageContent() {
     try {
         // Cargar secciones HTML
         await loadAllSections();
-        // Seleccionar el primer curso por defecto (sin cambiar de tab)
-        if (courses.length > 0) {
-            selectCourse(courses[0].id, false);
-        }
         // Test: verificar que getOtherCourses funciona
         const testOtherCourses = getOtherCourses();
 
@@ -232,10 +230,6 @@ async function loadPageContent() {
 
 // Configurar event listeners
 function setupEventListeners() {
-    // Event listeners para tabs
-    document.getElementById('tab-general')?.addEventListener('click', () => switchTab('general'));
-    document.getElementById('tab-curso')?.addEventListener('click', () => switchTab('curso'));
-    
     // Event listeners para botones de cursos (se añaden dinámicamente)
     document.addEventListener('click', (e) => {
         if (e.target.matches('[data-course-id]')) {

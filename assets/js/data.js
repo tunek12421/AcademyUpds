@@ -112,10 +112,11 @@ function getOtherCourses(excludeCourseId = null) {
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
 const navLinks = [
-    { name: 'Inicio', href: '#' },
-    { name: 'Cursos', href: '#courses' },
-    { name: 'Microtik', href: '#instructors' },
-    { name: 'Contacto', href: '#contact' }
+    { name: 'Inicio', href: 'https://www.upds.edu.bo/', navs: [] },
+    { name: 'Cursos', href: '/' , navs: [] },
+    { name: 'Microtik', href: '/microtik', navs: [
+        {name: "curso1", href: "/cursos/mt-1"},
+    ] },
 ];
 
 // Secciones HTML a cargar
@@ -123,13 +124,15 @@ const sections = [
     ['header-section', '/assets/sections/header.html', (parent) => {
         let nav = parent.querySelector("nav");
         nav.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
-
-        let link=document.body.querySelectorAll('.upds-nav-top a')[INDEX];
-        let center=link.offsetLeft;
+        let link = document.body.querySelectorAll('.upds-nav-top a')[INDEX];
         let elementorHeader = document.getElementById("elementor-header");
-        console.log(center,elementorHeader);
-        elementorHeader.style.left = `${center}px`;
-
+        let resizeHeader = () => {
+            elementorHeader.style.left = `${link.offsetLeft+link.offsetWidth/2}px`;
+            elementorHeader.classList.add("active");
+        };
+        window.addEventListener('resize', resizeHeader);
+        if (document.readyState === 'complete') setTimeout(resizeHeader, 100);
+        else window.addEventListener('load', resizeHeader);
     }],
     ['footer-section', '/assets/sections/footer.html', ()=>{}]
 ];

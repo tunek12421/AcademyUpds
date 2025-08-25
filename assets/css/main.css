@@ -1,15 +1,14 @@
-@import url("variables.css");
-
 /*Estilos generales*/
 @import url("styles/styles.css");
 @import url("styles/header.css");
 @import url("styles/upds.css");
+@import url("styles/default.css");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
 
 /* Variables CSS */
 :root {
   /* Colores principales */
-  --color-primary: #06165b;
+  --color-primary: #223B87;
   --color-secondary: #fbba00;
   --color-accent: #ee1c25;
   --color-success: #25d366;

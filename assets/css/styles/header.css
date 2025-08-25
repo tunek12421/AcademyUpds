@@ -19,12 +19,17 @@
   align-items: center;
 }
 
-.elementor-icon-header{
+.elementor-icon-header {
   position: absolute;
   color: var(--color-primary);
   font-size: 85px;
-  bottom: -65px;
+  bottom: -85px;
   margin-left: -30px;
+  transition: transform 0.3s;
+}
+
+.elementor-icon-header.active {
+  transform: translateY(-20px);
 }
 
 /* Logo Container */
@@ -92,11 +97,13 @@
 /* Header Bottom Section (Contact Info) */
 .upds-header-bottom {
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
   background: var(--color-primary);
   padding: 0.64rem 0;
   min-height: 45px;
+  z-index: 1;
 }
 
 .upds-header-contact {

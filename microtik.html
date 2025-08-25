@@ -6,7 +6,7 @@
     <title>TechAcademy - Página de Academia con Cursos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/assets/css/main.css">
-    <script>const INDEX=1;</script>
+    <script>const INDEX=2;</script>
     <script src="/assets/js/main.js" type="module"></script>
 </head>
 <body class="min-h-screen bg-background">
@@ -136,6 +136,44 @@
                                     Ver todos los cursos
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Details Tab Content -->
+            <div id="content-curso" class="tab-content space-y-8 hidden">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Course details will be loaded dynamically -->
+                        </div>
+
+                        <!-- Instructor Card -->
+                        <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Instructor details will be loaded dynamically -->
+                        </div>
+
+                        <!-- Course Content -->
+                        <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Course modules will be loaded dynamically -->
+                        </div>
+
+                        <!-- Skills -->
+                        <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Skills will be loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="space-y-6">
+                        <div id="pricing-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Pricing will be loaded dynamically -->
+                        </div>
+
+                        <div id="other-courses-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Other courses will be loaded dynamically -->
                         </div>
                     </div>
                 </div>

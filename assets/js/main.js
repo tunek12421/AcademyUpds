@@ -44,7 +44,6 @@ async function main() {
         ]);
         document.body.querySelector("main").classList.remove("hidden");
     } catch (error) {
-        // Mostrar mensaje de error al usuario
         showErrorMessage('Hubo un problema al cargar la aplicación.', error);
     }
 }

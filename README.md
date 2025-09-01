@@ -28,7 +28,7 @@ project_vanilla/
 └── README.md           # Este archivo
 ```
 
-## 🚀 Cómo ejecutar
+##  Cómo ejecutar
 
 ### Opción 1: Servidor local simple
 ```bash

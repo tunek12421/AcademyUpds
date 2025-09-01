@@ -2,18 +2,18 @@
 
 Una conversión completa del proyecto React original a HTML, CSS y JavaScript vanilla, manteniendo toda la funcionalidad y el diseño visual.
 
-## 📋 Características
+##  Características
 
-- ✅ **Diseño responsive** con Tailwind CSS
-- ✅ **Navegación por pestañas** funcional
-- ✅ **Sistema de cursos** interactivo
-- ✅ **Detalles dinámicos** de cada curso
-- ✅ **Instructores y módulos** completos
-- ✅ **Interfaz moderna** con componentes reutilizables
-- ✅ **Imágenes con fallback** automático
-- ✅ **Animaciones y transiciones** suaves
+-  **Diseño responsive** con Tailwind CSS
+-  **Navegación por pestañas** funcional
+-  **Sistema de cursos** interactivo
+-  **Detalles dinámicos** de cada curso
+-  **Instructores y módulos** completos
+-  **Interfaz moderna** con componentes reutilizables
+-  **Imágenes con fallback** automático
+-  **Animaciones y transiciones** suaves
 
-## 🗂️ Estructura del proyecto
+## 🗂 Estructura del proyecto
 
 ```
 project_vanilla/

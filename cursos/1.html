@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPDS - Página de Academia con Cursos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script>
+        const DATA={
+            headIndex: 2,   //ID del enlace en el encabezado
+            name: "course", //Nombre de la vista
+            courseId: 1,    //ID del curso
+        };
+    </script>
+    <script src="/assets/js/main.js" type="module"></script>
+</head>
+<body class="min-h-screen bg-background">
+    <!-- Header -->
+    <section id="header-section"></section>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 hidden">
+        <!-- Course Details Content -->
+        <div class="space-y-8">
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Course details will be loaded dynamically -->
+                        </div>
+
+                        <!-- Instructor Card -->
+                        <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Instructor details will be loaded dynamically -->
+                        </div>
+
+                        <!-- Course Content -->
+                        <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Course modules will be loaded dynamically -->
+                        </div>
+
+                        <!-- Skills -->
+                        <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Skills will be loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="space-y-6">
+                        <div id="pricing-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Pricing will be loaded dynamically -->
+                        </div>
+
+                        <div id="other-courses-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <!-- Other courses will be loaded dynamically -->
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </main>
+    <section id="footer-section"></section>
+</body>
+</html>

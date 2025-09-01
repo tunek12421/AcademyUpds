@@ -115,18 +115,23 @@ const navLinks = [
     { name: 'Inicio', href: 'https://www.upds.edu.bo/', navs: [] },
     { name: 'Cursos', href: '/' , navs: [] },
     { name: 'Microtik', href: '/microtik.html', navs: [
-        {name: "curso1", href: "/cursos/mt-1.html"},
-        {name: "curso2", href: "/cursos/mt-2.html"},
-        {name: "curso3", href: "/cursos/mt-3.html"},
+        {name: "Curso Microtik 1", href: "/cursos/1.html"},
+        {name: "Curso Microtik 2", href: "/cursos/2.html"},
+        {name: "Curso Microtik 3", href: "/cursos/3.html"},
     ] },
 ];
 
 // Secciones HTML a cargar
 const sections = [
     ['header-section', '/assets/sections/header.html', (parent) => {
-        let nav = parent.querySelector("nav");
-        nav.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
-        let link = document.body.querySelectorAll('.upds-nav-top a')[DATA.headIndex];
+        //Crear navegación superior
+        let navTop = parent.querySelector(".upds-nav-top");
+        navTop.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
+        //Crear navegacion inferior
+        let navBottom = parent.querySelector(".upds-header-contact");
+        navBottom.innerHTML = `${navLinks[DATA.headIndex].navs.map(link => `<a href="${link.href}" class="upds-contact-link">${link.name}</a>`).join('')}`;
+        
+        let link = navTop.querySelectorAll('a')[DATA.headIndex];
         let elementorHeader = document.getElementById("elementor-header");
         let resizeHeader = () => {
             elementorHeader.style.left = `${link.offsetLeft+link.offsetWidth/2}px`;

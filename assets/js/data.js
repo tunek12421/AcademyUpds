@@ -114,10 +114,10 @@ function getOtherCourses(excludeCourseId = null) {
 const navLinks = [
     { name: 'Inicio', href: 'https://www.upds.edu.bo/', navs: [] },
     { name: 'Cursos', href: '/' , navs: [] },
-    { name: 'Microtik', href: '/microtik', navs: [
-        {name: "curso1", href: "/cursos/mt-1"},
-        {name: "curso1", href: "/cursos/mt-2"},
-        {name: "curso1", href: "/cursos/mt-3"},
+    { name: 'Microtik', href: '/microtik.html', navs: [
+        {name: "curso1", href: "/cursos/mt-1.html"},
+        {name: "curso2", href: "/cursos/mt-2.html"},
+        {name: "curso3", href: "/cursos/mt-3.html"},
     ] },
 ];
 
@@ -126,7 +126,7 @@ const sections = [
     ['header-section', '/assets/sections/header.html', (parent) => {
         let nav = parent.querySelector("nav");
         nav.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
-        let link = document.body.querySelectorAll('.upds-nav-top a')[INDEX];
+        let link = document.body.querySelectorAll('.upds-nav-top a')[DATA.headIndex];
         let elementorHeader = document.getElementById("elementor-header");
         let resizeHeader = () => {
             elementorHeader.style.left = `${link.offsetLeft+link.offsetWidth/2}px`;

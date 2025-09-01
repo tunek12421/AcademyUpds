@@ -22,60 +22,42 @@ import {
 
 // Aplicación principal - Manejo de estado y eventos
 
-// Función para cambiar de tab
-function switchTab(tabName) {
-    // Actualizar estado
-    updateState({ activeTab: tabName });
+// Función para mostrar mensajes de error
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50';
+    errorDiv.innerHTML = `
+        <div class="flex items-center">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-red-500 hover:text-red-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(errorDiv);
     
-    // Actualizar UI de tabs
-    const tabs = document.querySelectorAll('.tab-trigger');
-    tabs.forEach(tab => {
-        if (tab.id === `tab-${tabName}`) {
-            tab.classList.add('bg-background', 'text-foreground', 'shadow-sm');
-            tab.classList.remove('text-muted-foreground');
-            tab.setAttribute('data-state', 'active');
-        } else {
-            tab.classList.remove('bg-background', 'text-foreground', 'shadow-sm');
-            tab.classList.add('text-muted-foreground');
-            tab.setAttribute('data-state', 'inactive');
+    // Auto-remover después de 10 segundos
+    setTimeout(() => {
+        if (errorDiv && errorDiv.parentNode) {
+            errorDiv.remove();
         }
-    });
-    
-    // Mostrar/ocultar contenido
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(content => {
-        if (content.id === `content-${tabName}`) {
-            content.classList.remove('hidden');
-        } else {
-            content.classList.add('hidden');
-        }
-    });
+    }, 10000);
 }
 
 // Función para seleccionar curso
-function selectCourse(courseId, switchToTab = true) {
-    window.location.href = `/cursos/${courseId}`; // Navegar a la página del curso
-
-/*    const course = getCourseById(courseId);
+function selectCourse(courseId) {
+    const course = getCourseById(courseId);
     if (course) {
         updateState({ selectedCourse: course });
-        if (switchToTab) {
-            updateState({ activeTab: 'curso' });
-            switchTab('curso');
-        }
         renderCourseDetails();
     } else {
         console.error(`Curso ${courseId} no encontrado`);
-    }*/
-}
-
-// Función para renderizar la grilla de cursos
-function renderCoursesGrid() {
-    const coursesGrid = document.getElementById('courses-grid');
-    if (!coursesGrid) return;
-    
-    const coursesHTML = courses.map(course => createCourseCard(course)).join('');
-    coursesGrid.innerHTML = coursesHTML;
+    }
 }
 
 // Función para renderizar los detalles del curso
@@ -86,52 +68,65 @@ function renderCourseDetails() {
         return;
     }
     
-    // Renderizar tarjeta principal del curso
-    const courseMainCard = document.getElementById('course-main-card');
-    if (courseMainCard) {
-        courseMainCard.innerHTML = createCourseDetails(course);
+    // Obtener el contenedor principal
+    const mainContainer = document.querySelector('main .space-y-8');
+    if (!mainContainer) {
+        console.error('No se encontró el contenedor principal');
+        return;
     }
     
-    // Renderizar tarjeta del instructor
-    const instructorCard = document.getElementById('instructor-card');
-    if (instructorCard) {
-        instructorCard.innerHTML = createInstructorCard(course);
-    }
+    // Limpiar contenido anterior
+    mainContainer.innerHTML = '';
     
-    // Renderizar contenido del curso
-    const courseContentCard = document.getElementById('course-content-card');
-    if (courseContentCard) {
-        courseContentCard.innerHTML = createCourseContentCard(course);
-    }
-    
-    // Renderizar habilidades
-    const skillsCard = document.getElementById('skills-card');
-    if (skillsCard) {
-        skillsCard.innerHTML = createSkillsCard(course);
-    }
-    
-    // Renderizar tarjeta de precio
-    const pricingCard = document.getElementById('pricing-card');
-    if (pricingCard) {
-        pricingCard.innerHTML = createPricingCard(course);
-    }
-    
-    // Renderizar otros cursos
-    const otherCoursesCard = document.getElementById('other-courses-card');
-    if (otherCoursesCard) {
-        try {
-            const otherCourses = getOtherCourses();
-            const otherCoursesHTML = createOtherCoursesCard(otherCourses);
-            otherCoursesCard.innerHTML = otherCoursesHTML;
-        } catch (error) {
-            console.error('Error al renderizar otros cursos:', error);
-            otherCoursesCard.innerHTML = `
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-4">Otros cursos</h3>
-                    <p class="text-muted-foreground">Error al cargar otros cursos.</p>
+    // Crear la estructura del curso
+    try {
+        const courseHTML = `
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createCourseDetails(course)}
+                    </div>
+
+                    <!-- Instructor Card -->
+                    <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createInstructorCard(course)}
+                    </div>
+
+                    <!-- Course Content -->
+                    <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createCourseContentCard(course)}
+                    </div>
+
+                    <!-- Skills -->
+                    <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createSkillsCard(course)}
+                    </div>
                 </div>
-            `;
-        }
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <div id="pricing-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createPricingCard(course)}
+                    </div>
+
+                    <div id="other-courses-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createOtherCoursesCard(getOtherCourses())}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        mainContainer.innerHTML = courseHTML;
+    } catch (error) {
+        console.error('Error al renderizar curso:', error);
+        mainContainer.innerHTML = `
+            <div class="text-center py-8">
+                <h2 class="text-2xl font-bold mb-4">Error al cargar el curso</h2>
+                <p class="text-muted-foreground">Hubo un problema al cargar los detalles del curso.</p>
+                <p class="text-sm text-muted-foreground mt-2">Curso ID: ${course.id}</p>
+            </div>
+        `;
     }
 }
 
@@ -212,19 +207,60 @@ window.selectCourse = selectCourse;
 // Función de inicialización principal
 async function loadPageContent() {
     try {
+        console.log('Iniciando carga de contenido...');
+        
         // Cargar secciones HTML
         await loadAllSections();
-        // Test: verificar que getOtherCourses funciona
-        const testOtherCourses = getOtherCourses();
+        console.log('Secciones HTML cargadas');
 
-        // Renderizar contenido inicial
-        renderCoursesGrid();
+        // Verificar si estamos en la vista de curso específico
+        console.log('Verificando DATA:', window.DATA);
+        
+        if (typeof window.DATA !== 'undefined' && DATA.name === "course" && DATA.courseId) {
+            console.log(`Buscando curso con ID: ${DATA.courseId}`);
+            
+            // Cargar curso específico
+            const course = getCourseById(DATA.courseId.toString());
+            console.log('Curso encontrado:', course);
+            
+            if (course) {
+                updateState({ selectedCourse: course });
+                console.log('Estado actualizado, renderizando curso...');
+                renderCourseDetails();
+            } else {
+                console.error(`Curso con ID ${DATA.courseId} no encontrado`);
+                // Fallback: mostrar el primer curso disponible
+                const firstCourse = courses[0];
+                if (firstCourse) {
+                    console.log('Mostrando primer curso como fallback:', firstCourse);
+                    updateState({ selectedCourse: firstCourse });
+                    renderCourseDetails();
+                } else {
+                    showErrorMessage(`Curso con ID ${DATA.courseId} no encontrado`);
+                }
+            }
+        } else {
+            console.error('No se especificó un courseId válido en DATA');
+            console.log('DATA disponible:', typeof window.DATA !== 'undefined' ? window.DATA : 'undefined');
+            
+            // Fallback: mostrar el primer curso disponible
+            const firstCourse = courses[0];
+            if (firstCourse) {
+                console.log('Mostrando primer curso como fallback:', firstCourse);
+                updateState({ selectedCourse: firstCourse });
+                renderCourseDetails();
+            } else {
+                showErrorMessage('No se especificó un curso válido y no hay cursos disponibles');
+            }
+        }
+        
         // Configurar event listeners
         setupEventListeners();
-        // Configurar tab inicial
-        switchTab(appState.activeTab);
+        console.log('Event listeners configurados');
+        
     } catch (error) {
         console.error('Error al inicializar la aplicación:', error);
+        showErrorMessage('Error al cargar la aplicación: ' + error.message);
     }
 }
 
@@ -241,9 +277,7 @@ function setupEventListeners() {
 
 // Exportar funciones principales
 export {
-    switchTab,
     selectCourse,
-    renderCoursesGrid,
     renderCourseDetails,
     enrollInCourse,
     previewCourse,

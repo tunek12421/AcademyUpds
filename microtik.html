@@ -6,7 +6,13 @@
     <title>UPDS - Página de Academia con Cursos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/assets/css/main.css">
-    <script>const INDEX=2;</script>
+    <script>
+        const DATA={
+            headIndex: 2,   //ID del enlace en el encabezado
+            name: "course", //Nombre de la vista
+            courseId: 1,    //ID del curso
+        };
+    </script>
     <script src="/assets/js/main.js" type="module"></script>
 </head>
 <body class="min-h-screen bg-background">
@@ -14,10 +20,8 @@
     <section id="header-section"></section>
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 hidden">
-        <!-- Tabs -->
-        <div class="w-full">
-            <!-- Course Details Tab Content -->
-            <div id="content-curso" class="tab-content space-y-8 hidden">
+        <!-- Course Details Content -->
+        <div class="space-y-8">
                 <div class="grid lg:grid-cols-3 gap-8">
                     <!-- Main Content -->
                     <div class="lg:col-span-2 space-y-6">
@@ -51,7 +55,6 @@
                             <!-- Other courses will be loaded dynamically -->
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </main>

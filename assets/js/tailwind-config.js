@@ -45,7 +45,7 @@ async function loadTailwindConfig() {
     
     try {
         // Si no hay caché, cargar desde JSON
-        const response = await fetch('config/tailwind-colors.json');
+        const response = await fetch('/assets/config/tailwind-colors.json');
         config = await response.json();
         
         // Guardar en localStorage para futuras cargas

@@ -1,4 +1,4 @@
-# TechAcademy - Vanilla JavaScript Version
+# UPDS - Vanilla JavaScript Version
 
 Una conversión completa del proyecto React original a HTML, CSS y JavaScript vanilla, manteniendo toda la funcionalidad y el diseño visual.
 

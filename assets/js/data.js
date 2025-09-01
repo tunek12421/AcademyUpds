@@ -116,6 +116,8 @@ const navLinks = [
     { name: 'Cursos', href: '/' , navs: [] },
     { name: 'Microtik', href: '/microtik', navs: [
         {name: "curso1", href: "/cursos/mt-1"},
+        {name: "curso1", href: "/cursos/mt-2"},
+        {name: "curso1", href: "/cursos/mt-3"},
     ] },
 ];
 

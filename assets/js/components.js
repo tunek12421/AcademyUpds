@@ -87,7 +87,7 @@ function createCourseCard(course) {
                 <p class="text-muted-foreground mb-4 line-clamp-2">
                     ${course.description}
                 </p>
-                <div class="flex flex-column gap-3 items-center justify-between">
+                <div class="flex flex-column gap-3 justify-between">
                     <div class="flex items-center gap-4 text-sm text-muted-foreground">
                         <div class="flex items-center gap-1">
                             ${createClockIcon()}

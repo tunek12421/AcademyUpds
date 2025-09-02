@@ -147,7 +147,7 @@ function createInstructorCard(course) {
         </div>
         <div class="px-6 pb-6">
             <div class="flex items-start gap-4">
-                ${createImageWithFallback(course.instructorImage, course.instructor, 'w-16 h-16 rounded-full object-cover')}
+                ${createImageWithFallback(course.instructorImage, course.instructor, 'w-16 h-16 rounded-lg object-cover')}
                 <div>
                     <h4 class="font-medium mb-2">${course.instructor}</h4>
                     <p class="text-muted-foreground">${course.instructorBio}</p>

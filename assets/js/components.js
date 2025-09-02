@@ -98,10 +98,7 @@ function createCourseCard(course) {
                     ${createButton(`Ver detalles ${createChevronRightIcon()}`, 'default', 'default', `selectCourse('${course.id}')`, 'group')}
                 </div>
                 <div class="mt-4 pt-4 border-t">
-                    <div class="flex items-center justify-between">
-                        <span class="text-muted-foreground">Por ${course.instructor}</span>
-                        <span class="font-bold">$${course.price}</span>
-                    </div>
+                    <span class="text-muted-foreground">Por ${course.instructor}</span>
                 </div>
             </div>
         </div>
@@ -201,12 +198,12 @@ function createSkillsCard(course) {
     `;
 }
 
-// Componente para tarjeta de precio
+// Componente para tarjeta de inscripción
 function createPricingCard(course) {
     return `
         <div class="p-6">
             <div class="text-center mb-6">
-                <span class="text-3xl font-bold">$${course.price}</span>
+                <h3 class="text-xl font-bold mb-2">Inscríbete al curso</h3>
                 <p class="text-muted-foreground">Acceso de por vida</p>
             </div>
             ${createButton('Inscribirme ahora', 'default', 'lg', '', 'w-full mb-4')}

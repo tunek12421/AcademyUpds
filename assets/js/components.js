@@ -29,12 +29,12 @@ function createChevronRightIcon() {
 // Componente Badge
 function createBadge(text, variant = 'default') {
     const variants = {
-        default: 'bg-primary text-primary-foreground',
+        default: 'text-primary-foreground',
         secondary: 'bg-secondary text-secondary-foreground',
         outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
     };
     
-    return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variants[variant]}">${text}</span>`;
+    return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variants[variant]}" ${variant === 'default' ? 'style="background: var(--color-primary);"' : ''}>${text}</span>`;
 }
 
 // Componente para imagen con fallback
@@ -46,7 +46,7 @@ function createImageWithFallback(src, alt, className = '') {
 // Componente Button
 function createButton(text, variant = 'default', size = 'default', onClick = '', additionalClasses = '') {
     const variants = {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        default: 'text-primary-foreground hover:bg-primary/90',
         outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
     };
     
@@ -57,7 +57,7 @@ function createButton(text, variant = 'default', size = 'default', onClick = '',
     
     const onClickAttr = onClick ? `onclick="${onClick}"` : '';
     
-    return `<button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background ${variants[variant]} ${sizes[size]} ${additionalClasses}" ${onClickAttr}>
+    return `<button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background ${variants[variant]} ${sizes[size]} ${additionalClasses}" style="background: var(--color-primary);" ${onClickAttr}>
         ${text}
     </button>`;
 }

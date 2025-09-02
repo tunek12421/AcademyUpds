@@ -122,7 +122,7 @@ function renderHomeView() {
                         Aprende las habilidades más demandadas del mercado tecnológico con instructores expertos 
                         y proyectos reales que impulsan tu crecimiento profesional.
                     </p>
-                    <button onclick="exploreAllCourses()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8">
+                    <button onclick="exploreAllCourses()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background text-primary-foreground hover:bg-primary/90 h-11 px-8" style="background: var(--color-primary);">
                         Explorar cursos
                     </button>
                 </div>
@@ -224,7 +224,7 @@ function renderHomeView() {
                         <p class="text-muted-foreground mb-4">
                             Únete a miles de estudiantes que ya están transformando su carrera
                         </p>
-                        <button onclick="exploreAllCourses()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full">
+                        <button onclick="exploreAllCourses()" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background text-primary-foreground hover:bg-primary/90 h-11 px-8 w-full" style="background: var(--color-primary);">
                             Ver todos los cursos
                         </button>
                     </div>

@@ -130,7 +130,7 @@ function renderHomeView() {
         </div>
 
         <!-- Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" style="display: none;">
             <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
                 <div class="p-6 text-center">
                     <svg class="h-8 w-8 mx-auto mb-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">

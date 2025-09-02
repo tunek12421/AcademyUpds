@@ -109,12 +109,13 @@ function getOtherCourses(excludeCourseId = null) {
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
 const navLinks = [
-    { name: 'Inicio', href: 'https://www.upds.edu.bo/', navs: [] },
-    { name: 'Cursos', href: '/' , navs: [] },
-    { name: 'Microtik', href: '/microtik.html', navs: [
-        {name: "Curso Microtik 1", href: "/cursos/1.html"},
-        {name: "Curso Microtik 2", href: "/cursos/2.html"},
-        {name: "Curso Microtik 3", href: "/cursos/3.html"},
+    { name: 'Inicio', href: '/', navs: [] },
+    { name: 'Cursos', href: '#' , navs: [] },
+    { name: 'Cochabamba', href: 'https://www.upds.edu.bo/sede/cochabamba/', navs: [] },
+    { name: 'Mikrotik', href: '/mikrotik.html', navs: [
+        {name: "Curso Mikrotik 1", href: "/cursos/1.html"},
+        {name: "Curso Mikrotik 2", href: "/cursos/2.html"},
+        {name: "Curso Mikrotik 3", href: "/cursos/3.html"},
     ] },
 ];
 

@@ -77,9 +77,12 @@
         /* Grid de sedes */
         .locations-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
             margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .location-card {
@@ -87,6 +90,9 @@
             border-radius: 10px;
             padding: 20px;
             transition: background 0.3s;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
         }
 
         .location-card:hover {
@@ -151,7 +157,8 @@
         .social-links {
             display: flex;
             gap: 5px;
-            margin-top: 15px;
+            margin-top: auto;
+            padding-top: 15px;
         }
 
         .social-icon {
@@ -177,30 +184,6 @@
         .social-icon.youtube:hover { background: #F20101; }
         .social-icon.linkedin:hover { background: #4267B2; }
         .social-icon.whatsapp:hover { background: #4FCE5D; }
-
-        /* Sede Nacional */
-        .national-section {
-            text-align: center;
-            background: rgba(17, 37, 91, 0.15);
-            border-radius: 10px;
-            padding: 30px;
-            margin: 40px auto;
-            max-width: 600px;
-        }
-
-        .national-section .location-name {
-            margin-bottom: 20px;
-        }
-
-        .national-section .contact-list {
-            display: inline-block;
-            text-align: left;
-        }
-
-        .national-section .social-links {
-            justify-content: center;
-            margin-top: 20px;
-        }
 
         /* Navegación de sedes */
         .nav-sedes {
@@ -295,59 +278,6 @@
 
             <!-- Grid de ubicaciones -->
             <div class="locations-grid">
-                <!-- Potosí -->
-                <div class="location-card">
-                    <h4 class="location-name">
-                        <a href="https://www.upds.edu.bo/contacto/sede-potosi/">Potosí</a>
-                    </h4>
-                    <ul class="contact-list">
-                        <li class="contact-item">
-                            <a href="https://www.google.com/maps?daddr=-19.5688582,-65.7666385">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Av. Unión y Gareca</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="tel:59126246677">
-                                <i class="fas fa-phone-alt"></i>
-                                <span>(591-2) 624-6677</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="https://wa.me/59172367998">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>(591) 723-67998</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="mailto:infoupds.potosi@upds.edu.bo">
-                                <i class="fas fa-envelope"></i>
-                                <span>infoupds.potosi@upds.edu.bo</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/UPDSSedePotosi/" target="_blank" class="social-icon facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://www.instagram.com/upds_potosi/" target="_blank" class="social-icon instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://twitter.com/udomingosavio" target="_blank" class="social-icon twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://www.youtube.com/channel/UCDDP7wVSYp1EFO4sbB7_WYQ" target="_blank" class="social-icon youtube">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/company/universidadprivadadomingosavio" target="_blank" class="social-icon linkedin">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://wa.me/59172367998" target="_blank" class="social-icon whatsapp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-
                 <!-- Cochabamba -->
                 <div class="location-card">
                     <h4 class="location-name">
@@ -401,149 +331,43 @@
                     </div>
                 </div>
 
-                <!-- La Paz -->
+                <!-- Nacional -->
                 <div class="location-card">
                     <h4 class="location-name">
-                        <a href="https://www.upds.edu.bo/contacto/sede-la-paz/">La Paz</a>
+                        <a href="https://www.upds.edu.bo/contacto/nacional/">Nacional</a>
                     </h4>
                     <ul class="contact-list">
                         <li class="contact-item">
-                            <a href="https://www.google.com/maps?daddr=-16.5035998,-68.1247577">
+                            <a href="https://www.google.com/maps?daddr=-17.7579232,-63.1784418">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>Fermín Prudencio # 1225, Zona de Miraflores</span>
+                                <span>Avenida República del Japón 250</span>
                             </a>
                         </li>
                         <li class="contact-item">
-                            <a href="tel:59122223434">
+                            <a href="tel:59133426600">
                                 <i class="fas fa-phone-alt"></i>
-                                <span>(591-2) 222-3434</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="https://wa.me/59178809575">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>(591) 788-09575</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="mailto:infoupds.lapaz@upds.edu.bo">
-                                <i class="fas fa-envelope"></i>
-                                <span>infoupds.lapaz@upds.edu.bo</span>
+                                <span>(591) 3 342 - 6600</span>
                             </a>
                         </li>
                     </ul>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/updsLPZ/" target="_blank" class="social-icon facebook">
+                        <a href="https://www.facebook.com/upds.rednacional/" target="_blank" class="social-icon facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/upds_lapaz/" target="_blank" class="social-icon instagram">
+                        <a href="#" class="social-icon instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="https://twitter.com/udomingosavio" target="_blank" class="social-icon twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="https://www.youtube.com/channel/UCZQL53Z73Zqy5Z-flqHzKuw" target="_blank" class="social-icon youtube">
+                        <a href="https://www.youtube.com/channel/UCDDP7wVSYp1EFO4sbB7_WYQ" target="_blank" class="social-icon youtube">
                             <i class="fab fa-youtube"></i>
                         </a>
                         <a href="https://www.linkedin.com/company/universidadprivadadomingosavio" target="_blank" class="social-icon linkedin">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="https://wa.me/59178809575" target="_blank" class="social-icon whatsapp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
                     </div>
                 </div>
-
-                <!-- Cobija -->
-                <div class="location-card">
-                    <h4 class="location-name">
-                        <a href="https://www.upds.edu.bo/contacto/cobija/">Cobija</a>
-                    </h4>
-                    <ul class="contact-list">
-                        <li class="contact-item">
-                            <a href="https://maps.app.goo.gl/Zc9y9dic1nT5xgRC9">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Avenida 16 de Julio N.º 128, Puerto Cobija</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="tel:59167113404">
-                                <i class="fas fa-phone-alt"></i>
-                                <span>(591) 671-13404</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="https://wa.me/59167113404">
-                                <i class="fab fa-whatsapp"></i>
-                                <span>(591) 671-13404</span>
-                            </a>
-                        </li>
-                        <li class="contact-item">
-                            <a href="mailto:infoupds.cobija@upds.edu.bo">
-                                <i class="fas fa-envelope"></i>
-                                <span>infoupds.cobija@upds.edu.bo</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="social-links">
-                        <a href="https://www.facebook.com/updscobija/" target="_blank" class="social-icon facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://www.instagram.com/upds_cobija/" target="_blank" class="social-icon instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://twitter.com/udomingosavio" target="_blank" class="social-icon twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="https://www.youtube.com/channel/UCDDP7wVSYp1EFO4sbB7_WYQ?view_as=subscriber" target="_blank" class="social-icon youtube">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/company/universidadprivadadomingosavio" target="_blank" class="social-icon linkedin">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://wa.me/59167113404" target="_blank" class="social-icon whatsapp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sede Nacional -->
-        <div class="national-section">
-            <h4 class="location-name">
-                <a href="https://www.upds.edu.bo/contacto/nacional/">Nacional</a>
-            </h4>
-            <ul class="contact-list">
-                <li class="contact-item">
-                    <a href="https://www.google.com/maps?daddr=-17.7579232,-63.1784418">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Avenida República del Japón 250</span>
-                    </a>
-                </li>
-                <li class="contact-item">
-                    <a href="tel:59133426600">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>(591) 3 342 - 6600</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="social-links">
-                <a href="https://www.facebook.com/upds.rednacional/" target="_blank" class="social-icon facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" class="social-icon instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://twitter.com/udomingosavio" target="_blank" class="social-icon twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://www.youtube.com/channel/UCDDP7wVSYp1EFO4sbB7_WYQ" target="_blank" class="social-icon youtube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/universidadprivadadomingosavio" target="_blank" class="social-icon linkedin">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
             </div>
         </div>
 

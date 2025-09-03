@@ -206,8 +206,7 @@ function createPricingCard(course) {
                 <h3 class="text-xl font-bold mb-2">Inscríbete al curso</h3>
                 <p class="text-muted-foreground">Acceso de por vida</p>
             </div>
-            ${createButton('Inscribirme ahora', 'default', 'lg', '', 'w-full mb-4')}
-            ${createButton('Vista previa gratuita', 'outline', 'default', '', 'w-full')}
+            ${createButton('Inscribirme ahora', 'default', 'lg', '', 'w-full')}
         </div>
     `;
 }

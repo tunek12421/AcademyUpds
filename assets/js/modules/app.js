@@ -17,7 +17,9 @@ import {
     createCourseContentCard,
     createSkillsCard,
     createPricingCard,
-    createOtherCoursesCard
+    createOtherCoursesCard,
+    createPrerequisitesCard,
+    createFAQCard
 } from '../components.js';
 
 // Aplicación principal - Manejo de estado y eventos
@@ -281,6 +283,16 @@ function renderCourseDetails() {
                     <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createSkillsCard(course)}
                     </div>
+
+                    <!-- Prerequisites -->
+                    ${course.prerequisites ? `<div id="prerequisites-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createPrerequisitesCard(course)}
+                    </div>` : ''}
+
+                    <!-- FAQ -->
+                    ${course.faq ? `<div id="faq-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        ${createFAQCard(course)}
+                    </div>` : ''}
                 </div>
 
                 <!-- Sidebar -->

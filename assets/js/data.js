@@ -2,6 +2,68 @@
 const courses = [
     {
         id: '1',
+        title: 'Curso Mikrotik MTCNA',
+        description: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
+        instructor: 'Alfaro Bazán Boris Fernando',
+        instructorBio: 'Especialista en redes y telecomunicaciones con más de 10 años de experiencia. Instructor certificado Mikrotik con amplia experiencia en proyectos de networking.',
+        instructorImage: '/assets/images/AlfaroBazan.jpeg',
+        duration: '8 semanas',
+        level: 'Intermedio',
+        students: 756,
+        rating: 4.7,
+        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        category: 'Mikrotik',
+        objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
+        modules: [
+            'Capítulo 1: RouterOS - Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
+            'Capítulo 2: Ruteo Estático - Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
+            'Capítulo 3: Bridge - Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
+            'Capítulo 4: Wireless (IEEE 802.11) - Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
+            'Capítulo 5: Network Management - Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
+            'Capítulo 6: Firewall - Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
+            'Capítulo 7: Colas Simples y QoS - Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
+            'Capítulo 8: Túneles PPP - Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
+            'Capítulo 9: Herramientas RouterOS - Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.'
+        ],
+        completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
+        prerequisites: {
+            title: 'Conocimientos esenciales que debes tener para este curso',
+            description: 'Es importante que estés familiarizado con varios conceptos en redes, sin los cuales se podría ralentizar tu proceso de aprendizaje. Te dejamos a continuación una lista de videos para que los revises si tus conocimientos en esos tópicos no son muy claros.',
+            topics: ['Subnetting', 'Sumarización', 'VLSM']
+        },
+        faq: {
+            title: 'Preguntas Frecuentes sobre MTCNA',
+            questions: [
+                {
+                    question: '¿Qué es la certificación MTCNA?',
+                    answer: 'MTCNA (MikroTik Certified Network Associate) es la certificación básica de MikroTik que valida tus conocimientos en RouterOS y la configuración básica de dispositivos MikroTik. Es el primer nivel en el programa de certificación MikroTik.'
+                },
+                {
+                    question: '¿Cuáles son los requisitos previos para tomar este curso?',
+                    answer: 'Se recomienda tener conocimientos básicos de networking, incluyendo conceptos de TCP/IP, subnetting, VLSM y routing básico. No se requiere experiencia previa con MikroTik, pero conocimientos de redes son esenciales.'
+                },
+                {
+                    question: '¿El curso incluye laboratorios prácticos?',
+                    answer: 'Sí, el curso incluye múltiples laboratorios prácticos donde podrás configurar dispositivos MikroTik virtuales y físicos. Aprenderás mediante ejercicios hands-on que refuerzan los conceptos teóricos.'
+                },
+                {
+                    question: '¿Cómo es el examen de certificación MTCNA?',
+                    answer: 'El examen MTCNA consiste en aproximadamente 25 preguntas de opción múltiple y se realiza en línea. Cubre todos los temas del curso y requiere una puntuación del 60% para aprobar. El examen tiene una duración de 60 minutos.'
+                },
+                {
+                    question: '¿Qué dispositivos MikroTik puedo configurar después del curso?',
+                    answer: 'Después de completar el curso, podrás configurar routers, switches y puntos de acceso MikroTik para redes pequeñas y medianas, incluyendo configuración básica de firewall, wireless, y gestión de tráfico.'
+                },
+                {
+                    question: '¿El certificado MTCNA tiene vencimiento?',
+                    answer: 'No, los certificados MTCNA no tienen fecha de vencimiento. Una vez que obtienes la certificación, es válida de por vida. Sin embargo, se recomienda mantenerse actualizado con las nuevas versiones de RouterOS.'
+                }
+            ]
+        },
+        skills: ['RouterOS', 'Networking', 'Firewall', 'Wireless', 'QoS', 'MTCNA Certification', 'PPP Tunnels', 'Network Management', 'Static Routing']
+    },
+    {
+        id: '2',
         title: 'Desarrollo Web Full Stack',
         description: 'Aprende a crear aplicaciones web completas desde cero utilizando las tecnologías más demandadas del mercado.',
         instructor: 'Alfaro Bazán Boris Fernando',
@@ -24,7 +86,7 @@ const courses = [
         skills: ['JavaScript', 'React', 'Node.js', 'MongoDB', 'Git', 'API REST']
     },
     {
-        id: '2',
+        id: '3',
         title: 'Diseño UX/UI Profesional',
         description: 'Domina las herramientas y metodologías para crear experiencias de usuario excepcionales y interfaces atractivas.',
         instructor: 'Alfaro Bazán Boris Fernando',
@@ -45,29 +107,6 @@ const courses = [
             'Portfolio profesional'
         ],
         skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research', 'Wireframing', 'Design Systems']
-    },
-    {
-        id: '3',
-        title: 'Marketing Digital y Growth',
-        description: 'Estrategias avanzadas de marketing digital para hacer crecer tu negocio y aumentar las ventas online.',
-        instructor: 'Alfaro Bazán Boris Fernando',
-        instructorBio: 'Especialista en Marketing Digital con más de 10 años de experiencia. Ha ayudado a más de 100 empresas a aumentar sus ventas online.',
-        instructorImage: '/assets/images/AlfaroBazan.jpeg',
-        duration: '8 semanas',
-        level: 'Intermedio',
-        students: 756,
-        rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1752118464988-2914fb27d0f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG1lbnRvciUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NTU4MTIwNTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-        category: 'Marketing',
-        modules: [
-            'Fundamentos del marketing digital',
-            'SEO y SEM',
-            'Redes sociales',
-            'Email marketing',
-            'Analytics y métricas',
-            'Estrategias de crecimiento'
-        ],
-        skills: ['Google Ads', 'Facebook Ads', 'SEO', 'Analytics', 'Content Marketing', 'Growth Hacking']
     }
 ];
 

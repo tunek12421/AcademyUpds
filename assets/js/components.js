@@ -249,6 +249,81 @@ function createOtherCoursesCard(otherCourses = []) {
     `;
 }
 
+// Componente para conocimientos esenciales
+function createPrerequisitesCard(course) {
+    if (!course.prerequisites) {
+        return '';
+    }
+    
+    const topicsHTML = course.prerequisites.topics.map(topic => `
+        <li class="flex items-center gap-2">
+            <svg class="h-4 w-4 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>${topic}</span>
+        </li>
+    `).join('');
+
+    return `
+        <div class="p-6">
+            <h3 class="text-xl font-bold mb-4">${course.prerequisites.title}</h3>
+            <p class="text-muted-foreground mb-4">${course.prerequisites.description}</p>
+            <ul class="space-y-2">
+                ${topicsHTML}
+            </ul>
+        </div>
+    `;
+}
+
+// Componente para preguntas frecuentes
+function createFAQCard(course) {
+    if (!course.faq) {
+        return '';
+    }
+    
+    const questionsHTML = course.faq.questions.map((item, index) => `
+        <div class="border rounded-lg">
+            <button class="w-full text-left p-4 flex justify-between items-center hover:bg-gray-100 transition-colors focus:outline-none focus:bg-gray-100 active:bg-gray-100" onclick="toggleFAQ(${index})">
+                <span class="font-medium pr-4 text-gray-900">${item.question}</span>
+                <svg id="faq-icon-${index}" class="h-5 w-5 text-gray-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="faq-content-${index}" class="hidden">
+                <div class="px-4 pb-4 text-gray-600">
+                    ${item.answer}
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    return `
+        <div class="p-6">
+            <h3 class="text-xl font-bold mb-4">${course.faq.title}</h3>
+            <div class="space-y-3">
+                ${questionsHTML}
+            </div>
+        </div>
+    `;
+}
+
+// Función global para manejar el toggle de FAQ
+function toggleFAQ(index) {
+    const content = document.getElementById(`faq-content-${index}`);
+    const icon = document.getElementById(`faq-icon-${index}`);
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Hacer la función accesible globalmente
+window.toggleFAQ = toggleFAQ;
+
 // Exportar todas las funciones de componentes
 export {
     createStarIcon,
@@ -263,5 +338,7 @@ export {
     createCourseContentCard,
     createSkillsCard,
     createPricingCard,
-    createOtherCoursesCard
+    createOtherCoursesCard,
+    createPrerequisitesCard,
+    createFAQCard
 };

@@ -212,6 +212,32 @@ button:active {
     transform: scale(1.05);
 }
 
+/* Estilos para módulos desplegables */
+.module-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.module-content.expanded {
+    max-height: 500px; /* Altura máxima estimada */
+    transition: max-height 0.3s ease-in;
+}
+
+/* Mejoras visuales para módulos */
+.module-header:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.module-icon {
+    transition: transform 0.2s ease-in-out;
+}
+
+.module-content-inner {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-left: 3px solid var(--color-primary, #3b82f6);
+}
+
 /* Estilos para mejorar la experiencia móvil */
 @media (max-width: 640px) {
     .hero-content h2 {
@@ -232,5 +258,14 @@ button:active {
     .courses-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
+    }
+
+    /* Ajustes móviles para módulos */
+    .module-header {
+        padding: 0.75rem;
+    }
+    
+    .module-content-inner {
+        padding: 0.75rem;
     }
 }

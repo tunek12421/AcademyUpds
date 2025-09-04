@@ -160,17 +160,61 @@ function createInstructorCard(course) {
 // Componente para contenido del curso
 function createCourseContentCard(course) {
     const modulesHTML = course.modules.map((module, index) => `
-        <div class="flex items-center gap-3 p-3 border rounded-lg">
-            <span class="flex items-center justify-center aspect-square w-8 h-8 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                ${index + 1}
-            </span>
-            <span>${module}</span>
+        <div class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+            <button 
+                class="module-header w-full text-left p-4 flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-none focus:bg-gray-50" 
+                onclick="toggleModule(${index})"
+            >
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center aspect-square w-8 h-8 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        ${index + 1}
+                    </span>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900">${module.title}</h4>
+                        <div class="flex items-center gap-2 mt-1">
+                            <svg class="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm text-gray-500">${module.duration}</span>
+                        </div>
+                    </div>
+                </div>
+                <svg 
+                    id="module-icon-${index}" 
+                    class="module-icon h-5 w-5 text-gray-500 transition-transform duration-200" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="module-content-${index}" class="module-content hidden">
+                <div class="module-content-inner px-4 py-4 border-t">
+                    <p class="text-gray-700 leading-relaxed mb-4">${module.content}</p>
+                    <div class="flex items-center gap-6 text-sm">
+                        <div class="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full">
+                            <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-blue-700 font-medium">Video lecciones</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-full">
+                            <svg class="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-green-700 font-medium">Material de apoyo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     `).join('');
 
     return `
         <div class="p-6">
             <h3 class="text-xl font-bold mb-4">Contenido del curso</h3>
+            <p class="text-muted-foreground mb-4">9 capítulos · 16 horas de contenido</p>
         </div>
         <div class="px-6 pb-6">
             <div class="space-y-3">
@@ -321,8 +365,27 @@ function toggleFAQ(index) {
     }
 }
 
-// Hacer la función accesible globalmente
+// Función global para manejar el toggle de módulos
+function toggleModule(index) {
+    const content = document.getElementById(`module-content-${index}`);
+    const icon = document.getElementById(`module-icon-${index}`);
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        content.style.maxHeight = '0px';
+        icon.style.transform = 'rotate(0deg)';
+        setTimeout(() => {
+            content.classList.add('hidden');
+        }, 200);
+    }
+}
+
+// Hacer las funciones accesibles globalmente
 window.toggleFAQ = toggleFAQ;
+window.toggleModule = toggleModule;
 
 // Exportar todas las funciones de componentes
 export {

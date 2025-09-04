@@ -13,7 +13,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
+        drop_console: false,  // Mantener console.logs para debugging SPA
         drop_debugger: true,
         dead_code: true,
         unused: true
@@ -28,6 +28,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'src/index.html'),
+        spa: resolve(__dirname, 'src/spa.html'),  // Agregar SPA
         mikrotik: resolve(__dirname, 'src/mikrotik.html'),
         curso: resolve(__dirname, 'src/curso.html'),
         header: resolve(__dirname, 'src/assets/sections/header.html'),

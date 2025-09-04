@@ -8,11 +8,7 @@
     padding: 60px 0 20px;
 }
 
-.footer-upds .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+/* Usar sistema de containers de Tailwind - no sobrescribir */
 
 /* Logo y título principal */
 .footer-upds .footer-header {

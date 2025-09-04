@@ -53,12 +53,17 @@ function showErrorMessage(message) {
 
 // Función para seleccionar curso
 function selectCourse(courseId) {
-    // Redirigir a la página de detalles del curso
-    window.location.href = `/curso.html?id=${courseId}`;
+    // Usar navegación SPA en lugar de cambiar la URL
+    import('../router.js').then(({ navigateTo }) => {
+        navigateTo(`/curso?id=${courseId}`);
+    }).catch(() => {
+        // Fallback si el router no está disponible
+        window.location.href = `/curso.html?id=${courseId}`;
+    });
 }
 
 // Función para renderizar la vista de categoría
-function renderCategoryView(categoryName = "Microtik") {
+export function renderCategoryView(categoryName = "Microtik") {
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
     if (!mainContainer) {
@@ -99,16 +104,21 @@ function renderCoursesGrid() {
 }
 
 // Función para renderizar la vista principal (home)
-function renderHomeView() {
+export function renderHomeView() {
+    console.log('🏠 [HOME] Iniciando renderizado de la vista HOME...');
+    
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
     if (!mainContainer) {
-        console.error('No se encontró el contenedor principal');
+        console.error('❌ [HOME] No se encontró el contenedor principal main .space-y-8');
         return;
     }
     
+    console.log('✅ [HOME] Contenedor principal encontrado:', mainContainer);
+    
     // Limpiar contenido anterior
     mainContainer.innerHTML = '';
+    console.log('🧹 [HOME] Contenido anterior limpiado');
     
     // Crear la estructura de la vista home
     const homeHTML = `
@@ -235,14 +245,58 @@ function renderHomeView() {
         </div>
     `;
     mainContainer.innerHTML = homeHTML;
+    console.log('📝 [HOME] HTML estructura cargada');
+    
     // Después de cargar el HTML, renderizar los cursos
+    console.log('📚 [HOME] Renderizando grid de cursos...');
     renderCoursesGrid();
+    
+    console.log('✅ [HOME] Vista HOME completada exitosamente');
 }
 
 // Función para renderizar los detalles del curso
-function renderCourseDetails() {
-    const course = appState.selectedCourse;
-    if (!course)return;
+export function renderCourseView(course) {
+    console.log('📖 [COURSE] Iniciando renderizado de vista de curso:', course?.title);
+    
+    if (!course) {
+        console.error('❌ [COURSE] No se proporcionó información del curso');
+        return;
+    }
+
+    // Obtener el contenedor principal
+    const mainContainer = document.querySelector('main .space-y-8');
+    if (!mainContainer) {
+        console.error('❌ [COURSE] No se encontró el contenedor principal');
+        return;
+    }
+    
+    console.log('✅ [COURSE] Contenedor principal encontrado');
+
+    // Limpiar contenido anterior
+    mainContainer.innerHTML = '';
+
+    // Crear la estructura de la vista de curso
+    mainContainer.innerHTML = `
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-6">
+                <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+                <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+                <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+                <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+            </div>
+            <div class="space-y-6">
+                <div id="pricing-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+                <div id="other-courses-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
+            </div>
+        </div>
+    `;
+
+    // Renderizar componentes
+    renderCourseDetails(course);
+}
+
+function renderCourseDetails(course) {
+    if (!course) return;
     
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
@@ -398,55 +452,24 @@ window.login = login;
 // Función de inicialización principal
 async function loadPageContent() {
     try {
-        console.log('Iniciando carga de contenido...');
+        console.log('📋 [APP] Iniciando carga de contenido...');
         
         // Cargar secciones HTML
+        console.log('🔄 [APP] Cargando secciones HTML...');
         await loadAllSections();
-        console.log('Secciones HTML cargadas');
+        console.log('✅ [APP] Secciones HTML cargadas correctamente');
 
-        // Verificar si estamos en la vista de curso específico
-        console.log('Verificando DATA:', window.DATA);
-        switch (DATA.name) {
-            case "home":
-                console.log('Renderizando vista principal (home)');
-                renderHomeView();
-                break;
-            case "category":
-                console.log('Renderizando vista de categoría');
-                renderCategoryView();
-                break;
-            case "course":
-                let courseId = new URLSearchParams(window.location.search).get('id')||1;
-                console.log(`Buscando curso con ID: ${courseId}`);
-                const course = getCourseById(courseId);
-                console.log('Curso encontrado:', course);
-                if (course) {
-                    updateState({ selectedCourse: course });
-                    console.log('Estado actualizado, renderizando curso...');
-                    renderCourseDetails();
-                } else {
-                    console.error(`Curso con ID ${courseId} no encontrado`);
-                    const firstCourse = courses[0];
-                    if (firstCourse) {
-                        console.log('Mostrando primer curso como fallback:', firstCourse);
-                        updateState({ selectedCourse: firstCourse });
-                        renderCourseDetails();
-                    } else {
-                        showErrorMessage(`Curso con ID ${courseId} no encontrado`);
-                    }
-                }
-                break;
-            default: 
-                renderHomeView();
-                break;
-        }
         // Configurar event listeners
+        console.log('👂 [APP] Configurando event listeners...');
         setupEventListeners();
-        console.log('Event listeners configurados');
+        console.log('✅ [APP] Event listeners configurados');
+        
+        console.log('🎯 [APP] loadPageContent completado exitosamente');
         
     } catch (error) {
-        console.error('Error al inicializar la aplicación:', error);
+        console.error('❌ [APP] Error en loadPageContent:', error);
         showErrorMessage('Error al cargar la aplicación: ' + error.message);
+        throw error; // Re-lanzar para que main() lo capture
     }
 }
 
@@ -465,9 +488,6 @@ function setupEventListeners() {
 export {
     selectCourse,
     renderCoursesGrid,
-    renderCategoryView,
-    renderHomeView,
-    renderCourseDetails,
     enrollInCourse,
     previewCourse,
     exploreAllCourses,

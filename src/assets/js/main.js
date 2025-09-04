@@ -1,6 +1,7 @@
 // Punto de entrada principal de la aplicación
 // Este archivo orquesta la carga de todos los módulos
 import { loadPageContent } from './modules/app.js';
+import { initRouter } from './router.js';
 // Función para mostrar mensajes de error al usuario
 function showErrorMessage(message) {
     // Crear elemento de error si no existe
@@ -35,10 +36,23 @@ function showErrorMessage(message) {
 // Función principal de inicialización
 async function main() {
     try {
+        console.log('🚀 [MAIN] Iniciando aplicación...');
+        
+        // Cargar secciones comunes (header, footer)
+        console.log('📥 [MAIN] Cargando secciones (header/footer)...');
         await loadPageContent();
-        document.body.querySelector("main").classList.remove("hidden");
+        console.log('✅ [MAIN] Secciones cargadas correctamente');
+        
+        // Inicializar router SPA
+        console.log('🌐 [MAIN] Inicializando router SPA...');
+        const router = initRouter();
+        console.log('✅ [MAIN] Router inicializado:', router);
+        
+        console.log('🎉 [MAIN] Aplicación inicializada correctamente');
+        
     } catch (error) {
-        showErrorMessage('Hubo un problema al cargar la aplicación.', error);
+        console.error('❌ [MAIN] Error crítico en main():', error);
+        showErrorMessage('Hubo un problema al cargar la aplicación: ' + error.message);
     }
 }
 

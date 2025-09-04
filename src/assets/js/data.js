@@ -186,11 +186,11 @@ function getOtherCourses(excludeCourseId = null) {
 const navLinks = [
     { name: 'Inicio', href: '/', navs: [] },
     { name: 'Cursos', href: '#' , navs: [] },
-    { name: 'Cochabamba', href: 'https://www.upds.edu.bo/sede/cochabamba/', navs: [] },
-    { name: 'Mikrotik', href: '/mikrotik.html', navs: [
-        {name: "Curso Mikrotik 1", href: "/curso.html?id=1"},
-        {name: "Curso Mikrotik 2", href: "/curso.html?id=2"},
-        {name: "Curso Mikrotik 3", href: "/curso.html?id=3"},
+    { name: 'Cochabamba', href: '/cochabamba', navs: [] },
+    { name: 'Mikrotik', href: '/mikrotik', navs: [
+        {name: "Curso Mikrotik 1", href: "/curso?id=1"},
+        {name: "Curso Mikrotik 2", href: "/curso?id=2"},
+        {name: "Curso Mikrotik 3", href: "/curso?id=3"},
     ] },
 ];
 
@@ -207,12 +207,21 @@ const sections = [
         let link = navTop.querySelectorAll('a')[DATA.headIndex];
         let elementorHeader = document.getElementById("elementor-header");
         let resizeHeader = () => {
-            elementorHeader.style.left = `${link.offsetLeft+link.offsetWidth/2}px`;
-            elementorHeader.classList.add("active");
+            if (link && elementorHeader) {
+                // Asegurar que la flecha se posiciona correctamente
+                requestAnimationFrame(() => {
+                    elementorHeader.style.left = `${link.offsetLeft + link.offsetWidth/2}px`;
+                    elementorHeader.classList.add("active");
+                });
+            }
         };
         window.addEventListener('resize', resizeHeader);
-        if (document.readyState === 'complete') setTimeout(resizeHeader, 100);
-        else window.addEventListener('load', resizeHeader);
+        // Mejorar el timing para evitar animaciones raras
+        if (document.readyState === 'complete') {
+            setTimeout(resizeHeader, 150);
+        } else {
+            window.addEventListener('load', resizeHeader);
+        }
     }],
     ['footer-section', '/assets/sections/footer.html', ()=>{}]
 ];

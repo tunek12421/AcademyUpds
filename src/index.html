@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/assets/css/main.css">
     <script>
         const DATA={
-            headIndex: 0,   //ID del enlace en el encabezado
-            name: "home",   //Nombre de la vista
+            headIndex: 0,   //ID del enlace en el encabezado (se actualiza dinámicamente)
+            name: "home",   //Nombre de la vista (se actualiza dinámicamente)
         };
     </script>
     <script src="/assets/js/main.js" type="module"></script>
@@ -17,11 +17,11 @@
     <!-- Header -->
     <section id="header-section"></section>
     <!-- Main Content -->
+    <!-- Main Content - SPA Container -->
     <main class="container mx-auto px-4 py-8 hidden">
-        <!-- Tabs -->
         <div class="w-full">
-            <!-- General Tab Content -->
-            <div id="content-general" class="tab-content space-y-8">
+            <div class="space-y-8">
+                <!-- El contenido se carga dinámicamente aquí por el router -->
                 <!-- Hero Section -->
                 <div class="relative rounded-lg overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1739956802238-2f37aefec7e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGFjYWRlbXl8ZW58MXx8fHwxNzU1ODEyMDU0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 

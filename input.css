@@ -1,0 +1,19 @@
+/*Font awesome*/
+@import "node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
+/* Directivas de Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  src: url("./src/assets/webfonts/fa-solid-900.woff2") format("woff2"),
+       url("./src/assets/webfonts/fa-solid-900.woff") format("woff");
+}
+:root {
+  --color-primary: theme('colors.primary.DEFAULT');
+  --color-secondary: theme('colors.secondary.DEFAULT');
+}

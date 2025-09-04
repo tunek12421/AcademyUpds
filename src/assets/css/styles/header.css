@@ -1,0 +1,259 @@
+/* ===========================================
+   UPDS HEADER LAYOUT - MTCNA COURSE
+   Header exacto de https://tunek12421.github.io/CursoMikrotikUpds/
+   =========================================== */
+
+/* UPDS Header Container */
+.upds-header {
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Top Section (Logos + Navigation) */
+.upds-header-top {
+  position: relative;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+}
+
+.elementor-icon-header {
+  position: absolute;
+  color: var(--color-primary);
+  font-size: 85px;
+  bottom: -85px;
+  margin-left: -50px;
+  transition: transform 0.3s;
+}
+
+.elementor-icon-header.active {
+  transform: translateY(-20px);
+}
+
+/* Logo Container */
+.upds-header-logo-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 0 30px;
+}
+
+/* Left Logo */
+.upds-header-logo-left {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.upds-logo-left {
+  height: 83px;
+  width: auto;
+  aspect-ratio: 1/1;
+}
+
+/* Top Navigation (Center) */
+.upds-nav-top {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.upds-nav-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  padding: 1rem;
+  font-family: "Encode Sans Condensed", Sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.upds-nav-link:hover {
+  text-decoration: none;
+  transform: translateY(-5px);
+  transition: transform 0.3s ease-out;
+}
+
+/* Right Logo */
+.upds-header-logo-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.upds-logo-right {
+  height: 45.5px;
+  width: auto;
+  aspect-ratio: 4/1;
+}
+
+/* Header Bottom Section (Contact Info) */
+.upds-header-bottom {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-primary);
+  padding: 0.64rem 0;
+  min-height: 45px;
+  z-index: 1;
+}
+
+.upds-header-contact {
+  display: flex;
+  gap: 25px;
+  color: #fff;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 0;
+}
+
+.upds-contact-link {
+  fill: white;
+  padding: 0px;
+  font-family: "Encode Sans Condensed", Sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: -0.3px;
+}
+
+.upds-contact-link:hover {
+  text-decoration: none;
+}
+
+/* === RESPONSIVE DESIGN === */
+
+/* Large Screens */
+@media (max-width: 1200px) {
+  .upds-header-logo-container {
+    max-width: 1000px;
+    gap: 35px;
+    padding: 0 25px;
+  }
+  
+  .upds-nav-top {
+    font-size: 0.9rem;
+  }
+  
+  .upds-header-contact {
+    gap: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .upds-logo-left {
+    height: 73px;
+  }
+  
+  .upds-logo-right {
+    height: 41.5px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .upds-header-logo-container {
+    max-width: 100%;
+    padding: 0 20px;
+    gap: 25px;
+    justify-content: space-between;
+  }
+  
+  .upds-logo-left {
+    height: 68px;
+  }
+  
+  .upds-logo-right {
+    height: 39.5px;
+  }
+  
+  .upds-nav-top {
+    font-size: 0.85rem;
+    padding: 0;
+  }
+  
+  .upds-header-contact {
+    gap: 15px;
+    font-size: 0.85rem;
+    padding: 0;
+  }
+  
+  .upds-nav-link {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .upds-header-top {
+    min-height: auto;
+  }
+    
+  .upds-header-logo-container {
+    gap: 8px;
+    padding: 10px;
+  }
+  
+  .upds-logo-left {
+    height: 55px;
+  }
+  
+  .upds-logo-right {
+    height: 32px;
+  }
+  
+  .upds-nav-top {
+    font-size: 0.8rem;
+    text-align: center;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .upds-header-bottom {
+    flex-wrap: wrap;
+  }
+  
+  .upds-header-contact {
+    gap: 5px;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0;
+  }
+  
+  .upds-nav-link {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+  .upds-logo-left {
+    height: 45px;
+  }
+  
+  .upds-logo-right {
+    height: 28px;
+  }
+  
+  .upds-header-contact {
+    font-size: 0.75rem;
+  }
+  
+  .upds-nav-link {
+    font-size: 0.85rem;
+  }
+}

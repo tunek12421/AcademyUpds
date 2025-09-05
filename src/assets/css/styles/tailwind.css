@@ -8825,8 +8825,8 @@ video {
   inset:0px
 }
 
-.bottom-\[-60px\]{
-  bottom:-60px
+.bottom-\[-40px\]{
+  bottom:-40px
 }
 
 .left-3{
@@ -8973,12 +8973,20 @@ video {
   height:24rem
 }
 
-.min-h-\[45px\]{
-  min-height:45px
+.max-h-64{
+  max-height:16rem
 }
 
-.min-h-\[90px\]{
-  min-height:90px
+.max-h-screen{
+  max-height:100vh
+}
+
+.min-h-\[30px\]{
+  min-height:30px
+}
+
+.min-h-\[60px\]{
+  min-height:60px
 }
 
 .min-h-screen{
@@ -9129,6 +9137,10 @@ video {
 
 .overflow-hidden{
   overflow:hidden
+}
+
+.overflow-y-auto{
+  overflow-y:auto
 }
 
 .truncate{
@@ -9297,6 +9309,11 @@ video {
   padding-bottom:0.125rem
 }
 
+.py-1{
+  padding-top:0.25rem;
+  padding-bottom:0.25rem
+}
+
 .py-1\.5{
   padding-top:0.375rem;
   padding-bottom:0.375rem
@@ -9367,11 +9384,6 @@ video {
 .text-4xl{
   font-size:2.25rem;
   line-height:2.5rem
-}
-
-.text-6xl{
-  font-size:3.75rem;
-  line-height:1
 }
 
 .text-base{
@@ -9714,8 +9726,8 @@ video {
 }
 
 @media (min-width: 1024px){
-  .lg\:bottom-\[-85px\]{
-    bottom:-85px
+  .lg\:bottom-\[-50px\]{
+    bottom:-50px
   }
 
   .lg\:col-span-2{
@@ -9746,13 +9758,13 @@ video {
     gap:2rem
   }
 
-  .lg\:py-3{
-    padding-top:0.75rem;
-    padding-bottom:0.75rem
+  .lg\:py-2{
+    padding-top:0.5rem;
+    padding-bottom:0.5rem
   }
 
-  .lg\:text-7xl{
-    font-size:4.5rem;
+  .lg\:text-5xl{
+    font-size:3rem;
     line-height:1
   }
 
@@ -9762,8 +9774,8 @@ video {
 }
 
 @media (min-width: 1280px){
-  .xl\:text-8xl{
-    font-size:6rem;
+  .xl\:text-6xl{
+    font-size:3.75rem;
     line-height:1
   }
 }

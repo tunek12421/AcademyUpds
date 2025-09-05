@@ -114,19 +114,28 @@ a:focus-visible {
 
 /* Mejoras para la responsividad */
 @media (max-width: 768px) {
-    .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
+    /* Eliminado el override del container para usar padding consistente de Tailwind */
     
     .grid-cols-2 {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
     
-    .lg\:col-span-2 {
-        grid-column: span 1;
-    }
+    /* Eliminado .lg\:col-span-2 override - Tailwind ya maneja esto correctamente */
+}
+
+/* Prevenir altura excesiva en componentes */
+.lg\:col-span-2 {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+/* Asegurar que las imágenes de contenido no causen overflow */
+.lg\:col-span-2 img,
+#course-main-card img,
+#course-content-card img {
+    max-width: 100% !important;
+    height: auto !important;
 }
 
 /* Estilos para mejorar la legibilidad */

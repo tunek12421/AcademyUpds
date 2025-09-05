@@ -278,7 +278,7 @@ export function renderCourseView(course) {
     // Crear la estructura de la vista de curso
     mainContainer.innerHTML = `
         <div class="grid lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-6 max-h-screen overflow-y-auto">
                 <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
                 <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
                 <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
@@ -313,7 +313,7 @@ function renderCourseDetails(course) {
         const courseHTML = `
             <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-2 space-y-6 max-h-screen overflow-y-auto">
                     <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createCourseDetails(course)}
                     </div>

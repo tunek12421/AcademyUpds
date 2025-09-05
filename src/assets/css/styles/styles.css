@@ -142,7 +142,7 @@ main {
 
 /* Solo agregar padding para páginas con sticky behavior */
 body:not(.no-sticky-page) main {
-    padding-top: 120px; /* Altura optimizada para el estado inicial */
+    padding-top: 165px; /* Altura completa: parte blanca (105px) + parte azul (60px) */
 }
 
 /* Header: comportamiento normal */
@@ -168,36 +168,37 @@ header > div:last-child {
     z-index: 1001 !important;
 }
 
-/* Solo activar fixed cuando se necesite sticky behavior */
+/* Solo activar fixed siempre para páginas sticky, sin cambios de position */
 body:not(.no-sticky-page) header > div:last-child {
-    position: absolute !important; /* Usar absolute en lugar de fixed para evitar espacio vacío */
-    top: 100% !important; /* Justo después de la parte blanca */
+    position: fixed !important; /* Siempre fixed para evitar saltos */
+    top: 105px !important; /* Inicialmente debajo de la parte blanca */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
     z-index: 9999 !important;
-    transition: all 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) !important; /* Transición muy suave */
+    transition: top 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                backdrop-filter 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-    transform: translateY(0) translateZ(0) !important;
+    transform: translateY(0) translateZ(0) scale(1) !important;
     backface-visibility: hidden !important;
-    will-change: position, top, transform, box-shadow, backdrop-filter !important;
+    will-change: top, transform, box-shadow, backdrop-filter !important;
     backdrop-filter: blur(0px) saturate(100%) !important;
     -webkit-backdrop-filter: blur(0px) saturate(100%) !important;
+    filter: brightness(1) !important;
+    perspective: 1000px !important;
 }
 
-/* Cuando se hace sticky, cambiar a fixed */
+/* Cuando se hace sticky, solo cambiar el top sin cambiar position */
 body:not(.no-sticky-page) header > div:last-child.blue-header-sticky {
-    position: fixed !important;
-    top: 0 !important; /* Se mueve hacia arriba */
-}
-
-/* Estilos adicionales cuando está sticky */
-body:not(.no-sticky-page) header > div:last-child.blue-header-sticky {
+    top: 0 !important; /* Deslizar hacia arriba cambiando solo top */
     min-height: 90px !important; /* Altura más compacta cuando se desprende */
-    box-shadow: 0 12px 40px rgba(0,0,0,0.25) !important;
-    backdrop-filter: blur(12px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-    transform: translateY(0) scale(1.001) translateZ(0) !important; /* Sutil escala */
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.08) !important;
+    backdrop-filter: blur(20px) saturate(180%) brightness(1.02) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.02) !important;
+    transform: translateY(0) scale(1.002) translateZ(0) !important; /* Sutil escala más pronunciada */
+    filter: brightness(1.05) contrast(1.02) !important; /* Mejora visual sutil */
 }
 
 /* Las páginas .no-sticky-page ya tienen comportamiento normal por defecto
@@ -223,16 +224,21 @@ header > div:last-child.blue-header-sticky .upds-header-contact {
 .blue-header-logos {
     position: absolute !important;
     top: 50% !important;
-    transform: translateY(-50%) !important;
+    transform: translateY(-50%) scale(0.9) translateZ(0) !important;
     opacity: 0 !important;
-    transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s !important; /* Delay para suavidad */
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s, 
+                opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s,
+                transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s !important; /* Delay más largo para suavidad */
     z-index: 10001 !important;
     pointer-events: none !important;
+    filter: brightness(1) contrast(1) !important;
 }
 
 /* Solo mostrar cuando el header está desprendido */
 header > div:last-child.blue-header-sticky .blue-header-logos {
     opacity: 1 !important;
+    transform: translateY(-50%) scale(1) translateZ(0) !important; /* Escala normal cuando se muestra */
+    filter: brightness(1.02) contrast(1.01) !important; /* Sutil mejora visual */
 }
 
 .blue-header-logo-left {

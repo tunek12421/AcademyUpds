@@ -437,42 +437,56 @@ class SPARouter {
                 if (scrollY >= this.whiteHeaderHeight) {
                     // Activar sticky: solo agregar clase para transición CSS
                     if (!this.blueHeader.classList.contains('blue-header-sticky')) {
-                        this.blueHeader.classList.add('blue-header-sticky');
                         console.log('🌊 [STICKY-HEADER] Desprendimiento suave iniciado en curso...');
                         
-                        // Ajustar padding del main cuando se vuelve sticky
-                        const main = document.querySelector('main');
-                        if (main) {
-                            main.style.paddingTop = '60px'; // Solo altura de la parte azul cuando está sticky
-                        }
-                        
-                        // Mostrar logos con delay
-                        setTimeout(() => {
-                            const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
-                            logos.forEach(logo => {
-                                logo.style.setProperty('opacity', '1', 'important');
-                                logo.style.setProperty('transition', 'opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)', 'important');
-                                console.log('👁️ [STICKY-HEADER] Logo mostrado:', logo.className);
-                            });
-                        }, 300);
+                        // Usar requestAnimationFrame para una transición más suave
+                        requestAnimationFrame(() => {
+                            this.blueHeader.classList.add('blue-header-sticky');
+                            
+                            // Ajustar padding del main cuando se vuelve sticky con transición más suave
+                            const main = document.querySelector('main');
+                            if (main) {
+                                main.style.transition = 'padding-top 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+                                main.style.paddingTop = '105px'; // Solo altura de la parte blanca cuando está sticky
+                            }
+                            
+                            // Los logos ya se mostrarán automáticamente con CSS, solo necesitamos activar la transición
+                            setTimeout(() => {
+                                const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
+                                logos.forEach(logo => {
+                                    // Usar las transiciones CSS nativas que ya están definidas
+                                    logo.style.setProperty('opacity', '1', 'important');
+                                    logo.style.setProperty('transform', 'translateY(-50%) scale(1) translateZ(0)', 'important');
+                                    console.log('👁️ [STICKY-HEADER] Logo mostrado con transición suave:', logo.className);
+                                });
+                            }, 100); // Delay más corto ya que CSS maneja la transición
+                        });
                     }
                 } else {
                     // Desactivar sticky: solo remover clase para transición CSS
                     if (this.blueHeader.classList.contains('blue-header-sticky')) {
-                        // Restaurar padding original del main
-                        const main = document.querySelector('main');
-                        if (main) {
-                            main.style.paddingTop = '120px'; // Altura completa cuando no está sticky
-                        }
-                        
-                        // Ocultar logos primero
-                        const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
-                        logos.forEach(logo => {
-                            logo.style.setProperty('opacity', '0', 'important');
-                        });
-                        
-                        this.blueHeader.classList.remove('blue-header-sticky');
                         console.log('🌊 [STICKY-HEADER] Reacoplamiento suave iniciado...');
+                        
+                        // Usar requestAnimationFrame para una transición más suave
+                        requestAnimationFrame(() => {
+                            // Ocultar logos primero
+                            const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
+                            logos.forEach(logo => {
+                                logo.style.setProperty('opacity', '0', 'important');
+                            });
+                            
+                            // Restaurar padding original del main con transición más suave
+                            const main = document.querySelector('main');
+                            if (main) {
+                                main.style.transition = 'padding-top 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+                                main.style.paddingTop = '165px'; // Altura completa cuando no está sticky
+                            }
+                            
+                            // Remover clase sticky después de un pequeño delay
+                            setTimeout(() => {
+                                this.blueHeader.classList.remove('blue-header-sticky');
+                            }, 50);
+                        });
                     }
                 }
             }

@@ -9025,10 +9025,6 @@ video {
   max-width:42rem
 }
 
-.max-w-7xl{
-  max-width:80rem
-}
-
 .flex-1{
   flex:1 1 0%
 }
@@ -9689,11 +9685,6 @@ video {
   .sm\:gap-4{
     gap:1rem
   }
-
-  .sm\:px-6{
-    padding-left:1.5rem;
-    padding-right:1.5rem
-  }
 }
 
 @media (min-width: 768px){
@@ -9753,11 +9744,6 @@ video {
 
   .lg\:gap-8{
     gap:2rem
-  }
-
-  .lg\:px-8{
-    padding-left:2rem;
-    padding-right:2rem
   }
 
   .lg\:py-3{

@@ -1,0 +1,60 @@
+{
+  "rewrites": [
+    {
+      "source": "/curso",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/curso/(.*)",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/cursos",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/cursos/(.*)",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/mikrotik",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/mikrotik/(.*)",
+      "destination": "/spa.html"
+    },
+    {
+      "source": "/((?!api|_next/static|_next/image|favicon.ico|assets).*)",
+      "destination": "/spa.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

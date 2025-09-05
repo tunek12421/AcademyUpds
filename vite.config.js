@@ -73,6 +73,10 @@ export default defineConfig({
         {
           src: '../_redirects',
           dest: '.'
+        },
+        {
+          src: '../vercel.json',
+          dest: '.'
         }
       ]
     })

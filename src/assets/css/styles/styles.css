@@ -175,10 +175,87 @@ header > div:last-child {
 /* Estado desprendido: se mueve suavemente hacia arriba */
 header > div:last-child.blue-header-sticky {
     top: 0 !important; /* Se desliza hacia arriba con transición suave */
+    min-height: 90px !important; /* Altura más compacta cuando se desprende */
     box-shadow: 0 12px 40px rgba(0,0,0,0.25) !important;
     backdrop-filter: blur(12px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
     transform: translateY(0) scale(1.001) translateZ(0) !important; /* Sutil escala */
+}
+
+/* El contenedor debe ser relativo para los logos absolutos */
+header > div:last-child.blue-header-sticky > div {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 90px !important;
+}
+
+/* Ajustar los enlaces cuando está desprendido */
+header > div:last-child.blue-header-sticky .upds-header-contact {
+    padding: 1.5rem 6rem !important; /* Más padding horizontal para evitar logos */
+    font-size: 1.1rem !important; /* Texto un poco más grande */
+    justify-content: center !important; /* Mantener centrado */
+    margin: 0 auto !important; /* Centrar el container */
+}
+
+/* Logos que aparecen en la parte azul cuando está desprendida */
+.blue-header-logos {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    opacity: 0 !important;
+    transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) 0.2s !important; /* Delay para suavidad */
+    z-index: 10001 !important;
+    pointer-events: none !important;
+}
+
+/* Solo mostrar cuando el header está desprendido */
+header > div:last-child.blue-header-sticky .blue-header-logos {
+    opacity: 1 !important;
+}
+
+.blue-header-logo-left {
+    left: 1rem !important;
+    height: 4.5rem !important; /* Aumentado de 4rem a 4.5rem */
+    width: auto !important;
+}
+
+.blue-header-logo-right {
+    right: 1rem !important;
+    height: 2.5rem !important; /* Tamaño similar a los de arriba */
+    width: auto !important;
+}
+
+/* Responsive para los logos y contenido */
+@media (min-width: 640px) {
+    .blue-header-logo-left {
+        left: 2rem !important;
+    }
+    
+    .blue-header-logo-right {
+        right: 2rem !important;
+    }
+    
+    /* Más padding en pantallas grandes */
+    header > div:last-child.blue-header-sticky .upds-header-contact {
+        padding: 1.5rem 8rem !important;
+    }
+}
+
+@media (max-width: 640px) {
+    /* En móviles, reducir padding y tamaño de logos */
+    .blue-header-logo-left {
+        height: 3.5rem !important; /* Aumentado proporcionalmente para móviles */
+    }
+    
+    .blue-header-logo-right {
+        height: 1.8rem !important;
+    }
+    
+    header > div:last-child.blue-header-sticky .upds-header-contact {
+        padding: 1.5rem 4rem !important; /* Menos padding en móviles */
+        font-size: 1rem !important;
+    }
 }
 
 

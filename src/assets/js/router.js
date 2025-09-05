@@ -185,10 +185,26 @@ class SPARouter {
                         if (!this.blueHeader.classList.contains('blue-header-sticky')) {
                             this.blueHeader.classList.add('blue-header-sticky');
                             console.log('🌊 [STICKY-HEADER] Desprendimiento suave iniciado...');
+                            
+                            // Mostrar logos con delay
+                            setTimeout(() => {
+                                const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
+                                logos.forEach(logo => {
+                                    logo.style.setProperty('opacity', '1', 'important');
+                                    logo.style.setProperty('transition', 'opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)', 'important');
+                                    console.log('👁️ [STICKY-HEADER] Logo mostrado:', logo.className);
+                                });
+                            }, 300);
                         }
                     } else {
                         // Desactivar sticky: solo remover clase para transición CSS
                         if (this.blueHeader.classList.contains('blue-header-sticky')) {
+                            // Ocultar logos primero
+                            const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
+                            logos.forEach(logo => {
+                                logo.style.setProperty('opacity', '0', 'important');
+                            });
+                            
                             this.blueHeader.classList.remove('blue-header-sticky');
                             console.log('🌊 [STICKY-HEADER] Reacoplamiento suave iniciado...');
                         }
@@ -232,6 +248,7 @@ class SPARouter {
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
             console.log('🔄 [STICKY-HEADER] Inicializando navegación de secciones');
+            
             // Crear enlaces de navegación para todas las secciones
             navBottom.innerHTML = `
                 <a href="#hero-section" data-section="hero-section" class="upds-section-link hover:text-gray-200 transition-colors">
@@ -244,6 +261,33 @@ class SPARouter {
                     Nosotros
                 </a>
             `;
+            
+            // Agregar logos que aparecerán cuando se desprenda
+            const blueHeader = navBottom.parentElement;
+            if (blueHeader && !blueHeader.querySelector('.blue-header-logos')) {
+                // Logo izquierdo - UPDS2.png
+                const logoLeft = document.createElement('img');
+                logoLeft.src = '/assets/images/logos/UPDS2.png';
+                logoLeft.alt = 'UPDS';
+                logoLeft.className = 'blue-header-logos blue-header-logo-left';
+                logoLeft.style.cssText = 'position: absolute !important; opacity: 0; left: 1rem !important; top: 50% !important; transform: translateY(-50%) !important; height: 4.5rem !important; width: auto !important; z-index: 10001 !important; transition: opacity 0.6s ease !important;';
+                
+                // Logo derecho - UPDS5.png
+                const logoRight = document.createElement('img');
+                logoRight.src = '/assets/images/logos/UPDS5.png';
+                logoRight.alt = 'UPDS';
+                logoRight.className = 'blue-header-logos blue-header-logo-right';
+                logoRight.style.cssText = 'position: absolute !important; opacity: 0; right: 1rem !important; top: 50% !important; transform: translateY(-50%) !important; height: 2.5rem !important; width: auto !important; z-index: 10001 !important; transition: opacity 0.6s ease !important;';
+                
+                // Agregar logos al header azul
+                blueHeader.appendChild(logoLeft);
+                blueHeader.appendChild(logoRight);
+                
+                console.log('🎨 [STICKY-HEADER] Logos agregados al header azul');
+                console.log('🎨 [STICKY-HEADER] Logo izquierdo:', logoLeft.src, logoLeft.style.cssText);
+                console.log('🎨 [STICKY-HEADER] Logo derecho:', logoRight.src, logoRight.style.cssText);
+            }
+            
             console.log('✅ [STICKY-HEADER] Navegación de secciones inicializada');
         }
     }

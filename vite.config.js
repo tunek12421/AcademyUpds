@@ -67,6 +67,14 @@ export default defineConfig({
           dest: 'assets/images/instructor'
         },
         {
+          src: 'assets/images/logos/UPDS2.png',
+          dest: 'assets/images/logos'
+        },
+        {
+          src: 'assets/images/logos/UPDS5.png',
+          dest: 'assets/images/logos'
+        },
+        {
           src: '../.htaccess',
           dest: '.'
         },

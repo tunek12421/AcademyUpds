@@ -142,7 +142,8 @@ main {
 
 /* Solo agregar padding para páginas con sticky behavior */
 body:not(.no-sticky-page) main {
-    padding-top: 165px; /* Altura completa: parte blanca (105px) + parte azul (60px) */
+    padding-top: 120px; /* Altura reducida para primera carga */
+    margin-top: -25px; /* Reducir más el espacio entre parte azul y contenido */
 }
 
 /* Header: comportamiento normal */
@@ -171,7 +172,7 @@ header > div:last-child {
 /* Solo activar fixed siempre para páginas sticky, sin cambios de position */
 body:not(.no-sticky-page) header > div:last-child {
     position: fixed !important; /* Siempre fixed para evitar saltos */
-    top: 105px !important; /* Inicialmente debajo de la parte blanca */
+    top: 105px !important; /* Más espaciado con la parte blanca */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;

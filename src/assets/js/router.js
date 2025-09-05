@@ -447,7 +447,7 @@ class SPARouter {
                             const main = document.querySelector('main');
                             if (main) {
                                 main.style.transition = 'padding-top 0.7s cubic-bezier(0.19, 1, 0.22, 1)';
-                                main.style.paddingTop = '105px'; // Solo altura de la parte blanca cuando está sticky
+                                main.style.paddingTop = '90px'; // Solo altura de la parte blanca cuando está sticky
                             }
                             
                             // Los logos aparecerán automáticamente con las transiciones CSS mejoradas
@@ -471,7 +471,7 @@ class SPARouter {
                             const main = document.querySelector('main');
                             if (main) {
                                 main.style.transition = 'padding-top 0.7s cubic-bezier(0.19, 1, 0.22, 1)';
-                                main.style.paddingTop = '165px'; // Altura completa cuando no está sticky
+                                main.style.paddingTop = '120px'; // Reducir padding cuando no está sticky
                             }
                             
                             // Remover clase sticky después de un delay sincronizado con las transiciones

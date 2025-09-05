@@ -152,18 +152,15 @@ class SPARouter {
     initHomeScrollDetection() {
         console.log('🔄 [STICKY-HEADER] Inicializando detección de scroll para header sticky');
         
-        // Calcular altura real del header y ajustar padding
-        setTimeout(() => {
-            const header = document.querySelector('header');
-            if (header) {
-                const headerHeight = header.offsetHeight;
-                const main = document.querySelector('main');
-                if (main) {
-                    main.style.paddingTop = `${headerHeight + 20}px`; // +20px para un poco de espacio extra
-                    console.log('📏 [STICKY-HEADER] Altura del header:', headerHeight + 'px, padding aplicado:', (headerHeight + 20) + 'px');
-                }
-            }
-        }, 100);
+        // Obtener referencias a los elementos del header
+        this.whiteHeader = document.querySelector('header > div:first-child');
+        this.blueHeader = document.querySelector('header > div:last-child');
+        
+        if (this.whiteHeader && this.blueHeader) {
+            // Calcular la altura de la parte blanca para saber cuándo activar sticky
+            this.whiteHeaderHeight = this.whiteHeader.offsetHeight;
+            console.log('📏 [STICKY-HEADER] Altura parte blanca:', this.whiteHeaderHeight + 'px');
+        }
         
         // Remover listener anterior si existe
         if (this.scrollListener) {
@@ -177,27 +174,56 @@ class SPARouter {
             console.log('📋 [STICKY-HEADER] Secciones cargadas:', homeSections.map(s => s.id));
             
             this.scrollListener = () => {
-                const scrollPosition = window.scrollY + 100; // Offset para activar antes
+                const scrollY = window.scrollY;
+                const scrollPosition = scrollY + 100; // Offset para activar antes
                 let currentSection = homeSections[0]; // Default: hero section
                 
-                // Debug scroll position y elementos
-                if (window.scrollY > 0 && window.scrollY % 200 === 0) {
-                    console.log('📏 [STICKY-HEADER] Scroll position:', window.scrollY);
-                    homeSections.forEach(section => {
-                        const element = document.getElementById(section.id);
-                        if (element) {
-                            console.log(`📍 [STICKY-HEADER] Sección ${section.id}: offsetTop=${element.offsetTop}, height=${element.offsetHeight}`);
-                        } else {
-                            console.log(`❌ [STICKY-HEADER] Elemento ${section.id} no encontrado en DOM`);
+                // Control del sticky de la parte azul con efecto inmediato pero suave
+                if (this.blueHeader) {
+                    if (scrollY >= this.whiteHeaderHeight) {
+                        // Activar sticky: inmediato con animación visual
+                        if (!this.blueHeader.classList.contains('blue-header-sticky')) {
+                            // Limpiar clases previas
+                            this.blueHeader.classList.remove('blue-header-reattaching');
+                            
+                            // Aplicar sticky inmediatamente + animación visual
+                            this.blueHeader.classList.add('blue-header-sticky', 'blue-header-detaching');
+                            console.log('🔵 [STICKY-HEADER] Desprendimiento inmediato - STICKY activo');
+                            
+                            // Remover clase de animación después del efecto visual
+                            setTimeout(() => {
+                                if (this.blueHeader) {
+                                    this.blueHeader.classList.remove('blue-header-detaching');
+                                }
+                            }, 600); // Solo para la animación visual
                         }
-                    });
+                    } else {
+                        // Desactivar sticky: inmediato con animación visual
+                        if (this.blueHeader.classList.contains('blue-header-sticky')) {
+                            // Remover sticky inmediatamente + animación visual
+                            this.blueHeader.classList.remove('blue-header-sticky', 'blue-header-detaching');
+                            this.blueHeader.classList.add('blue-header-reattaching');
+                            console.log('⚪ [STICKY-HEADER] Reacoplamiento inmediato - NORMAL activo');
+                            
+                            // Remover clase de animación después del efecto visual
+                            setTimeout(() => {
+                                if (this.blueHeader) {
+                                    this.blueHeader.classList.remove('blue-header-reattaching');
+                                }
+                            }, 500); // Solo para la animación visual
+                        }
+                    }
                 }
                 
-                // Encontrar la sección actual basada en scroll - ajustar para header fijo
+                // Debug scroll position y elementos (menos frecuente)
+                if (scrollY > 0 && scrollY % 200 === 0) {
+                    console.log('📏 [STICKY-HEADER] Scroll position:', scrollY);
+                }
+                
+                // Encontrar la sección actual basada en scroll
                 for (const section of homeSections) {
                     const element = document.getElementById(section.id);
                     if (element) {
-                        // Ajustar por la altura del header fijo (140px - 40px margin = 100px efectivo)
                         const elementTop = element.offsetTop - 100;
                         if (scrollPosition >= elementTop) {
                             currentSection = section;
@@ -208,7 +234,6 @@ class SPARouter {
                 // Actualizar header solo si cambió la sección
                 if (this.currentHomeSection !== currentSection.id) {
                     console.log('📍 [STICKY-HEADER] Cambio de sección:', this.currentHomeSection, '→', currentSection.id);
-                    console.log('📏 [STICKY-HEADER] Header position:', document.querySelector('header').getBoundingClientRect().top);
                     this.currentHomeSection = currentSection.id;
                     this.updateHeaderForHomeSection(currentSection);
                 }
@@ -271,6 +296,13 @@ class SPARouter {
             window.removeEventListener('scroll', this.scrollListener);
             this.scrollListener = null;
             this.currentHomeSection = null;
+            
+            // Limpiar todos los estados de la parte azul
+            if (this.blueHeader) {
+                this.blueHeader.classList.remove('blue-header-sticky', 'blue-header-detaching', 'blue-header-reattaching');
+                console.log('🧹 [STICKY-HEADER] Todos los estados de animación removidos de la parte azul');
+            }
+            
             console.log('✅ [STICKY-HEADER] Scroll detection limpiado');
         }
     }

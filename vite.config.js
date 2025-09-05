@@ -6,6 +6,16 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
   root: 'src',
+  server: {
+    historyApiFallback: {
+      rewrites: [
+        { from: /^\/curso/, to: '/spa.html' },
+        { from: /^\/cursos/, to: '/spa.html' },
+        { from: /^\/mikrotik/, to: '/spa.html' },
+        { from: /./, to: '/spa.html' }
+      ]
+    }
+  },
   build: {
     outDir: '../dist',
     emptyOutDir: true,
@@ -56,6 +66,14 @@ export default defineConfig({
           src: 'assets/images/instructor/*',
           dest: 'assets/images/instructor'
         },
+        {
+          src: '../.htaccess',
+          dest: '.'
+        },
+        {
+          src: '../_redirects',
+          dest: '.'
+        }
       ]
     })
   ]

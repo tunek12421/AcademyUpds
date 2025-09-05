@@ -176,10 +176,10 @@ body:not(.no-sticky-page) header > div:last-child {
     right: 0 !important;
     width: 100% !important;
     z-index: 9999 !important;
-    transition: top 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-                transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-                box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-                backdrop-filter 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    transition: top 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+                transform 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+                box-shadow 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+                backdrop-filter 0.7s cubic-bezier(0.19, 1, 0.22, 1) !important;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     transform: translateY(0) translateZ(0) scale(1) !important;
     backface-visibility: hidden !important;
@@ -224,21 +224,32 @@ header > div:last-child.blue-header-sticky .upds-header-contact {
 .blue-header-logos {
     position: absolute !important;
     top: 50% !important;
-    transform: translateY(-50%) scale(0.9) translateZ(0) !important;
+    transform: translateY(-50%) scale(0.8) translateX(-10px) rotateY(-15deg) translateZ(0) !important;
     opacity: 0 !important;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s, 
-                opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s,
-                transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.3s !important; /* Delay más largo para suavidad */
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s, 
+                opacity 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s,
+                transform 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s !important; /* Transición más larga y suave */
     z-index: 10001 !important;
     pointer-events: none !important;
-    filter: brightness(1) contrast(1) !important;
+    filter: brightness(0.9) contrast(1) blur(2px) !important; /* Efecto inicial ligeramente desenfocado */
 }
 
 /* Solo mostrar cuando el header está desprendido */
 header > div:last-child.blue-header-sticky .blue-header-logos {
     opacity: 1 !important;
-    transform: translateY(-50%) scale(1) translateZ(0) !important; /* Escala normal cuando se muestra */
-    filter: brightness(1.02) contrast(1.01) !important; /* Sutil mejora visual */
+    transform: translateY(-50%) scale(1.02) translateX(0) rotateY(0deg) translateZ(0) !important; /* Efecto de entrada elegante */
+    filter: brightness(1.03) contrast(1.02) blur(0px) !important; /* Enfoque completo y brillo sutil */
+    animation: logoGlow 3s ease-in-out infinite alternate !important; /* Sutil animación de resplandor */
+}
+
+/* Animación sutil de resplandor para los logos */
+@keyframes logoGlow {
+    0% {
+        filter: brightness(1.03) contrast(1.02) drop-shadow(0 0 8px rgba(255,255,255,0.3)) !important;
+    }
+    100% {
+        filter: brightness(1.05) contrast(1.03) drop-shadow(0 0 12px rgba(255,255,255,0.5)) !important;
+    }
 }
 
 .blue-header-logo-left {

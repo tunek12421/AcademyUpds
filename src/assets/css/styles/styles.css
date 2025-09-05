@@ -135,9 +135,14 @@ body {
     min-height: 200vh;
 }
 
-/* Sin padding top ya que no hay header fijo */
+/* Por defecto sin padding */
 main {
-    padding-top: 0px; /* No hay header fijo */
+    padding-top: 0px;
+}
+
+/* Solo agregar padding para páginas con sticky behavior */
+body:not(.no-sticky-page) main {
+    padding-top: 120px; /* Altura optimizada para el estado inicial */
 }
 
 /* Header: comportamiento normal */
@@ -155,10 +160,18 @@ header > div:first-child {
     z-index: 1000 !important;
 }
 
-/* Parte azul del header: siempre fixed pero desplazado */
+/* Parte azul del header: por defecto posición normal */
 header > div:last-child {
-    position: fixed !important;
-    top: 105px !important; /* Inicialmente debajo de la parte blanca */
+    position: relative !important;
+    background-color: var(--color-primary) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    z-index: 1001 !important;
+}
+
+/* Solo activar fixed cuando se necesite sticky behavior */
+body:not(.no-sticky-page) header > div:last-child {
+    position: absolute !important; /* Usar absolute en lugar de fixed para evitar espacio vacío */
+    top: 100% !important; /* Justo después de la parte blanca */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
@@ -167,14 +180,19 @@ header > div:last-child {
     box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
     transform: translateY(0) translateZ(0) !important;
     backface-visibility: hidden !important;
-    will-change: top, transform, box-shadow, backdrop-filter !important;
+    will-change: position, top, transform, box-shadow, backdrop-filter !important;
     backdrop-filter: blur(0px) saturate(100%) !important;
     -webkit-backdrop-filter: blur(0px) saturate(100%) !important;
 }
 
-/* Estado desprendido: se mueve suavemente hacia arriba */
-header > div:last-child.blue-header-sticky {
-    top: 0 !important; /* Se desliza hacia arriba con transición suave */
+/* Cuando se hace sticky, cambiar a fixed */
+body:not(.no-sticky-page) header > div:last-child.blue-header-sticky {
+    position: fixed !important;
+    top: 0 !important; /* Se mueve hacia arriba */
+}
+
+/* Estilos adicionales cuando está sticky */
+body:not(.no-sticky-page) header > div:last-child.blue-header-sticky {
     min-height: 90px !important; /* Altura más compacta cuando se desprende */
     box-shadow: 0 12px 40px rgba(0,0,0,0.25) !important;
     backdrop-filter: blur(12px) saturate(180%) !important;
@@ -182,16 +200,8 @@ header > div:last-child.blue-header-sticky {
     transform: translateY(0) scale(1.001) translateZ(0) !important; /* Sutil escala */
 }
 
-/* Desactivar completamente el comportamiento sticky para ciertas páginas */
-header > div:last-child.no-sticky-behavior {
-    position: static !important; /* Cambiar de fixed a static */
-    top: auto !important;
-    transform: none !important;
-    transition: none !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important; /* Sombra normal */
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
+/* Las páginas .no-sticky-page ya tienen comportamiento normal por defecto
+   No necesitamos reglas adicionales porque la regla fixed solo aplica a body:not(.no-sticky-page) */
 
 /* El contenedor debe ser relativo para los logos absolutos */
 header > div:last-child.blue-header-sticky > div {

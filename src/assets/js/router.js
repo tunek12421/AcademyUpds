@@ -186,6 +186,12 @@ class SPARouter {
                             this.blueHeader.classList.add('blue-header-sticky');
                             console.log('🌊 [STICKY-HEADER] Desprendimiento suave iniciado...');
                             
+                            // Ajustar padding del main cuando se vuelve sticky
+                            const main = document.querySelector('main');
+                            if (main) {
+                                main.style.paddingTop = '60px'; // Solo altura de la parte azul cuando está sticky
+                            }
+                            
                             // Mostrar logos con delay
                             setTimeout(() => {
                                 const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
@@ -199,6 +205,12 @@ class SPARouter {
                     } else {
                         // Desactivar sticky: solo remover clase para transición CSS
                         if (this.blueHeader.classList.contains('blue-header-sticky')) {
+                            // Restaurar padding original del main
+                            const main = document.querySelector('main');
+                            if (main) {
+                                main.style.paddingTop = '120px'; // Altura completa cuando no está sticky
+                            }
+                            
                             // Ocultar logos primero
                             const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
                             logos.forEach(logo => {
@@ -342,11 +354,13 @@ class SPARouter {
     enableStickyBehavior() {
         console.log('✅ [STICKY-HEADER] Habilitando comportamiento sticky');
         
+        // Remover clase del body para restaurar padding del main
+        document.body.classList.remove('no-sticky-page');
+        
         const blueHeader = document.querySelector('header > div:last-child');
         if (blueHeader) {
-            // Remover clase que desactiva sticky
-            blueHeader.classList.remove('no-sticky-behavior');
-            console.log('✅ [STICKY-HEADER] Clase no-sticky-behavior removida');
+            // La clase se maneja ahora a nivel de body, no individual
+            console.log('✅ [STICKY-HEADER] Sticky behavior habilitado a través de body class');
         }
     }
 
@@ -360,6 +374,9 @@ class SPARouter {
         
         // Limpiar cualquier scroll detection activo
         this.cleanupScrollDetection();
+        
+        // Agregar clase al body para quitar padding del main
+        document.body.classList.add('no-sticky-page');
         
         // Obtener referencias a los elementos del header
         const whiteHeader = document.querySelector('header > div:first-child');
@@ -375,8 +392,7 @@ class SPARouter {
                 logo.style.setProperty('opacity', '0', 'important');
             });
             
-            // Agregar clase para desactivar sticky completamente
-            blueHeader.classList.add('no-sticky-behavior');
+            // Ya no necesitamos agregar clase individual, se maneja con body.no-sticky-page
             
             console.log('✅ [STICKY-HEADER] Comportamiento sticky desactivado');
         }
@@ -424,6 +440,12 @@ class SPARouter {
                         this.blueHeader.classList.add('blue-header-sticky');
                         console.log('🌊 [STICKY-HEADER] Desprendimiento suave iniciado en curso...');
                         
+                        // Ajustar padding del main cuando se vuelve sticky
+                        const main = document.querySelector('main');
+                        if (main) {
+                            main.style.paddingTop = '60px'; // Solo altura de la parte azul cuando está sticky
+                        }
+                        
                         // Mostrar logos con delay
                         setTimeout(() => {
                             const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
@@ -437,6 +459,12 @@ class SPARouter {
                 } else {
                     // Desactivar sticky: solo remover clase para transición CSS
                     if (this.blueHeader.classList.contains('blue-header-sticky')) {
+                        // Restaurar padding original del main
+                        const main = document.querySelector('main');
+                        if (main) {
+                            main.style.paddingTop = '120px'; // Altura completa cuando no está sticky
+                        }
+                        
                         // Ocultar logos primero
                         const logos = this.blueHeader.querySelectorAll('.blue-header-logos');
                         logos.forEach(logo => {

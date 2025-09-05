@@ -124,10 +124,10 @@ a:focus-visible {
     /* Eliminado .lg\:col-span-2 override - Tailwind ya maneja esto correctamente */
 }
 
-/* Prevenir altura excesiva en componentes */
+/* Prevenir altura excesiva en componentes - DESACTIVADO para evitar doble scroll */
 .lg\:col-span-2 {
-    max-height: 100vh;
-    overflow-y: auto;
+    /* max-height: 100vh; */
+    /* overflow-y: auto; */
 }
 
 /* Header fijo - espacio inicial, se ajustará dinámicamente */
@@ -180,6 +180,17 @@ header > div:last-child.blue-header-sticky {
     backdrop-filter: blur(12px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
     transform: translateY(0) scale(1.001) translateZ(0) !important; /* Sutil escala */
+}
+
+/* Desactivar completamente el comportamiento sticky para ciertas páginas */
+header > div:last-child.no-sticky-behavior {
+    position: static !important; /* Cambiar de fixed a static */
+    top: auto !important;
+    transform: none !important;
+    transition: none !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important; /* Sombra normal */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 /* El contenedor debe ser relativo para los logos absolutos */

@@ -178,39 +178,19 @@ class SPARouter {
                 const scrollPosition = scrollY + 100; // Offset para activar antes
                 let currentSection = homeSections[0]; // Default: hero section
                 
-                // Control del sticky de la parte azul con efecto inmediato pero suave
+                // Control del sticky de la parte azul con transición CSS natural
                 if (this.blueHeader) {
                     if (scrollY >= this.whiteHeaderHeight) {
-                        // Activar sticky: inmediato con animación visual
+                        // Activar sticky: solo agregar clase para transición CSS
                         if (!this.blueHeader.classList.contains('blue-header-sticky')) {
-                            // Limpiar clases previas
-                            this.blueHeader.classList.remove('blue-header-reattaching');
-                            
-                            // Aplicar sticky inmediatamente + animación visual
-                            this.blueHeader.classList.add('blue-header-sticky', 'blue-header-detaching');
-                            console.log('🔵 [STICKY-HEADER] Desprendimiento inmediato - STICKY activo');
-                            
-                            // Remover clase de animación después del efecto visual
-                            setTimeout(() => {
-                                if (this.blueHeader) {
-                                    this.blueHeader.classList.remove('blue-header-detaching');
-                                }
-                            }, 600); // Solo para la animación visual
+                            this.blueHeader.classList.add('blue-header-sticky');
+                            console.log('🌊 [STICKY-HEADER] Desprendimiento suave iniciado...');
                         }
                     } else {
-                        // Desactivar sticky: inmediato con animación visual
+                        // Desactivar sticky: solo remover clase para transición CSS
                         if (this.blueHeader.classList.contains('blue-header-sticky')) {
-                            // Remover sticky inmediatamente + animación visual
-                            this.blueHeader.classList.remove('blue-header-sticky', 'blue-header-detaching');
-                            this.blueHeader.classList.add('blue-header-reattaching');
-                            console.log('⚪ [STICKY-HEADER] Reacoplamiento inmediato - NORMAL activo');
-                            
-                            // Remover clase de animación después del efecto visual
-                            setTimeout(() => {
-                                if (this.blueHeader) {
-                                    this.blueHeader.classList.remove('blue-header-reattaching');
-                                }
-                            }, 500); // Solo para la animación visual
+                            this.blueHeader.classList.remove('blue-header-sticky');
+                            console.log('🌊 [STICKY-HEADER] Reacoplamiento suave iniciado...');
                         }
                     }
                 }
@@ -297,10 +277,10 @@ class SPARouter {
             this.scrollListener = null;
             this.currentHomeSection = null;
             
-            // Limpiar todos los estados de la parte azul
+            // Limpiar estado sticky de la parte azul
             if (this.blueHeader) {
-                this.blueHeader.classList.remove('blue-header-sticky', 'blue-header-detaching', 'blue-header-reattaching');
-                console.log('🧹 [STICKY-HEADER] Todos los estados de animación removidos de la parte azul');
+                this.blueHeader.classList.remove('blue-header-sticky');
+                console.log('🧹 [STICKY-HEADER] Estado sticky removido de la parte azul');
             }
             
             console.log('✅ [STICKY-HEADER] Scroll detection limpiado');

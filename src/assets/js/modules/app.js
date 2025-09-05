@@ -105,7 +105,6 @@ function renderCoursesGrid() {
 
 // Función para renderizar la vista principal (home)
 export function renderHomeView() {
-    console.log('🏠 [HOME] Iniciando renderizado de la vista HOME...');
     
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
@@ -114,16 +113,14 @@ export function renderHomeView() {
         return;
     }
     
-    console.log('✅ [HOME] Contenedor principal encontrado:', mainContainer);
     
     // Limpiar contenido anterior
     mainContainer.innerHTML = '';
-    console.log('🧹 [HOME] Contenido anterior limpiado');
     
     // Crear la estructura de la vista home
     const homeHTML = `
         <!-- Hero Section -->
-        <div class="relative rounded-lg overflow-hidden">
+        <div id="hero-section" class="relative rounded-lg overflow-hidden">
             <img src="https://images.unsplash.com/photo-1739956802238-2f37aefec7e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGFjYWRlbXl8ZW58MXx8fHwxNzU1ODEyMDU0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
                  alt="Academia online" class="w-full h-96 object-cover" 
                  onerror="this.src='https://via.placeholder.com/1080x384/e5e7eb/6b7280?text=Academia+Online'">
@@ -182,7 +179,7 @@ export function renderHomeView() {
         </div>
 
         <!-- Featured Courses -->
-        <div>
+        <div id="courses-section">
             <h3 class="text-3xl font-bold mb-6">Cursos destacados</h3>
             <div id="courses-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Los cursos se cargarán dinámicamente -->
@@ -190,7 +187,7 @@ export function renderHomeView() {
         </div>
 
         <!-- About Section -->
-        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div id="about-section" class="rounded-lg border bg-card text-card-foreground shadow-sm">
             <div class="p-8">
                 <div class="grid md:grid-cols-2 gap-8 items-center">
                     <div>
@@ -245,13 +242,10 @@ export function renderHomeView() {
         </div>
     `;
     mainContainer.innerHTML = homeHTML;
-    console.log('📝 [HOME] HTML estructura cargada');
     
     // Después de cargar el HTML, renderizar los cursos
-    console.log('📚 [HOME] Renderizando grid de cursos...');
     renderCoursesGrid();
     
-    console.log('✅ [HOME] Vista HOME completada exitosamente');
 }
 
 // Función para renderizar los detalles del curso
@@ -452,19 +446,13 @@ window.login = login;
 // Función de inicialización principal
 async function loadPageContent() {
     try {
-        console.log('📋 [APP] Iniciando carga de contenido...');
         
         // Cargar secciones HTML
-        console.log('🔄 [APP] Cargando secciones HTML...');
         await loadAllSections();
-        console.log('✅ [APP] Secciones HTML cargadas correctamente');
 
         // Configurar event listeners
-        console.log('👂 [APP] Configurando event listeners...');
         setupEventListeners();
-        console.log('✅ [APP] Event listeners configurados');
         
-        console.log('🎯 [APP] loadPageContent completado exitosamente');
         
     } catch (error) {
         console.error('❌ [APP] Error en loadPageContent:', error);

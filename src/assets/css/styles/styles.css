@@ -130,6 +130,26 @@ a:focus-visible {
     overflow-y: auto;
 }
 
+/* Header fijo - espacio inicial, se ajustará dinámicamente */
+body {
+    min-height: 200vh;
+}
+
+/* Asegurar espacio para header fijo */
+main {
+    padding-top: 120px; /* Espacio para el header fijo */
+}
+
+/* Asegurar que el header fijo funcione correctamente */
+header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    background-color: white !important;
+}
+
 /* Asegurar que las imágenes de contenido no causen overflow */
 .lg\:col-span-2 img,
 #course-main-card img,

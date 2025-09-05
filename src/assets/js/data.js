@@ -183,7 +183,7 @@ function getOtherCourses(excludeCourseId = null) {
     // Filtrar el curso seleccionado y devolver máximo 3 cursos
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
-const navLinks = [
+export const navLinks = [
     { name: 'Inicio', href: '/', navs: [] },
     { name: 'Cursos', href: '#' , navs: [] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
@@ -192,6 +192,22 @@ const navLinks = [
         {name: "Curso Mikrotik 2", href: "/curso?id=2"},
         {name: "Curso Mikrotik 3", href: "/curso?id=3"},
     ] },
+];
+
+// Configuración para secciones de la página de inicio
+export const homeSections = [
+    {
+        id: 'hero-section',
+        name: 'Inicio'
+    },
+    {
+        id: 'courses-section', 
+        name: 'Cursos'
+    },
+    {
+        id: 'about-section',
+        name: 'Nosotros'
+    }
 ];
 
 // Secciones HTML a cargar

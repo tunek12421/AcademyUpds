@@ -36,19 +36,8 @@ function showErrorMessage(message) {
 // Función principal de inicialización
 async function main() {
     try {
-        console.log('🚀 [MAIN] Iniciando aplicación...');
-        
-        // Cargar secciones comunes (header, footer)
-        console.log('📥 [MAIN] Cargando secciones (header/footer)...');
         await loadPageContent();
-        console.log('✅ [MAIN] Secciones cargadas correctamente');
-        
-        // Inicializar router SPA
-        console.log('🌐 [MAIN] Inicializando router SPA...');
         const router = initRouter();
-        console.log('✅ [MAIN] Router inicializado:', router);
-        
-        console.log('🎉 [MAIN] Aplicación inicializada correctamente');
         
     } catch (error) {
         console.error('❌ [MAIN] Error crítico en main():', error);

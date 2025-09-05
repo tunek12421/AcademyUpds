@@ -4,7 +4,6 @@ import { updateState, getState, getCourseById } from './data.js';
 
 class SPARouter {
     constructor() {
-        console.log('🔧 [ROUTER] Creando instancia del router...');
         this.routes = {
             '/': () => this.loadHome(),
             '/home': () => this.loadHome(),
@@ -15,12 +14,10 @@ class SPARouter {
         };
         
         this.currentRoute = window.location.pathname;
-        console.log('📍 [ROUTER] Ruta inicial:', this.currentRoute);
         this.init();
     }
 
     init() {
-        console.log('⚡ [ROUTER] Inicializando router...');
         
         // Interceptar clicks en enlaces
         document.addEventListener('click', (e) => {
@@ -29,11 +26,9 @@ class SPARouter {
                 const link = e.target.matches('a') ? e.target : e.target.closest('a');
                 const href = link.getAttribute('href');
                 
-                console.log('🖱️ [ROUTER] Click interceptado en:', href);
                 
                 // No interceptar enlaces externos
                 if (href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) {
-                    console.log('🌐 [ROUTER] Enlace externo, no interceptado');
                     return;
                 }
                 
@@ -43,14 +38,11 @@ class SPARouter {
 
         // Manejar botón atrás/adelante del navegador
         window.addEventListener('popstate', () => {
-            console.log('⬅️ [ROUTER] Evento popstate detectado');
             this.loadRoute(window.location.pathname + window.location.search);
         });
 
         // Cargar ruta inicial
-        console.log('🚀 [ROUTER] Cargando ruta inicial...');
         this.loadRoute(window.location.pathname + window.location.search);
-        console.log('✅ [ROUTER] Router inicializado completamente');
     }
 
     navigate(path) {
@@ -62,14 +54,11 @@ class SPARouter {
     }
 
     loadRoute(path) {
-        console.log('📄 [ROUTER] Cargando ruta:', path);
         
         // Parsear ruta y parámetros
         const [route, queryString] = path.split('?');
         const params = new URLSearchParams(queryString || '');
         
-        console.log('🔗 [ROUTER] Ruta parseada:', route);
-        console.log('🔗 [ROUTER] Parámetros:', params.toString());
         
         // Actualizar DATA.headIndex basado en la ruta
         this.updateHeaderIndex(route);
@@ -77,21 +66,19 @@ class SPARouter {
         // Ejecutar función de ruta
         const routeFunction = this.routes[route];
         if (routeFunction) {
-            console.log('✅ [ROUTER] Función de ruta encontrada, ejecutando...');
             routeFunction(params);
         } else {
-            console.log('❌ [ROUTER] Ruta no encontrada, fallback a home');
             this.loadHome(); // Fallback a home
         }
         
         // Actualizar flecha del header
         this.updateHeaderArrow();
+        this.updateHeaderBreadcrumbs();
     }
 
     updateHeaderIndex(route) {
         // Verificar que window.DATA existe, sino inicializarlo
         if (!window.DATA) {
-            console.log('⚠️ [ROUTER] window.DATA no existe, inicializándolo...');
             window.DATA = {
                 headIndex: 0,
                 name: "home"
@@ -108,7 +95,6 @@ class SPARouter {
         };
         
         const newIndex = routeToIndex[route] || 0;
-        console.log('📊 [ROUTER] Actualizando headIndex de', window.DATA.headIndex, 'a', newIndex);
         window.DATA.headIndex = newIndex;
     }
 
@@ -130,19 +116,174 @@ class SPARouter {
         }, 50);
     }
 
+    updateHeaderBreadcrumbs() {
+        // Importar navLinks desde data.js
+        import('./data.js').then(module => {
+            const navBottom = document.querySelector(".upds-header-contact");
+            if (navBottom && module.navLinks) {
+                const currentNavs = module.navLinks[window.DATA.headIndex]?.navs || [];
+                if (currentNavs.length > 0) {
+                    // Mostrar breadcrumbs
+                    navBottom.innerHTML = currentNavs.map(link => 
+                        `<a href="${link.href}" class="upds-contact-link hover:text-gray-200 transition-colors">${link.name}</a>`
+                    ).join('');
+                } else if (window.DATA.name === 'home') {
+                    // Si estamos en home, inicializar navegación de secciones y scroll detection
+                    this.initHomeSectionNavigation();
+                    this.initHomeScrollDetection();
+                } else {
+                    // Mostrar información de contacto por defecto
+                    navBottom.innerHTML = `
+                        <a href="tel:+59161681770" class="upds-contact-link hover:text-gray-200 transition-colors">
+                            Tel: +591 61681770
+                        </a>
+                        <a href="mailto:info@upds.edu.bo" class="upds-contact-link hover:text-gray-200 transition-colors">
+                            Email: info@upds.edu.bo
+                        </a>
+                        <span class="upds-contact-link hidden sm:inline">
+                            Dirección: Cochabamba - Bolivia
+                        </span>
+                    `;
+                }
+            }
+        });
+    }
+
+    initHomeScrollDetection() {
+        console.log('🔄 [STICKY-HEADER] Inicializando detección de scroll para header sticky');
+        
+        // Calcular altura real del header y ajustar padding
+        setTimeout(() => {
+            const header = document.querySelector('header');
+            if (header) {
+                const headerHeight = header.offsetHeight;
+                const main = document.querySelector('main');
+                if (main) {
+                    main.style.paddingTop = `${headerHeight + 20}px`; // +20px para un poco de espacio extra
+                    console.log('📏 [STICKY-HEADER] Altura del header:', headerHeight + 'px, padding aplicado:', (headerHeight + 20) + 'px');
+                }
+            }
+        }, 100);
+        
+        // Remover listener anterior si existe
+        if (this.scrollListener) {
+            window.removeEventListener('scroll', this.scrollListener);
+            console.log('🧹 [STICKY-HEADER] Listener anterior removido');
+        }
+
+        // Importar configuración de secciones
+        import('./data.js').then(module => {
+            const { homeSections } = module;
+            console.log('📋 [STICKY-HEADER] Secciones cargadas:', homeSections.map(s => s.id));
+            
+            this.scrollListener = () => {
+                const scrollPosition = window.scrollY + 100; // Offset para activar antes
+                let currentSection = homeSections[0]; // Default: hero section
+                
+                // Debug scroll position y elementos
+                if (window.scrollY > 0 && window.scrollY % 200 === 0) {
+                    console.log('📏 [STICKY-HEADER] Scroll position:', window.scrollY);
+                    homeSections.forEach(section => {
+                        const element = document.getElementById(section.id);
+                        if (element) {
+                            console.log(`📍 [STICKY-HEADER] Sección ${section.id}: offsetTop=${element.offsetTop}, height=${element.offsetHeight}`);
+                        } else {
+                            console.log(`❌ [STICKY-HEADER] Elemento ${section.id} no encontrado en DOM`);
+                        }
+                    });
+                }
+                
+                // Encontrar la sección actual basada en scroll - ajustar para header fijo
+                for (const section of homeSections) {
+                    const element = document.getElementById(section.id);
+                    if (element) {
+                        // Ajustar por la altura del header fijo (140px - 40px margin = 100px efectivo)
+                        const elementTop = element.offsetTop - 100;
+                        if (scrollPosition >= elementTop) {
+                            currentSection = section;
+                        }
+                    }
+                }
+                
+                // Actualizar header solo si cambió la sección
+                if (this.currentHomeSection !== currentSection.id) {
+                    console.log('📍 [STICKY-HEADER] Cambio de sección:', this.currentHomeSection, '→', currentSection.id);
+                    console.log('📏 [STICKY-HEADER] Header position:', document.querySelector('header').getBoundingClientRect().top);
+                    this.currentHomeSection = currentSection.id;
+                    this.updateHeaderForHomeSection(currentSection);
+                }
+            };
+            
+            // Agregar listener
+            window.addEventListener('scroll', this.scrollListener);
+            console.log('👂 [STICKY-HEADER] Listener de scroll agregado');
+            
+            // Ejecutar una vez para inicializar
+            this.scrollListener();
+        });
+    }
+
+    initHomeSectionNavigation() {
+        const navBottom = document.querySelector(".upds-header-contact");
+        if (navBottom) {
+            console.log('🔄 [STICKY-HEADER] Inicializando navegación de secciones');
+            // Crear enlaces de navegación para todas las secciones
+            navBottom.innerHTML = `
+                <a href="#hero-section" data-section="hero-section" class="upds-section-link hover:text-gray-200 transition-colors">
+                    Inicio
+                </a>
+                <a href="#courses-section" data-section="courses-section" class="upds-section-link hover:text-gray-200 transition-colors">
+                    Cursos
+                </a>
+                <a href="#about-section" data-section="about-section" class="upds-section-link hover:text-gray-200 transition-colors">
+                    Nosotros
+                </a>
+            `;
+            console.log('✅ [STICKY-HEADER] Navegación de secciones inicializada');
+        }
+    }
+
+    updateHeaderForHomeSection(section) {
+        const navBottom = document.querySelector(".upds-header-contact");
+        if (navBottom) {
+            console.log('🎨 [STICKY-HEADER] Resaltando sección activa:', section.name);
+            
+            // Remover clase activa de todos los enlaces
+            const allLinks = navBottom.querySelectorAll('.upds-section-link');
+            allLinks.forEach(link => {
+                link.classList.remove('text-yellow-300', 'font-bold');
+                link.classList.add('text-white');
+            });
+            
+            // Agregar clase activa al enlace de la sección actual
+            const activeLink = navBottom.querySelector(`[data-section="${section.id}"]`);
+            if (activeLink) {
+                activeLink.classList.remove('text-white');
+                activeLink.classList.add('text-yellow-300', 'font-bold');
+                console.log('✅ [STICKY-HEADER] Sección resaltada:', section.name);
+            }
+        }
+    }
+
+    cleanupHomeScrollDetection() {
+        if (this.scrollListener) {
+            console.log('🧹 [STICKY-HEADER] Limpiando detección de scroll');
+            window.removeEventListener('scroll', this.scrollListener);
+            this.scrollListener = null;
+            this.currentHomeSection = null;
+            console.log('✅ [STICKY-HEADER] Scroll detection limpiado');
+        }
+    }
+
     async loadHome() {
-        console.log('🏠 [ROUTER] Cargando vista HOME...');
         updateState({ selectedCourse: null });
         window.DATA.name = "home";
         this.showMainContent();
         
         try {
             // Importar función dinámicamente
-            console.log('📦 [ROUTER] Importando módulo app.js...');
             const { renderHomeView } = await import('./modules/app.js');
-            console.log('🎨 [ROUTER] Ejecutando renderHomeView...');
             renderHomeView();
-            console.log('✅ [ROUTER] Vista HOME cargada correctamente');
         } catch (error) {
             console.error('❌ [ROUTER] Error al cargar HOME:', error);
         }
@@ -154,6 +295,7 @@ class SPARouter {
             params = urlParams;
         }
         
+        this.cleanupHomeScrollDetection(); // Limpiar scroll detection de home
         const courseId = params.get('id');
         if (courseId) {
             const course = getCourseById(courseId);
@@ -177,6 +319,7 @@ class SPARouter {
         updateState({ selectedCourse: null });
         window.DATA.name = "category";
         this.showMainContent();
+        this.cleanupHomeScrollDetection(); // Limpiar scroll detection de home
         
         // Importar función dinámicamente
         const { renderCategoryView } = await import('./modules/app.js');
@@ -188,12 +331,9 @@ class SPARouter {
     }
 
     showMainContent() {
-        console.log('👁️ [ROUTER] Mostrando contenido principal...');
         const mainElement = document.querySelector('main');
         if (mainElement) {
-            console.log('✅ [ROUTER] Elemento main encontrado, removiendo clase hidden');
             mainElement.classList.remove('hidden');
-            console.log('✅ [ROUTER] Clases del main después:', mainElement.className);
         } else {
             console.error('❌ [ROUTER] Elemento main NO encontrado en el DOM');
         }

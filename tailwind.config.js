@@ -69,6 +69,7 @@ module.exports = {
       },
       aspectRatio: {
         square: '1 / 1',
+        logo: '4 / 1',
       },
     },
   },

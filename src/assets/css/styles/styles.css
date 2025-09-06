@@ -1,9 +1,27 @@
 /* Estilos adicionales para complementar Tailwind CSS */
 
+/* SPA Page Transitions - Sistema Simple */
+#main-section {
+    transition: min-height 0.3s ease-out;
+}
+
+#main-section > * {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Loading Spinner Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
 /* Mejoras para la línea truncada */
 .line-clamp-2 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -124,11 +142,6 @@ a:focus-visible {
     /* Eliminado .lg\:col-span-2 override - Tailwind ya maneja esto correctamente */
 }
 
-/* Prevenir altura excesiva en componentes - DESACTIVADO para evitar doble scroll */
-.lg\:col-span-2 {
-    /* max-height: 100vh; */
-    /* overflow-y: auto; */
-}
 
 /* Header fijo - espacio inicial, se ajustará dinámicamente */
 body {
@@ -138,172 +151,6 @@ body {
 /* Por defecto sin padding */
 main {
     padding-top: 0px;
-}
-
-/* Solo agregar padding para páginas con sticky behavior */
-body:not(.no-sticky-page) main {
-    padding-top: 120px; /* Altura reducida para primera carga */
-    margin-top: -25px; /* Reducir más el espacio entre parte azul y contenido */
-}
-
-/* Header: comportamiento normal */
-header {
-    position: relative !important;
-    top: auto !important;
-    background: white !important;
-}
-
-/* Parte blanca del header: normal */
-header > div:first-child {
-    position: relative !important;
-    background-color: white !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-    z-index: 1000 !important;
-}
-
-/* Parte azul del header: por defecto posición normal */
-header > div:last-child {
-    position: relative !important;
-    background-color: var(--color-primary) !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-    z-index: 1001 !important;
-}
-
-/* Solo activar fixed siempre para páginas sticky, sin cambios de position */
-body:not(.no-sticky-page) header > div:last-child {
-    position: fixed !important; /* Siempre fixed para evitar saltos */
-    top: 105px !important; /* Más espaciado con la parte blanca */
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    z-index: 9999 !important;
-    transition: top 0.7s cubic-bezier(0.19, 1, 0.22, 1),
-                transform 0.7s cubic-bezier(0.19, 1, 0.22, 1),
-                box-shadow 0.8s cubic-bezier(0.19, 1, 0.22, 1),
-                backdrop-filter 0.7s cubic-bezier(0.19, 1, 0.22, 1) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-    transform: translateY(0) translateZ(0) scale(1) !important;
-    backface-visibility: hidden !important;
-    will-change: top, transform, box-shadow, backdrop-filter !important;
-    backdrop-filter: blur(0px) saturate(100%) !important;
-    -webkit-backdrop-filter: blur(0px) saturate(100%) !important;
-    filter: brightness(1) !important;
-    perspective: 1000px !important;
-}
-
-/* Cuando se hace sticky, solo cambiar el top sin cambiar position */
-body:not(.no-sticky-page) header > div:last-child.blue-header-sticky {
-    top: 0 !important; /* Deslizar hacia arriba cambiando solo top */
-    min-height: 90px !important; /* Altura más compacta cuando se desprende */
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.08) !important;
-    backdrop-filter: blur(20px) saturate(180%) brightness(1.02) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.02) !important;
-    transform: translateY(0) scale(1.002) translateZ(0) !important; /* Sutil escala más pronunciada */
-    filter: brightness(1.05) contrast(1.02) !important; /* Mejora visual sutil */
-}
-
-/* Las páginas .no-sticky-page ya tienen comportamiento normal por defecto
-   No necesitamos reglas adicionales porque la regla fixed solo aplica a body:not(.no-sticky-page) */
-
-/* El contenedor debe ser relativo para los logos absolutos */
-header > div:last-child.blue-header-sticky > div {
-    position: relative !important;
-    display: flex !important;
-    align-items: center !important;
-    min-height: 90px !important;
-}
-
-/* Ajustar los enlaces cuando está desprendido */
-header > div:last-child.blue-header-sticky .upds-header-contact {
-    padding: 1.5rem 6rem !important; /* Más padding horizontal para evitar logos */
-    font-size: 1.1rem !important; /* Texto un poco más grande */
-    justify-content: center !important; /* Mantener centrado */
-    margin: 0 auto !important; /* Centrar el container */
-}
-
-/* Logos que aparecen en la parte azul cuando está desprendida */
-.blue-header-logos {
-    position: absolute !important;
-    top: 50% !important;
-    transform: translateY(-50%) scale(0.8) translateX(-10px) rotateY(-15deg) translateZ(0) !important;
-    opacity: 0 !important;
-    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s, 
-                opacity 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s,
-                transform 1s cubic-bezier(0.19, 1, 0.22, 1) 0.4s !important; /* Transición más larga y suave */
-    z-index: 10001 !important;
-    pointer-events: none !important;
-    filter: brightness(0.9) contrast(1) blur(2px) !important; /* Efecto inicial ligeramente desenfocado */
-}
-
-/* Solo mostrar cuando el header está desprendido */
-header > div:last-child.blue-header-sticky .blue-header-logos {
-    opacity: 1 !important;
-    transform: translateY(-50%) scale(1.02) translateX(0) rotateY(0deg) translateZ(0) !important; /* Efecto de entrada elegante */
-    filter: brightness(1.03) contrast(1.02) blur(0px) !important; /* Enfoque completo y brillo sutil */
-    animation: logoGlow 3s ease-in-out infinite alternate !important; /* Sutil animación de resplandor */
-}
-
-/* Animación sutil de resplandor para los logos */
-@keyframes logoGlow {
-    0% {
-        filter: brightness(1.03) contrast(1.02) drop-shadow(0 0 8px rgba(255,255,255,0.3)) !important;
-    }
-    100% {
-        filter: brightness(1.05) contrast(1.03) drop-shadow(0 0 12px rgba(255,255,255,0.5)) !important;
-    }
-}
-
-.blue-header-logo-left {
-    left: 1rem !important;
-    height: 4.5rem !important; /* Aumentado de 4rem a 4.5rem */
-    width: auto !important;
-}
-
-.blue-header-logo-right {
-    right: 1rem !important;
-    height: 2.5rem !important; /* Tamaño similar a los de arriba */
-    width: auto !important;
-}
-
-/* Responsive para los logos y contenido */
-@media (min-width: 640px) {
-    .blue-header-logo-left {
-        left: 2rem !important;
-    }
-    
-    .blue-header-logo-right {
-        right: 2rem !important;
-    }
-    
-    /* Más padding en pantallas grandes */
-    header > div:last-child.blue-header-sticky .upds-header-contact {
-        padding: 1.5rem 8rem !important;
-    }
-}
-
-@media (max-width: 640px) {
-    /* En móviles, reducir padding y tamaño de logos */
-    .blue-header-logo-left {
-        height: 3.5rem !important; /* Aumentado proporcionalmente para móviles */
-    }
-    
-    .blue-header-logo-right {
-        height: 1.8rem !important;
-    }
-    
-    header > div:last-child.blue-header-sticky .upds-header-contact {
-        padding: 1.5rem 4rem !important; /* Menos padding en móviles */
-        font-size: 1rem !important;
-    }
-}
-
-
-/* Asegurar que las imágenes de contenido no causen overflow */
-.lg\:col-span-2 img,
-#course-main-card img,
-#course-content-card img {
-    max-width: 100% !important;
-    height: auto !important;
 }
 
 /* Estilos para mejorar la legibilidad */
@@ -329,17 +176,6 @@ button:active {
 /* Estilos para las tarjetas con mejor sombra */
 .card-hover:hover {
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Mejora para el sticky header */
-.sticky-header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid hsl(214.3 31.8% 91.4%);
 }
 
 /* Estilos para loading states (por si se implementan) */

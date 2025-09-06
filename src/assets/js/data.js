@@ -184,30 +184,18 @@ function getOtherCourses(excludeCourseId = null) {
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
 export const navLinks = [
-    { name: 'Inicio', href: '/', navs: [] },
-    { name: 'Cursos', href: '#' , navs: [] },
+    { name: 'Inicio', href: '/', navs: [], sections:[
+        {name: 'Inicio',id: 'hero-section'},
+        {name: 'Cursos',id: 'courses-section'},
+        {name: 'Nosotros',id: 'about-section'}
+    ] },
+    { name: 'Cursos', href: '/cursos' , navs: [] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
     { name: 'Mikrotik', href: '/mikrotik', navs: [
         {name: "Curso Mikrotik 1", href: "/curso?id=1"},
         {name: "Curso Mikrotik 2", href: "/curso?id=2"},
         {name: "Curso Mikrotik 3", href: "/curso?id=3"},
-    ] },
-];
-
-// Configuración para secciones de la página de inicio
-export const homeSections = [
-    {
-        id: 'hero-section',
-        name: 'Inicio'
-    },
-    {
-        id: 'courses-section', 
-        name: 'Cursos'
-    },
-    {
-        id: 'about-section',
-        name: 'Nosotros'
-    }
+    ],sections: []},
 ];
 
 // Secciones HTML a cargar
@@ -242,25 +230,6 @@ const sections = [
     ['footer-section', '/assets/sections/footer.html', ()=>{}]
 ];
 
-// Función para cargar secciones HTML
-async function loadSection(parent, url) {
-    await fetch(url)
-        .then(res => res.text())
-        .then(html => { parent.innerHTML = html; });
-}
-
-async function loadAllSections() {
-    await Promise.all(sections.map(async ([id, url, init]) => {
-        let parent = document.getElementById(id);
-        if(parent){
-            await loadSection(parent, url);
-            init(parent);
-        }else{
-            console.error(`No se encontró el elemento con ID: ${id}`);
-        }
-    }));
-}
-
 // Exportar datos y funciones
 export {
     courses,
@@ -271,6 +240,4 @@ export {
     getCoursesByCategory,
     getOtherCourses,
     sections,
-    loadSection,
-    loadAllSections
 };

@@ -1,13 +1,7 @@
 // Importar dependencias
 import { 
     courses, 
-    updateState, 
-    getState,
-    appState,
-    getCourseById, 
-    getCoursesByCategory,
     getOtherCourses,
-    loadAllSections 
 } from '../data.js';
 
 import {
@@ -445,11 +439,7 @@ window.previewCourse = previewCourse;
 window.login = login;
 // Función de inicialización principal
 async function loadPageContent() {
-    try {
-        
-        // Cargar secciones HTML
-        await loadAllSections();
-
+    try {        
         // Configurar event listeners
         setupEventListeners();
         

@@ -1,1 +1,3 @@
-/* /spa.html 200
+# SPA redirects - Assets pasan directamente, todo lo demás a index.html
+/assets/* /assets/:splat 200
+/* /src/index.html 200

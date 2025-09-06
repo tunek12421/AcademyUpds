@@ -9,10 +9,14 @@ export default defineConfig({
   server: {
     historyApiFallback: {
       rewrites: [
-        { from: /^\/curso/, to: '/spa.html' },
-        { from: /^\/cursos/, to: '/spa.html' },
-        { from: /^\/mikrotik/, to: '/spa.html' },
-        { from: /./, to: '/spa.html' }
+        // Mantener rutas de assets como están
+        { from: /^\/assets\//, to: function(context) { return context.parsedUrl.pathname } },
+        // Todo lo demás va a index.html para SPA
+        { from: /^\/curso/, to: '/index.html' },
+        { from: /^\/cursos/, to: '/index.html' },
+        { from: /^\/mikrotik/, to: '/index.html' },
+        { from: /^\/home/, to: '/index.html' },
+        { from: /./, to: '/index.html' }
       ]
     }
   },
@@ -37,12 +41,12 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        index: resolve(__dirname, 'src/index.html'),
-        spa: resolve(__dirname, 'src/spa.html'),  // Agregar SPA
-        mikrotik: resolve(__dirname, 'src/mikrotik.html'),
-        curso: resolve(__dirname, 'src/curso.html'),
-        header: resolve(__dirname, 'src/assets/sections/header.html'),
-        footer: resolve(__dirname, 'src/assets/sections/footer.html'),
+        index: resolve(__dirname, 'src/index.html'),  // Agregar SPA
+        home: resolve(__dirname, 'src/assets/pages/home.html'),
+        mikrotik: resolve(__dirname, 'src/assets/pages/mikrotik.html'),
+        curso: resolve(__dirname, 'src/assets/pages/curso.html'),
+        //header: resolve(__dirname, 'src/assets/sections/header.html'),
+        //footer: resolve(__dirname, 'src/assets/sections/footer.html'),
       }
     }
   },

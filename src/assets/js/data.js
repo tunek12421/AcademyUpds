@@ -190,8 +190,15 @@ export const navLinks = [
         {name: 'Nosotros',id: 'about-section'}
     ] },
     { name: 'Cursos', href: '/cursos' , navs: [
-        {name: "Facultades", href: "/facultades"},
-        {name: "Academias", href: "/academias"}
+        {name: "Facultades", href: "/facultades", submenu: [
+            {name: "Facultad 1", href: "/facultades/facultad-1"},
+            {name: "Facultad 2", href: "/facultades/facultad-2"},
+            {name: "Facultad 3", href: "/facultades/facultad-3"}
+        ]},
+        {name: "Academias", href: "/academias", submenu: [
+            {name: "Academia 1", href: "/academias/academia-1"},
+            {name: "Academia 2", href: "/academias/academia-2"}
+        ]}
     ] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
     { name: 'Mikrotik', href: '/mikrotik', navs: [

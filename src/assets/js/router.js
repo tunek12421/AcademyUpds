@@ -11,7 +11,12 @@ class SPARouter {
             '/mikrotik': () => this.loadMikrotik(),
             '/cochabamba': () => this.redirectExternal('https://www.upds.edu.bo/sede/cochabamba/'),
             '/facultades': () => this.loadFacultades(),
+            '/facultades/facultad-1': () => this.loadFacultad(1),
+            '/facultades/facultad-2': () => this.loadFacultad(2),
+            '/facultades/facultad-3': () => this.loadFacultad(3),
             '/academias': () => this.loadAcademias(),
+            '/academias/academia-1': () => this.loadAcademia(1),
+            '/academias/academia-2': () => this.loadAcademia(2),
         };
         
         this.currentRoute = window.location.pathname;
@@ -418,7 +423,12 @@ class SPARouter {
             '/cursos': 1,
             '/curso': 1,
             '/facultades': 1,
+            '/facultades/facultad-1': 1,
+            '/facultades/facultad-2': 1,
+            '/facultades/facultad-3': 1,
             '/academias': 1,
+            '/academias/academia-1': 1,
+            '/academias/academia-2': 1,
             '/cochabamba': 2,
             '/mikrotik': 3
         };
@@ -455,10 +465,38 @@ class SPARouter {
                 const currentSections = currentNav?.sections || [];
                 
                 if (currentNavs.length > 0) {
-                    // Mostrar navegación de subcategorías
-                    navBottom.innerHTML = currentNavs.map(link => 
-                        `<a href="${link.href}" class="upds-contact-link hover:text-gray-200 transition-colors">${link.name}</a>`
-                    ).join('');
+                    // Mostrar navegación de subcategorías con dropdowns
+                    navBottom.innerHTML = currentNavs.map(link => {
+                        if (link.submenu && link.submenu.length > 0) {
+                            // Crear dropdown para elementos con submenú
+                            const submenuHTML = link.submenu.map((subitem, index) => 
+                                `<a href="${subitem.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < link.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}">${subitem.name}</a>`
+                            ).join('');
+                            
+                            return `
+                                <div class="dropdown-container relative inline-block">
+                                    <button class="upds-contact-link dropdown-trigger hover:text-gray-200 transition-colors flex items-center" 
+                                            data-dropdown="${link.name}">
+                                        ${link.name}
+                                        <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-50">
+                                        <div class="py-2">
+                                            ${submenuHTML}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // Enlace normal sin submenú
+                            return `<a href="${link.href}" class="upds-contact-link hover:text-gray-200 transition-colors">${link.name}</a>`;
+                        }
+                    }).join('');
+                    
+                    // Inicializar funcionalidad de dropdown después de crear el HTML
+                    setTimeout(() => this.initDropdownFunctionality(), 10);
                 } else if (currentSections.length > 0) {
                     // Mostrar navegación de secciones (como en Inicio)
                     navBottom.innerHTML = currentSections.map(section => 
@@ -783,6 +821,26 @@ class SPARouter {
         this.loadHome();
     }
 
+    async loadFacultad(numero) {
+        updateState({ selectedCourse: null });
+        window.DATA.name = `facultad-${numero}`;
+        this.cleanupScrollDetection();
+        
+        console.log(`📚 [ROUTER] Cargando Facultad ${numero}`);
+        // Por ahora, redirigir a la página principal
+        this.loadHome();
+    }
+
+    async loadAcademia(numero) {
+        updateState({ selectedCourse: null });
+        window.DATA.name = `academia-${numero}`;
+        this.cleanupScrollDetection();
+        
+        console.log(`🎓 [ROUTER] Cargando Academia ${numero}`);
+        // Por ahora, redirigir a la página principal
+        this.loadHome();
+    }
+
     redirectExternal(url) {
         window.open(url, '_blank');
     }
@@ -797,6 +855,174 @@ class SPARouter {
             }
         } else {
             console.error('❌ [ROUTER] Elemento #main-section NO encontrado en el DOM');
+        }
+    }
+
+    // Función para inicializar la funcionalidad de dropdowns
+    initDropdownFunctionality() {
+        console.log('🔽 [DROPDOWN] Inicializando funcionalidad de dropdowns');
+        
+        // Limpiar listeners anteriores si existen
+        this.cleanupDropdownListeners();
+        
+        // Obtener todos los triggers de dropdown
+        const dropdownTriggers = document.querySelectorAll('.dropdown-trigger');
+        const dropdownContainers = document.querySelectorAll('.dropdown-container');
+        
+        this.dropdownListeners = [];
+        
+        dropdownTriggers.forEach(trigger => {
+            const container = trigger.closest('.dropdown-container');
+            const menu = container.querySelector('.dropdown-menu');
+            const arrow = trigger.querySelector('.dropdown-arrow');
+            
+            if (!container || !menu) return;
+            
+            // Detectar si es dispositivo móvil
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile) {
+                // En móviles, usar click
+                const clickListener = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Cerrar otros dropdowns
+                    dropdownContainers.forEach(otherContainer => {
+                        if (otherContainer !== container) {
+                            this.closeDropdown(otherContainer);
+                        }
+                    });
+                    
+                    // Toggle del dropdown actual
+                    this.toggleDropdown(container);
+                };
+                
+                trigger.addEventListener('click', clickListener);
+                this.dropdownListeners.push({ element: trigger, event: 'click', listener: clickListener });
+            } else {
+                // En desktop, usar hover
+                const mouseEnterListener = (e) => {
+                    // Cerrar otros dropdowns
+                    dropdownContainers.forEach(otherContainer => {
+                        if (otherContainer !== container) {
+                            this.closeDropdown(otherContainer);
+                        }
+                    });
+                    
+                    // Abrir el dropdown actual
+                    this.openDropdown(container);
+                };
+                
+                const mouseLeaveListener = (e) => {
+                    // Usar setTimeout para permitir que el mouse se mueva al dropdown
+                    setTimeout(() => {
+                        // Verificar si el mouse no está sobre el container o el dropdown
+                        const containerHovered = container.matches(':hover');
+                        if (!containerHovered) {
+                            this.closeDropdown(container);
+                        }
+                    }, 100);
+                };
+                
+                // También permitir click para navegación en desktop
+                const clickListener = (e) => {
+                    e.preventDefault();
+                    const href = trigger.getAttribute('data-href') || trigger.closest('a')?.getAttribute('href');
+                    if (href && href !== '#') {
+                        window.location.href = href;
+                    }
+                };
+                
+                container.addEventListener('mouseenter', mouseEnterListener);
+                container.addEventListener('mouseleave', mouseLeaveListener);
+                trigger.addEventListener('click', clickListener);
+                
+                this.dropdownListeners.push({ element: container, event: 'mouseenter', listener: mouseEnterListener });
+                this.dropdownListeners.push({ element: container, event: 'mouseleave', listener: mouseLeaveListener });
+                this.dropdownListeners.push({ element: trigger, event: 'click', listener: clickListener });
+            }
+        });
+        
+        // Click fuera para cerrar dropdowns (solo para móviles)
+        const documentClickListener = (e) => {
+            if (!e.target.closest('.dropdown-container')) {
+                dropdownContainers.forEach(container => {
+                    this.closeDropdown(container);
+                });
+            }
+        };
+        
+        document.addEventListener('click', documentClickListener);
+        this.dropdownListeners.push({ element: document, event: 'click', listener: documentClickListener });
+        
+        // Listener para reinicializar cuando cambie el tamaño de ventana
+        const resizeListener = () => {
+            // Cerrar todos los dropdowns primero
+            dropdownContainers.forEach(container => {
+                this.closeDropdown(container);
+            });
+            // Reinicializar después de un pequeño delay
+            setTimeout(() => this.initDropdownFunctionality(), 100);
+        };
+        
+        window.addEventListener('resize', resizeListener);
+        this.dropdownListeners.push({ element: window, event: 'resize', listener: resizeListener });
+        
+        console.log(`✅ [DROPDOWN] ${dropdownTriggers.length} dropdowns inicializados`);
+    }
+    
+    toggleDropdown(container) {
+        const menu = container.querySelector('.dropdown-menu');
+        const arrow = container.querySelector('.dropdown-arrow');
+        
+        if (!menu) return;
+        
+        const isOpen = menu.classList.contains('dropdown-open');
+        
+        if (isOpen) {
+            this.closeDropdown(container);
+        } else {
+            this.openDropdown(container);
+        }
+    }
+    
+    openDropdown(container) {
+        const menu = container.querySelector('.dropdown-menu');
+        const arrow = container.querySelector('.dropdown-arrow');
+        
+        if (!menu) return;
+        
+        menu.classList.add('dropdown-open');
+        menu.classList.remove('opacity-0', 'invisible', 'scale-95');
+        menu.classList.add('opacity-100', 'visible', 'scale-100');
+        
+        if (arrow) {
+            arrow.style.transform = 'rotate(180deg)';
+        }
+    }
+    
+    closeDropdown(container) {
+        const menu = container.querySelector('.dropdown-menu');
+        const arrow = container.querySelector('.dropdown-arrow');
+        
+        if (!menu) return;
+        
+        menu.classList.remove('dropdown-open');
+        menu.classList.remove('opacity-100', 'visible', 'scale-100');
+        menu.classList.add('opacity-0', 'invisible', 'scale-95');
+        
+        if (arrow) {
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+    
+    cleanupDropdownListeners() {
+        if (this.dropdownListeners) {
+            this.dropdownListeners.forEach(({ element, event, listener }) => {
+                element.removeEventListener(event, listener);
+            });
+            this.dropdownListeners = [];
         }
     }
 

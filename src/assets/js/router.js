@@ -6,9 +6,12 @@ class SPARouter {
         this.routes = {
             '/': () => this.loadHome(),
             '/home': () => this.loadHome(),
+            '/cursos': () => this.loadCursos(),
             '/curso': () => this.loadCourse(),
             '/mikrotik': () => this.loadMikrotik(),
             '/cochabamba': () => this.redirectExternal('https://www.upds.edu.bo/sede/cochabamba/'),
+            '/facultades': () => this.loadFacultades(),
+            '/academias': () => this.loadAcademias(),
         };
         
         this.currentRoute = window.location.pathname;
@@ -32,6 +35,32 @@ class SPARouter {
             if (!link) return;
             
             const href = link.getAttribute('href');
+            
+            // Interceptar clicks en navegación principal (upds-nav-link)
+            if (link.classList.contains('upds-nav-link')) {
+                e.preventDefault();
+                
+                // Obtener el índice del enlace clickeado
+                const navTop = document.querySelector(".upds-nav-top");
+                if (navTop) {
+                    const navLinks = navTop.querySelectorAll('.upds-nav-link');
+                    const clickedIndex = Array.from(navLinks).indexOf(link);
+                    if (clickedIndex !== -1) {
+                        // Actualizar el índice del header
+                        window.DATA.headIndex = clickedIndex;
+                        // Actualizar la posición de la flecha inmediatamente
+                        this.updateHeaderArrow();
+                        // Actualizar los breadcrumbs
+                        this.updateHeaderBreadcrumbs();
+                    }
+                }
+                
+                // Si no es una navegación externa, continuar con la navegación normal
+                if (href && !href.startsWith('http') && !href.startsWith('mailto') && !href.startsWith('tel')) {
+                    this.navigate(href);
+                }
+                return;
+            }
             
             // Interceptar enlaces de secciones (#section-id)
             if (href && href.startsWith('#')) {
@@ -386,9 +415,12 @@ class SPARouter {
             '/': 0,
             '/home': 0,
             '/spa.html': 0,  // Agregar ruta spa.html
+            '/cursos': 1,
             '/curso': 1,
-            '/mikrotik': 3,
-            '/cochabamba': 2
+            '/facultades': 1,
+            '/academias': 1,
+            '/cochabamba': 2,
+            '/mikrotik': 3
         };
         
         const newIndex = routeToIndex[route] || 0;
@@ -722,6 +754,33 @@ class SPARouter {
                 }
             }, 100);
         }
+    }
+
+    async loadCursos() {
+        updateState({ selectedCourse: null });
+        window.DATA.name = "cursos";
+        this.cleanupScrollDetection();
+        
+        // Por ahora, redirigir a la página principal de cursos (home)
+        this.loadHome();
+    }
+
+    async loadFacultades() {
+        updateState({ selectedCourse: null });
+        window.DATA.name = "facultades";
+        this.cleanupScrollDetection();
+        
+        // Por ahora, redirigir a la página principal
+        this.loadHome();
+    }
+
+    async loadAcademias() {
+        updateState({ selectedCourse: null });
+        window.DATA.name = "academias";
+        this.cleanupScrollDetection();
+        
+        // Por ahora, redirigir a la página principal
+        this.loadHome();
     }
 
     redirectExternal(url) {

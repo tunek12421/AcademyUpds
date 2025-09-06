@@ -189,7 +189,10 @@ export const navLinks = [
         {name: 'Cursos',id: 'courses-section'},
         {name: 'Nosotros',id: 'about-section'}
     ] },
-    { name: 'Cursos', href: '/cursos' , navs: [] },
+    { name: 'Cursos', href: '/cursos' , navs: [
+        {name: "Facultades", href: "/facultades"},
+        {name: "Academias", href: "/academias"}
+    ] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
     { name: 'Mikrotik', href: '/mikrotik', navs: [
         {name: "Curso Mikrotik 1", href: "/curso?id=1"},

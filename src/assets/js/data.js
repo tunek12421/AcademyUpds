@@ -191,27 +191,31 @@ export const navLinks = [
     ] },
     { name: 'Cursos', href: '/cursos' , navs: [
         {name: "Facultades", href: "/facultades", submenu: [
-            {name: "Facultad 1", href: "/facultades/facultad-1", submenu: [
-                {name: "Curso 1", href: "/facultades/facultad-1/curso-1"},
-                {name: "Curso 2", href: "/facultades/facultad-1/curso-2"}
+            {name: "Ciencias de la Salud", href: "/facultades/ciencias-salud", submenu: [
+                {name: "Curso 1", href: "/facultades/ciencias-salud/curso-1"},
+                {name: "Curso 2", href: "/facultades/ciencias-salud/curso-2"}
             ]},
-            {name: "Facultad 2", href: "/facultades/facultad-2", submenu: [
-                {name: "Curso 1", href: "/facultades/facultad-2/curso-1"},
-                {name: "Curso 2", href: "/facultades/facultad-2/curso-2"}
+            {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
+                {name: "Curso 1", href: "/facultades/ingenieria/curso-1"},
+                {name: "Curso 2", href: "/facultades/ingenieria/curso-2"}
             ]},
-            {name: "Facultad 3", href: "/facultades/facultad-3", submenu: [
-                {name: "Curso 1", href: "/facultades/facultad-3/curso-1"},
-                {name: "Curso 2", href: "/facultades/facultad-3/curso-2"}
+            {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
+                {name: "Curso 1", href: "/facultades/ciencias-empresariales/curso-1"},
+                {name: "Curso 2", href: "/facultades/ciencias-empresariales/curso-2"}
+            ]},
+            {name: "Ciencias Jurídicas", href: "/facultades/ciencias-juridicas", submenu: [
+                {name: "Curso 1", href: "/facultades/ciencias-juridicas/curso-1"},
+                {name: "Curso 2", href: "/facultades/ciencias-juridicas/curso-2"}
             ]}
         ]},
         {name: "Academias", href: "/academias", submenu: [
-            {name: "Academia 1", href: "/academias/academia-1", submenu: [
-                {name: "Curso 1", href: "/academias/academia-1/curso-1"},
-                {name: "Curso 2", href: "/academias/academia-1/curso-2"}
+            {name: "Mikrotik", href: "/academias/mikrotik", submenu: [
+                {name: "Curso 1", href: "/academias/mikrotik/curso-1"},
+                {name: "Curso 2", href: "/academias/mikrotik/curso-2"}
             ]},
-            {name: "Academia 2", href: "/academias/academia-2", submenu: [
-                {name: "Curso 1", href: "/academias/academia-2/curso-1"},
-                {name: "Curso 2", href: "/academias/academia-2/curso-2"}
+            {name: "Huawei", href: "/academias/huawei", submenu: [
+                {name: "Curso 1", href: "/academias/huawei/curso-1"},
+                {name: "Curso 2", href: "/academias/huawei/curso-2"}
             ]}
         ]}
     ] },

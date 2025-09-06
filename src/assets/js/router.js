@@ -11,12 +11,13 @@ class SPARouter {
             '/mikrotik': () => this.loadMikrotik(),
             '/cochabamba': () => this.redirectExternal('https://www.upds.edu.bo/sede/cochabamba/'),
             '/facultades': () => this.loadFacultades(),
-            '/facultades/facultad-1': () => this.loadFacultad(1),
-            '/facultades/facultad-2': () => this.loadFacultad(2),
-            '/facultades/facultad-3': () => this.loadFacultad(3),
+            '/facultades/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
+            '/facultades/ingenieria': () => this.loadFacultad('ingenieria'),
+            '/facultades/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
+            '/facultades/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
             '/academias': () => this.loadAcademias(),
-            '/academias/academia-1': () => this.loadAcademia(1),
-            '/academias/academia-2': () => this.loadAcademia(2),
+            '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
+            '/academias/huawei': () => this.loadAcademia('huawei'),
         };
         
         this.currentRoute = window.location.pathname;
@@ -423,12 +424,13 @@ class SPARouter {
             '/cursos': 1,
             '/curso': 1,
             '/facultades': 1,
-            '/facultades/facultad-1': 1,
-            '/facultades/facultad-2': 1,
-            '/facultades/facultad-3': 1,
+            '/facultades/ciencias-salud': 1,
+            '/facultades/ingenieria': 1,
+            '/facultades/ciencias-empresariales': 1,
+            '/facultades/ciencias-juridicas': 1,
             '/academias': 1,
-            '/academias/academia-1': 1,
-            '/academias/academia-2': 1,
+            '/academias/mikrotik': 1,
+            '/academias/huawei': 1,
             '/cochabamba': 2,
             '/mikrotik': 3
         };
@@ -846,22 +848,34 @@ class SPARouter {
         this.loadHome();
     }
 
-    async loadFacultad(numero) {
+    async loadFacultad(nombre) {
         updateState({ selectedCourse: null });
-        window.DATA.name = `facultad-${numero}`;
+        window.DATA.name = `facultad-${nombre}`;
         this.cleanupScrollDetection();
         
-        console.log(`📚 [ROUTER] Cargando Facultad ${numero}`);
+        const facultadNames = {
+            'ciencias-salud': 'Ciencias de la Salud',
+            'ingenieria': 'Ingeniería',
+            'ciencias-empresariales': 'Ciencias Empresariales',
+            'ciencias-juridicas': 'Ciencias Jurídicas'
+        };
+        
+        console.log(`📚 [ROUTER] Cargando Facultad de ${facultadNames[nombre]}`);
         // Por ahora, redirigir a la página principal
         this.loadHome();
     }
 
-    async loadAcademia(numero) {
+    async loadAcademia(nombre) {
         updateState({ selectedCourse: null });
-        window.DATA.name = `academia-${numero}`;
+        window.DATA.name = `academia-${nombre}`;
         this.cleanupScrollDetection();
         
-        console.log(`🎓 [ROUTER] Cargando Academia ${numero}`);
+        const academiaNames = {
+            'mikrotik': 'Mikrotik',
+            'huawei': 'Huawei'
+        };
+        
+        console.log(`🎓 [ROUTER] Cargando Academia ${academiaNames[nombre]}`);
         // Por ahora, redirigir a la página principal
         this.loadHome();
     }

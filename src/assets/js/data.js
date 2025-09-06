@@ -198,38 +198,6 @@ export const navLinks = [
     ],sections: []},
 ];
 
-// Secciones HTML a cargar
-const sections = [
-    ['header-section', '/assets/sections/header.html', (parent) => {
-        //Crear navegación superior
-        let navTop = parent.querySelector(".upds-nav-top");
-        navTop.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
-        //Crear navegacion inferior
-        let navBottom = parent.querySelector(".upds-header-contact");
-        navBottom.innerHTML = `${navLinks[DATA.headIndex].navs.map(link => `<a href="${link.href}" class="upds-contact-link">${link.name}</a>`).join('')}`;
-        
-        let link = navTop.querySelectorAll('a')[DATA.headIndex];
-        let elementorHeader = document.getElementById("elementor-header");
-        let resizeHeader = () => {
-            if (link && elementorHeader) {
-                // Asegurar que la flecha se posiciona correctamente
-                requestAnimationFrame(() => {
-                    elementorHeader.style.left = `${link.offsetLeft + link.offsetWidth/2}px`;
-                    elementorHeader.classList.add("active");
-                });
-            }
-        };
-        window.addEventListener('resize', resizeHeader);
-        // Mejorar el timing para evitar animaciones raras
-        if (document.readyState === 'complete') {
-            setTimeout(resizeHeader, 150);
-        } else {
-            window.addEventListener('load', resizeHeader);
-        }
-    }],
-    ['footer-section', '/assets/sections/footer.html', ()=>{}]
-];
-
 // Exportar datos y funciones
 export {
     courses,

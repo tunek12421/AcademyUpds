@@ -192,17 +192,17 @@ export const navLinks = [
     { name: 'Cursos', href: '/cursos' , navs: [
         {name: "Facultades", href: "/facultades", submenu: [
             {name: "Ciencias de la Salud", href: "/facultades/ciencias-salud", submenu: [
-                {name: "Curso de Manejo de Cadáveres", href: "/facultades/ciencias-salud/manejo-cadaveres"},
-                {name: "Curso de Primeros Auxilios", href: "/facultades/ciencias-salud/primeros-auxilios"}
+                {name: "Curso de Manejo de Cadáveres", href: "/curso?id=1"},
+                {name: "Curso de Primeros Auxilios", href: "/curso?id=1"}
             ]},
             {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
-                {name: "Excel Experto", href: "/facultades/ingenieria/excel-experto"}
+                {name: "Excel Experto", href: "/curso?id=1"}
             ]},
             {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
-                {name: "Tributación Aplicada y Llenado de Formularios", href: "/facultades/ciencias-empresariales/tributacion-aplicada"}
+                {name: "Tributación Aplicada y Llenado de Formularios", href: "/curso?id=1"}
             ]},
             {name: "Ciencias Jurídicas", href: "/facultades/ciencias-juridicas", submenu: [
-                {name: "Estrategias de Litigación y Simulacros de Audiencias", href: "/facultades/ciencias-juridicas/estrategias-litigacion"}
+                {name: "Estrategias de Litigación y Simulacros de Audiencias", href: "/curso?id=1"}
             ]}
         ]},
         {name: "Academias", href: "/academias", submenu: [

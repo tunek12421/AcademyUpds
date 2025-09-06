@@ -207,5 +207,4 @@ export {
     getCourseById,
     getCoursesByCategory,
     getOtherCourses,
-    sections,
 };

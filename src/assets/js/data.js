@@ -113,51 +113,11 @@ const courses = [
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
-            {
-                title: 'Capítulo 1: RouterOS',
-                content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 2: Ruteo Estático',
-                content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
-                content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 5: Network Management',
-                content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 6: Firewall',
-                content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
-                duration: '2.5 horas'
-            },
-            {
-                title: 'Capítulo 7: Colas Simples y QoS',
-                content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 8: Túneles PPP',
-                content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 9: Herramientas RouterOS',
-                content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
-                duration: '1.5 horas'
-            }
+            'Comprender la Importancia del  manejo coreecto de cadáveres en contextos clinicos, forenses y comunitarios.',
+            'Conocer la Legislación Boliviana y Protocolos del  IDIF.',
+            'Aplicar medidas de bioseguirdad y uso de equipo de proteccion  personal.',
+            'Ejecutar correctamente procedimientos de levantamiento, transporte, conservacion y almacenamiento de cuerpos.',
+            'Manejar documentación y  cadena de custodia de acuerdo con  la normativa legal.'
         ],
         completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
         prerequisites: {
@@ -211,51 +171,11 @@ const courses = [
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
-            {
-                title: 'Capítulo 1: RouterOS',
-                content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 2: Ruteo Estático',
-                content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
-                content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 5: Network Management',
-                content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 6: Firewall',
-                content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
-                duration: '2.5 horas'
-            },
-            {
-                title: 'Capítulo 7: Colas Simples y QoS',
-                content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 8: Túneles PPP',
-                content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 9: Herramientas RouterOS',
-                content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
-                duration: '1.5 horas'
-            }
+            'Capacitar a los participantes en técnicas básicas de primeros auxilios para brindar una atención oportuna y efectiva en situaciones de emergencia, minimizando riesgos y preservando la vida.',
+            'Ejecutar correctamente maniobras de Reanimación Cardiopulmonar (RCP) básica.',
+            'Aplicar técnicas para el control de hemorragias y tratamiento de heridas.',
+            'Identificar y actuar ante emergencias médicas frecuentes.',
+            'Reconocer y evaluar el estado inicial del paciente y activar el sistema de emergencias.'
         ],
         completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
         prerequisites: {
@@ -309,51 +229,11 @@ const courses = [
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
-            {
-                title: 'Capítulo 1: RouterOS',
-                content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 2: Ruteo Estático',
-                content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
-                content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 5: Network Management',
-                content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 6: Firewall',
-                content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
-                duration: '2.5 horas'
-            },
-            {
-                title: 'Capítulo 7: Colas Simples y QoS',
-                content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 8: Túneles PPP',
-                content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 9: Herramientas RouterOS',
-                content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
-                duration: '1.5 horas'
-            }
+            'Introducción al entorno de Excel',
+            'Primeros pasos con fórmulas y funciones',
+            'Manejo de datos básicos',
+            'Formato de hojas y presentación',
+            'Gráficos simples y validación'
         ],
         completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
         prerequisites: {
@@ -407,51 +287,11 @@ const courses = [
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
-            {
-                title: 'Capítulo 1: RouterOS',
-                content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 2: Ruteo Estático',
-                content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
-                content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 5: Network Management',
-                content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 6: Firewall',
-                content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
-                duration: '2.5 horas'
-            },
-            {
-                title: 'Capítulo 7: Colas Simples y QoS',
-                content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 8: Túneles PPP',
-                content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 9: Herramientas RouterOS',
-                content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
-                duration: '1.5 horas'
-            }
+            'Día 1: Marco normativo y principios básicos de tributación en Bolivia',
+            'Día 2: Tipos de impuestos y obligaciones tributarias',
+            'Día 3: Procedimientos de declaración y normativa vigente',
+            'Día 4: Llenado práctico de formularios tributarios',
+            'Día 5: Casos de aplicación y simulación de declaraciones tributarias'
         ],
         completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
         prerequisites: {
@@ -505,51 +345,10 @@ const courses = [
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
-            {
-                title: 'Capítulo 1: RouterOS',
-                content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 2: Ruteo Estático',
-                content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
-                content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 5: Network Management',
-                content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
-                duration: '1.5 horas'
-            },
-            {
-                title: 'Capítulo 6: Firewall',
-                content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
-                duration: '2.5 horas'
-            },
-            {
-                title: 'Capítulo 7: Colas Simples y QoS',
-                content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 8: Túneles PPP',
-                content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
-                duration: '2 horas'
-            },
-            {
-                title: 'Capítulo 9: Herramientas RouterOS',
-                content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
-                duration: '1.5 horas'
-            }
+            'Marco general de las medidas cuatelares.',
+            'Detención preventiva: Supuestos requisitos.',
+            'El Test de proporcionalidad y la razonabilidad de la detención preventiva.',
+            'Condiciones de validez de la detención preventiva.'
         ],
         completion: 'Al finalizar este curso, los participantes deberán estar en capacidad de configurar y administrar dispositivos MikroTik con RouterOS en redes pequeñas y medianas, además de estar preparados para el examen de certificación MTCNA.',
         prerequisites: {

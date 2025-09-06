@@ -8873,6 +8873,10 @@ video {
   left:0.75rem
 }
 
+.left-full{
+  left:100%
+}
+
 .right-0{
   right:0px
 }
@@ -9075,6 +9079,10 @@ video {
 
 .w-4{
   width:1rem
+}
+
+.w-48{
+  width:12rem
 }
 
 .w-5{
@@ -9299,6 +9307,11 @@ video {
 
 .border-t{
   border-top-width:1px
+}
+
+.border-gray-100{
+  --tw-border-opacity:1;
+  border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))
 }
 
 .border-gray-200{

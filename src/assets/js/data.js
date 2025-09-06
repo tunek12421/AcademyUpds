@@ -191,13 +191,28 @@ export const navLinks = [
     ] },
     { name: 'Cursos', href: '/cursos' , navs: [
         {name: "Facultades", href: "/facultades", submenu: [
-            {name: "Facultad 1", href: "/facultades/facultad-1"},
-            {name: "Facultad 2", href: "/facultades/facultad-2"},
-            {name: "Facultad 3", href: "/facultades/facultad-3"}
+            {name: "Facultad 1", href: "/facultades/facultad-1", submenu: [
+                {name: "Curso 1", href: "/facultades/facultad-1/curso-1"},
+                {name: "Curso 2", href: "/facultades/facultad-1/curso-2"}
+            ]},
+            {name: "Facultad 2", href: "/facultades/facultad-2", submenu: [
+                {name: "Curso 1", href: "/facultades/facultad-2/curso-1"},
+                {name: "Curso 2", href: "/facultades/facultad-2/curso-2"}
+            ]},
+            {name: "Facultad 3", href: "/facultades/facultad-3", submenu: [
+                {name: "Curso 1", href: "/facultades/facultad-3/curso-1"},
+                {name: "Curso 2", href: "/facultades/facultad-3/curso-2"}
+            ]}
         ]},
         {name: "Academias", href: "/academias", submenu: [
-            {name: "Academia 1", href: "/academias/academia-1"},
-            {name: "Academia 2", href: "/academias/academia-2"}
+            {name: "Academia 1", href: "/academias/academia-1", submenu: [
+                {name: "Curso 1", href: "/academias/academia-1/curso-1"},
+                {name: "Curso 2", href: "/academias/academia-1/curso-2"}
+            ]},
+            {name: "Academia 2", href: "/academias/academia-2", submenu: [
+                {name: "Curso 1", href: "/academias/academia-2/curso-1"},
+                {name: "Curso 2", href: "/academias/academia-2/curso-2"}
+            ]}
         ]}
     ] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },

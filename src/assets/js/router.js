@@ -469,9 +469,34 @@ class SPARouter {
                     navBottom.innerHTML = currentNavs.map(link => {
                         if (link.submenu && link.submenu.length > 0) {
                             // Crear dropdown para elementos con submenú
-                            const submenuHTML = link.submenu.map((subitem, index) => 
-                                `<a href="${subitem.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < link.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}">${subitem.name}</a>`
-                            ).join('');
+                            const submenuHTML = link.submenu.map((subitem, index) => {
+                                if (subitem.submenu && subitem.submenu.length > 0) {
+                                    // Elemento con submenú anidado
+                                    const nestedSubmenuHTML = subitem.submenu.map((nestedItem, nestedIndex) => 
+                                        `<a href="${nestedItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors ${nestedIndex < subitem.submenu.length - 1 ? 'border-b border-gray-100' : ''}">${nestedItem.name}</a>`
+                                    ).join('');
+                                    
+                                    return `
+                                        <div class="nested-dropdown-container relative">
+                                            <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer ${index < link.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}" 
+                                                 data-nested-dropdown="${subitem.name}">
+                                                <span>${subitem.name}</span>
+                                                <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-50">
+                                                <div class="py-1">
+                                                    ${nestedSubmenuHTML}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                } else {
+                                    // Elemento normal sin submenú anidado
+                                    return `<a href="${subitem.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < link.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}">${subitem.name}</a>`;
+                                }
+                            }).join('');
                             
                             return `
                                 <div class="dropdown-container relative inline-block">
@@ -868,6 +893,8 @@ class SPARouter {
         // Obtener todos los triggers de dropdown
         const dropdownTriggers = document.querySelectorAll('.dropdown-trigger');
         const dropdownContainers = document.querySelectorAll('.dropdown-container');
+        const nestedDropdownTriggers = document.querySelectorAll('.dropdown-item-with-submenu');
+        const nestedDropdownContainers = document.querySelectorAll('.nested-dropdown-container');
         
         this.dropdownListeners = [];
         
@@ -944,11 +971,76 @@ class SPARouter {
             }
         });
         
+        // Manejar dropdowns anidados
+        nestedDropdownTriggers.forEach(trigger => {
+            const container = trigger.closest('.nested-dropdown-container');
+            const menu = container.querySelector('.nested-dropdown-menu');
+            
+            if (!container || !menu) return;
+            
+            // Detectar si es dispositivo móvil
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile) {
+                // En móviles, usar click
+                const clickListener = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Cerrar otros dropdowns anidados
+                    nestedDropdownContainers.forEach(otherContainer => {
+                        if (otherContainer !== container) {
+                            this.closeNestedDropdown(otherContainer);
+                        }
+                    });
+                    
+                    // Toggle del dropdown anidado actual
+                    this.toggleNestedDropdown(container);
+                };
+                
+                trigger.addEventListener('click', clickListener);
+                this.dropdownListeners.push({ element: trigger, event: 'click', listener: clickListener });
+            } else {
+                // En desktop, usar hover
+                const mouseEnterListener = (e) => {
+                    // Cerrar otros dropdowns anidados
+                    nestedDropdownContainers.forEach(otherContainer => {
+                        if (otherContainer !== container) {
+                            this.closeNestedDropdown(otherContainer);
+                        }
+                    });
+                    
+                    // Abrir el dropdown anidado actual
+                    this.openNestedDropdown(container);
+                };
+                
+                const mouseLeaveListener = (e) => {
+                    // Usar setTimeout para permitir que el mouse se mueva al dropdown
+                    setTimeout(() => {
+                        // Verificar si el mouse no está sobre el container o el dropdown
+                        const containerHovered = container.matches(':hover');
+                        if (!containerHovered) {
+                            this.closeNestedDropdown(container);
+                        }
+                    }, 100);
+                };
+                
+                container.addEventListener('mouseenter', mouseEnterListener);
+                container.addEventListener('mouseleave', mouseLeaveListener);
+                
+                this.dropdownListeners.push({ element: container, event: 'mouseenter', listener: mouseEnterListener });
+                this.dropdownListeners.push({ element: container, event: 'mouseleave', listener: mouseLeaveListener });
+            }
+        });
+        
         // Click fuera para cerrar dropdowns (solo para móviles)
         const documentClickListener = (e) => {
             if (!e.target.closest('.dropdown-container')) {
                 dropdownContainers.forEach(container => {
                     this.closeDropdown(container);
+                });
+                nestedDropdownContainers.forEach(container => {
+                    this.closeNestedDropdown(container);
                 });
             }
         };
@@ -961,6 +1053,9 @@ class SPARouter {
             // Cerrar todos los dropdowns primero
             dropdownContainers.forEach(container => {
                 this.closeDropdown(container);
+            });
+            nestedDropdownContainers.forEach(container => {
+                this.closeNestedDropdown(container);
             });
             // Reinicializar después de un pequeño delay
             setTimeout(() => this.initDropdownFunctionality(), 100);
@@ -1017,6 +1112,51 @@ class SPARouter {
         }
     }
     
+    toggleNestedDropdown(container) {
+        const menu = container.querySelector('.nested-dropdown-menu');
+        const arrow = container.querySelector('.nested-arrow');
+        
+        if (!menu) return;
+        
+        const isOpen = menu.classList.contains('nested-dropdown-open');
+        
+        if (isOpen) {
+            this.closeNestedDropdown(container);
+        } else {
+            this.openNestedDropdown(container);
+        }
+    }
+    
+    openNestedDropdown(container) {
+        const menu = container.querySelector('.nested-dropdown-menu');
+        const arrow = container.querySelector('.nested-arrow');
+        
+        if (!menu) return;
+        
+        menu.classList.add('nested-dropdown-open');
+        menu.classList.remove('opacity-0', 'invisible', 'scale-95');
+        menu.classList.add('opacity-100', 'visible', 'scale-100');
+        
+        if (arrow) {
+            arrow.style.transform = 'rotate(90deg)';
+        }
+    }
+    
+    closeNestedDropdown(container) {
+        const menu = container.querySelector('.nested-dropdown-menu');
+        const arrow = container.querySelector('.nested-arrow');
+        
+        if (!menu) return;
+        
+        menu.classList.remove('nested-dropdown-open');
+        menu.classList.remove('opacity-100', 'visible', 'scale-100');
+        menu.classList.add('opacity-0', 'invisible', 'scale-95');
+        
+        if (arrow) {
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+
     cleanupDropdownListeners() {
         if (this.dropdownListeners) {
             this.dropdownListeners.forEach(({ element, event, listener }) => {

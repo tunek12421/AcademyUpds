@@ -192,20 +192,17 @@ export const navLinks = [
     { name: 'Cursos', href: '/cursos' , navs: [
         {name: "Facultades", href: "/facultades", submenu: [
             {name: "Ciencias de la Salud", href: "/facultades/ciencias-salud", submenu: [
-                {name: "Curso 1", href: "/facultades/ciencias-salud/curso-1"},
-                {name: "Curso 2", href: "/facultades/ciencias-salud/curso-2"}
+                {name: "Curso de Manejo de Cadáveres", href: "/facultades/ciencias-salud/manejo-cadaveres"},
+                {name: "Curso de Primeros Auxilios", href: "/facultades/ciencias-salud/primeros-auxilios"}
             ]},
             {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
-                {name: "Curso 1", href: "/facultades/ingenieria/curso-1"},
-                {name: "Curso 2", href: "/facultades/ingenieria/curso-2"}
+                {name: "Excel Experto", href: "/facultades/ingenieria/excel-experto"}
             ]},
             {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
-                {name: "Curso 1", href: "/facultades/ciencias-empresariales/curso-1"},
-                {name: "Curso 2", href: "/facultades/ciencias-empresariales/curso-2"}
+                {name: "Tributación Aplicada y Llenado de Formularios", href: "/facultades/ciencias-empresariales/tributacion-aplicada"}
             ]},
             {name: "Ciencias Jurídicas", href: "/facultades/ciencias-juridicas", submenu: [
-                {name: "Curso 1", href: "/facultades/ciencias-juridicas/curso-1"},
-                {name: "Curso 2", href: "/facultades/ciencias-juridicas/curso-2"}
+                {name: "Estrategias de Litigación y Simulacros de Audiencias", href: "/facultades/ciencias-juridicas/estrategias-litigacion"}
             ]}
         ]},
         {name: "Academias", href: "/academias", submenu: [

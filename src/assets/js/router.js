@@ -12,9 +12,14 @@ class SPARouter {
             '/cochabamba': () => this.redirectExternal('https://www.upds.edu.bo/sede/cochabamba/'),
             '/facultades': () => this.loadFacultades(),
             '/facultades/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
+            '/facultades/ciencias-salud/manejo-cadaveres': () => this.loadCursoFacultad('ciencias-salud', 'manejo-cadaveres'),
+            '/facultades/ciencias-salud/primeros-auxilios': () => this.loadCursoFacultad('ciencias-salud', 'primeros-auxilios'),
             '/facultades/ingenieria': () => this.loadFacultad('ingenieria'),
+            '/facultades/ingenieria/excel-experto': () => this.loadCursoFacultad('ingenieria', 'excel-experto'),
             '/facultades/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
+            '/facultades/ciencias-empresariales/tributacion-aplicada': () => this.loadCursoFacultad('ciencias-empresariales', 'tributacion-aplicada'),
             '/facultades/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
+            '/facultades/ciencias-juridicas/estrategias-litigacion': () => this.loadCursoFacultad('ciencias-juridicas', 'estrategias-litigacion'),
             '/academias': () => this.loadAcademias(),
             '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
             '/academias/huawei': () => this.loadAcademia('huawei'),
@@ -425,9 +430,14 @@ class SPARouter {
             '/curso': 1,
             '/facultades': 1,
             '/facultades/ciencias-salud': 1,
+            '/facultades/ciencias-salud/manejo-cadaveres': 1,
+            '/facultades/ciencias-salud/primeros-auxilios': 1,
             '/facultades/ingenieria': 1,
+            '/facultades/ingenieria/excel-experto': 1,
             '/facultades/ciencias-empresariales': 1,
+            '/facultades/ciencias-empresariales/tributacion-aplicada': 1,
             '/facultades/ciencias-juridicas': 1,
+            '/facultades/ciencias-juridicas/estrategias-litigacion': 1,
             '/academias': 1,
             '/academias/mikrotik': 1,
             '/academias/huawei': 1,
@@ -876,6 +886,31 @@ class SPARouter {
         };
         
         console.log(`🎓 [ROUTER] Cargando Academia ${academiaNames[nombre]}`);
+        // Por ahora, redirigir a la página principal
+        this.loadHome();
+    }
+
+    async loadCursoFacultad(facultad, curso) {
+        updateState({ selectedCourse: null });
+        window.DATA.name = `facultad-${facultad}-curso-${curso}`;
+        this.cleanupScrollDetection();
+        
+        const cursoNames = {
+            'manejo-cadaveres': 'Curso de Manejo de Cadáveres',
+            'primeros-auxilios': 'Curso de Primeros Auxilios',
+            'excel-experto': 'Excel Experto',
+            'tributacion-aplicada': 'Tributación Aplicada y Llenado de Formularios',
+            'estrategias-litigacion': 'Estrategias de Litigación y Simulacros de Audiencias'
+        };
+        
+        const facultadNames = {
+            'ciencias-salud': 'Ciencias de la Salud',
+            'ingenieria': 'Ingeniería',
+            'ciencias-empresariales': 'Ciencias Empresariales',
+            'ciencias-juridicas': 'Ciencias Jurídicas'
+        };
+        
+        console.log(`📚 [ROUTER] Cargando ${cursoNames[curso]} de la Facultad de ${facultadNames[facultad]}`);
         // Por ahora, redirigir a la página principal
         this.loadHome();
     }

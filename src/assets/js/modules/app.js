@@ -269,35 +269,10 @@ export function renderCourseView(course) {
         return;
     }
 
-    // Obtener el contenedor principal
-    const mainContainer = document.querySelector('main .space-y-8');
-    if (!mainContainer) {
-        console.error('❌ [COURSE] No se encontró el contenedor principal');
-        return;
-    }
-    
+   
     console.log('✅ [COURSE] Contenedor principal encontrado');
 
-    // Limpiar contenido anterior
-    mainContainer.innerHTML = '';
-
-    // Crear la estructura de la vista de curso
-    mainContainer.innerHTML = `
-        <div class="grid lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-6">
-                <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-                <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-                <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-                <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-            </div>
-            <div class="space-y-6">
-                <div id="pricing-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-                <div id="other-courses-card" class="rounded-lg border bg-card text-card-foreground shadow-sm"></div>
-            </div>
-        </div>
-    `;
-
-    // Renderizar componentes
+    // Renderizar componentes directamente con contenido
     renderCourseDetails(course);
 }
 
@@ -305,17 +280,17 @@ function renderCourseDetails(course) {
     if (!course) return;
     
     // Obtener el contenedor principal
-    const mainContainer = document.querySelector('main .space-y-8');
+    const mainContainer = document.querySelector("main");
+    console.log("container", mainContainer);
     if (!mainContainer) {
         console.error('No se encontró el contenedor principal');
         return;
     }
     
-    // Limpiar contenido anterior
-    mainContainer.innerHTML = '';
-    
-    // Crear la estructura del curso
+    // Crear la estructura del curso directamente con contenido
     try {
+        console.log('🔨 [COURSE] Construyendo HTML del curso...');
+        
         const courseHTML = `
             <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Main Content -->
@@ -363,9 +338,12 @@ function renderCourseDetails(course) {
             </div>
         `;
         
+        console.log('✅ [COURSE] Insertando HTML completo...');
         mainContainer.innerHTML = courseHTML;
+        
+        console.log('🎉 [COURSE] Renderizado completado exitosamente');
     } catch (error) {
-        console.error('Error al renderizar curso:', error);
+        console.error('❌ [COURSE] Error al renderizar curso:', error);
         mainContainer.innerHTML = `
             <div class="text-center py-8">
                 <h2 class="text-2xl font-bold mb-4">Error al cargar el curso</h2>
@@ -392,10 +370,6 @@ function initializeApp() {
     
     // Renderizar contenido inicial
     renderCoursesGrid();
-    renderCourseDetails();
-    
-    // Configurar tab inicial
-    //switchTab(appState.activeTab);
 }
 
 // Event listeners para cuando el DOM esté listo

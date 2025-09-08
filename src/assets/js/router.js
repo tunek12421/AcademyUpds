@@ -9,7 +9,6 @@ class SPARouter {
             '/cursos': () => this.loadCursos(),
             '/curso': () => this.loadCourse(),
             '/mikrotik': () => this.loadMikrotik(),
-            '/cochabamba': () => this.redirectExternal('https://www.upds.edu.bo/sede/cochabamba/'),
             '/facultades': () => this.loadFacultades(),
             '/facultades/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
             '/facultades/ciencias-salud/manejo-cadaveres': () => this.loadCursoFacultad('ciencias-salud', 'manejo-cadaveres'),
@@ -53,6 +52,12 @@ class SPARouter {
             
             // Interceptar clicks en navegación principal (upds-nav-link)
             if (link.classList.contains('upds-nav-link')) {
+                // Caso especial para Cochabamba - abrir enlace externo directamente
+                if (href && href.includes('cochabamba')) {
+                    window.open('https://www.upds.edu.bo/sede/cochabamba/', '_blank');
+                    return; // No prevenir default, no cambiar navegación interna
+                }
+                
                 e.preventDefault();
                 
                 // Obtener el índice del enlace clickeado
@@ -86,6 +91,24 @@ class SPARouter {
             
             // Interceptar enlaces de páginas
             if (e.target.matches('a[href^="/"]') || e.target.closest('a[href^="/"]')) {
+                // Caso especial para Cochabamba - abrir enlace externo directamente
+                if (href && href.includes('cochabamba')) {
+                    e.preventDefault();
+                    
+                    // Cerrar menú móvil si está abierto (usar las clases correctas)
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const mobileToggle = document.getElementById('mobile-toggle');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        if (mobileToggle) {
+                            mobileToggle.classList.remove('active');
+                        }
+                    }
+                    
+                    window.open('https://www.upds.edu.bo/sede/cochabamba/', '_blank');
+                    return;
+                }
+                
                 e.preventDefault();
                 
                 // No interceptar enlaces externos o de assets
@@ -102,11 +125,20 @@ class SPARouter {
             this.loadRoute(window.location.pathname + window.location.search);
         });
 
+        // Manejar recarga de página - scroll hacia arriba
+        window.addEventListener('beforeunload', () => {
+            // Scroll instantáneo hacia arriba antes de que se recargue la página
+            window.scrollTo(0, 0);
+            console.log('🔄 [ROUTER] Scroll hacia arriba ejecutado antes del reload');
+        });
         // Cargar ruta inicial
         this.loadRoute(window.location.pathname + window.location.search);
         
         // Inicializar navegación del header
         this.initHeaderNavigation();
+        
+        // Inicializar menú móvil
+        this.initMobileMenu();
     }
 
     initHeaderNavigation() {
@@ -126,7 +158,7 @@ class SPARouter {
                     navBottom.innerHTML = `${currentNav.navs.map(link => `<a href="${link.href}" class="upds-contact-link">${link.name}</a>`).join('')}`;
                 } else if (currentNav.sections && currentNav.sections.length > 0) {
                     // Si no hay navs pero sí sections (como en Inicio), usar sections
-                    navBottom.innerHTML = `${currentNav.sections.map(section => `<a href="#${section.id}" class="upds-section-link hover:text-gray-200 transition-colors">${section.name}</a>`).join('')}`;
+                    navBottom.innerHTML = `${currentNav.sections.map(section => `<a href="#${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`).join('')}`;
                 }
             }
             
@@ -200,14 +232,15 @@ class SPARouter {
                 newContent.style.transition = 'opacity 0.3s ease-in';
             }
             
-            // 7. Mostrar el contenedor principal y esperar que el DOM se procese
-            this.showMainContent();
             
-            // 8. Esperar a que el DOM esté completamente procesado
+            // 7. Esperar a que el DOM esté completamente procesado
             await this.waitForDOMReady();
             
-            // 9. Pequeño delay adicional para asegurar que todo esté renderizado
+            // 8. Pequeño delay adicional para asegurar que todo esté renderizado
             await new Promise(resolve => setTimeout(resolve, 150));
+            
+            // 9. Mostrar el contenedor principal y esperar que el DOM se procese
+            this.showMainContent();
             
             // 10. Ocultar indicador de carga
             this.hideLoadingOverlay();
@@ -218,14 +251,6 @@ class SPARouter {
                 console.log('✨ [ROUTER] Nuevo contenido mostrado');
             }
             
-            // 12. Scroll suave hacia arriba después de cargar la nueva página
-            setTimeout(() => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-                console.log('⬆️ [ROUTER] Scroll suave hacia arriba ejecutado');
-            }, 100);
             
             // 13. Remover la altura mínima fija después de que termine la transición
             setTimeout(() => {
@@ -256,43 +281,77 @@ class SPARouter {
     }
 
     showLoadingOverlay() {
-        // Crear overlay discreto sobre el área de contenido
+        // Crear overlay que solo cubre el área main (no header ni footer)
         const overlay = document.createElement('div');
         overlay.id = 'page-loading-overlay';
-        overlay.className = 'absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10';
-        overlay.innerHTML = `
-            <div class="flex items-center space-x-3 text-gray-600">
-                <div class="w-6 h-6 border-2 border-gray-300 border-t-primary rounded-full animate-spin"></div>
-                <span class="text-sm font-medium">Cargando...</span>
-            </div>
-        `;
+        overlay.className = 'absolute inset-0 w-full h-full bg-white bg-opacity-95 z-9';
         
-        // Asegurar que el contenedor principal tenga position relative
+        // Agregar el overlay al mainSection
         this.mainSection.style.position = 'relative';
         this.mainSection.appendChild(overlay);
+
+        // Crear el contenedor del indicador de carga simple con position fixed (independiente)
+        const loadingContainer = document.createElement('div');
+        loadingContainer.id = 'page-loading-indicator';
+        loadingContainer.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center gap-3 z-[9999] opacity-0 transition-opacity duration-300';
         
+        // Crear el spinner simple
+        const spinner = document.createElement('div');
+        spinner.className = 'w-6 h-6 border-2 border-gray-300 border-t-primary rounded-full animate-spin';
+        
+        // Crear el texto
+        const loadingText = document.createElement('span');
+        loadingText.textContent = 'Cargando...';
+        loadingText.className = 'text-gray-600 text-sm font-medium';
+        
+        // Ensamblar el indicador (horizontal: spinner + texto)
+        loadingContainer.appendChild(spinner);
+        loadingContainer.appendChild(loadingText);
+        
+        // Agregar el indicador al body (position fixed)
+        document.body.appendChild(loadingContainer);
+
         // Animar entrada
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.transition = 'opacity 0.2s ease-in';
-            overlay.style.opacity = '1';
-        }, 10);
+        requestAnimationFrame(() => {
+            loadingContainer.classList.remove('opacity-0');
+            loadingContainer.classList.add('opacity-100');
+        });
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
 
     hideLoadingOverlay() {
+        // Ocultar y remover el overlay del área main
         const overlay = document.getElementById('page-loading-overlay');
         if (overlay) {
-            overlay.style.transition = 'opacity 0.2s ease-out';
-            overlay.style.opacity = '0';
-            
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
             setTimeout(() => {
                 if (overlay.parentNode) {
                     overlay.remove();
                 }
-                // Limpiar el position relative si no es necesario
-                this.mainSection.style.position = '';
-            }, 200);
+            }, 300);
         }
+        
+        // Ocultar y remover el indicador fixed
+        const loadingIndicator = document.getElementById('page-loading-indicator');
+        if (loadingIndicator) {
+            // Animar salida suave
+            loadingIndicator.classList.remove('opacity-100');
+            loadingIndicator.classList.add('opacity-0');
+            
+            // Remover del DOM después de la animación
+            setTimeout(() => {
+                if (loadingIndicator.parentNode) {
+                    loadingIndicator.remove();
+                }
+            }, 300);
+        }
+        
+        // Limpiar el position relative si no es necesario
+        this.mainSection.style.position = '';
     }
 
     // Función para esperar a que el DOM esté completamente procesado
@@ -334,7 +393,7 @@ class SPARouter {
         const element = document.getElementById(sectionId);
         if (element) {
             // Calcular la posición teniendo en cuenta el header sticky
-            const elementPosition = element.offsetTop; // 10px de margen adicional
+            const elementPosition = element.offsetTop-80;
             
             // Scroll suave
             window.scrollTo({
@@ -426,6 +485,19 @@ class SPARouter {
             };
         }
         
+        // Verificar si es una ruta de curso y determinar el índice correcto
+        if (route === '/curso') {
+            // Obtener el ID del curso desde los parámetros de la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id');
+            
+            if (courseId === '1') {
+                // Curso Mikrotik MTCNA debe ir al índice 3 (Mikrotik)
+                window.DATA.headIndex = 3;
+                return;
+            }
+        }
+        
         const routeToIndex = {
             '/': 0,
             '/home': 0,
@@ -445,7 +517,6 @@ class SPARouter {
             '/academias': 1,
             '/academias/mikrotik': 1,
             '/academias/huawei': 1,
-            '/cochabamba': 2,
             '/mikrotik': 3,
             '/ciencias-salud': 1,
             '/ingenieria': 1,
@@ -461,7 +532,7 @@ class SPARouter {
         // Pequeño delay para asegurar que el DOM esté actualizado
         setTimeout(() => {
             const navTop = document.querySelector(".upds-nav-top");
-            const elementorHeader = document.getElementById("elementor-header");
+            const elementorHeader=document.getElementById("elementor-header");
             
             if (navTop && elementorHeader) {
                 const link = navTop.querySelectorAll('a')[window.DATA.headIndex];
@@ -505,7 +576,7 @@ class SPARouter {
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                                 </svg>
                                             </div>
-                                            <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-50">
+                                            <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
                                                 <div class="py-1">
                                                     ${nestedSubmenuHTML}
                                                 </div>
@@ -520,14 +591,14 @@ class SPARouter {
                             
                             return `
                                 <div class="dropdown-container relative inline-block">
-                                    <button class="upds-contact-link dropdown-trigger hover:text-gray-200 transition-colors flex items-center" 
+                                    <button class="upds-contact-link dropdown-trigger hover:text-primary-hover transition-colors flex items-center" 
                                             data-dropdown="${link.name}">
                                         ${link.name}
                                         <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
                                     </button>
-                                    <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-50">
+                                    <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
                                         <div class="py-2">
                                             ${submenuHTML}
                                         </div>
@@ -536,7 +607,7 @@ class SPARouter {
                             `;
                         } else {
                             // Enlace normal sin submenú
-                            return `<a href="${link.href}" class="upds-contact-link hover:text-gray-200 transition-colors">${link.name}</a>`;
+                            return `<a href="${link.href}" class="upds-contact-link hover:text-primary-hover transition-colors">${link.name}</a>`;
                         }
                     }).join('');
                     
@@ -545,7 +616,7 @@ class SPARouter {
                 } else if (currentSections.length > 0) {
                     // Mostrar navegación de secciones (como en Inicio)
                     navBottom.innerHTML = currentSections.map(section => 
-                        `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-gray-200 transition-colors">${section.name}</a>`
+                        `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`
                     ).join('');
                     
                     // Si estamos en home, inicializar scroll detection
@@ -619,7 +690,7 @@ class SPARouter {
             
             // Crear enlaces de navegación dinámicamente
             navBottom.innerHTML = homeSections.map(section => 
-                `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-gray-200 transition-colors">
+                `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">
                     ${section.name}
                 </a>`
             ).join('');
@@ -636,7 +707,7 @@ class SPARouter {
             // Remover clase activa de todos los enlaces
             const allLinks = navBottom.querySelectorAll('.upds-section-link');
             allLinks.forEach(link => {
-                link.classList.remove('text-yellow-300', 'font-bold');
+                link.classList.remove('text-primary-hover', 'font-bold');
                 link.classList.add('text-white');
             });
             
@@ -644,7 +715,7 @@ class SPARouter {
             const activeLink = navBottom.querySelector(`[data-section="${section.id}"]`);
             if (activeLink) {
                 activeLink.classList.remove('text-white');
-                activeLink.classList.add('text-yellow-300', 'font-bold');
+                activeLink.classList.add('text-primary-hover', 'font-bold');
                 console.log('✅ [HOME-SECTIONS] Sección resaltada:', section.name);
             }
         }
@@ -725,16 +796,16 @@ class SPARouter {
             
             // Crear enlaces de navegación para las secciones del curso
             navBottom.innerHTML = `
-                <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-gray-200 transition-colors">
+                <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
                     Información
                 </a>
-                <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-gray-200 transition-colors">
+                <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
                     Instructor
                 </a>
-                <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-gray-200 transition-colors">
+                <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
                     Contenido
                 </a>
-                <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-gray-200 transition-colors">
+                <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
                     Habilidades
                 </a>
             `;
@@ -751,7 +822,7 @@ class SPARouter {
             // Remover clase activa de todos los enlaces
             const allLinks = navBottom.querySelectorAll('.upds-course-link');
             allLinks.forEach(link => {
-                link.classList.remove('text-yellow-300', 'font-bold');
+                link.classList.remove('text-primary-hover', 'font-bold');
                 link.classList.add('text-white');
             });
             
@@ -759,7 +830,7 @@ class SPARouter {
             const activeLink = navBottom.querySelector(`[data-section="${section.id}"]`);
             if (activeLink) {
                 activeLink.classList.remove('text-white');
-                activeLink.classList.add('text-yellow-300', 'font-bold');
+                activeLink.classList.add('text-primary-hover', 'font-bold');
                 console.log('✅ [COURSE-SECTIONS] Sección de curso resaltada:', section.name);
             }
         }
@@ -1244,6 +1315,212 @@ class SPARouter {
             });
             this.dropdownListeners = [];
         }
+    }
+
+    // Inicializar funcionalidad del menú móvil
+    initMobileMenu() {
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileContent = document.getElementById('mobile-menu-content');
+
+        if (!mobileToggle || !mobileMenu || !mobileContent) {
+            console.log('📱 [MOBILE-MENU] Elementos del menú móvil no encontrados');
+            return;
+        }
+
+        // Función para abrir menú móvil dropdown
+        const openMobileMenu = () => {
+            mobileMenu.classList.add('active');
+            mobileToggle.classList.add('active');
+            this.generateMobileMenuContent();
+            console.log('📱 [MOBILE-MENU] Menú dropdown abierto');
+        };
+
+        // Función para cerrar menú móvil
+        const closeMobileMenu = () => {
+            mobileMenu.classList.remove('active');
+            mobileToggle.classList.remove('active');
+            console.log('📱 [MOBILE-MENU] Menú dropdown cerrado');
+        };
+
+        // Toggle del menú
+        const toggleMobileMenu = () => {
+            if (mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        };
+
+        // Event listeners
+        mobileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+
+        // Cerrar menú al hacer click fuera de él
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+                if (mobileMenu.classList.contains('active')) {
+                    closeMobileMenu();
+                }
+            }
+        });
+
+        // Cerrar menú al presionar escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Cerrar menú cuando se navega
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('.mobile-nav-link');
+            if (link && link.getAttribute('href') && !link.getAttribute('href').startsWith('#')) {
+                setTimeout(() => closeMobileMenu(), 100);
+            }
+        });
+
+        // Cerrar menú al cambiar el tamaño de ventana a desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 769 && mobileMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        console.log('📱 [MOBILE-MENU] Funcionalidad dropdown inicializada');
+    }
+
+    // Generar contenido del menú móvil
+    generateMobileMenuContent() {
+        const mobileContent = document.getElementById('mobile-menu-content');
+        if (!mobileContent) return;
+
+        // Importar navLinks
+        import('./data.js').then(module => {
+            const { navLinks } = module;
+            
+            let mobileMenuHTML = '';
+
+            // PRIMERO: Agregar las secciones de la página actual al inicio
+            const currentPageSections = this.getCurrentPageSections();
+            if (currentPageSections && currentPageSections.length > 0) {
+                mobileMenuHTML += `<div class="mobile-nav-section">`;
+                mobileMenuHTML += `<div class="mobile-nav-title">Navegación de Página</div>`;
+                currentPageSections.forEach(section => {
+                    mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
+                });
+                mobileMenuHTML += `</div>`;
+            }
+
+            // SEGUNDO: Agregar las categorías principales
+            navLinks.forEach((navItem, index) => {
+                if (navItem.name === 'Cochabamba') {
+                    // Enlace externo especial
+                    mobileMenuHTML += `
+                        <div class="mobile-nav-section">
+                            <div class="mobile-nav-title">${navItem.name}</div>
+                            <a href="/cochabamba" class="mobile-nav-link">
+                                <i class="fas fa-external-link-alt mr-2"></i>
+                                Visitar sitio web
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                mobileMenuHTML += `<div class="mobile-nav-section">`;
+                
+                // Título de la sección
+                mobileMenuHTML += `<div class="mobile-nav-title">${navItem.name}</div>`;
+
+                // Enlaces principales - mostrar para todas las categorías excepto Inicio
+                if (navItem.href && navItem.href !== '/' && navItem.name !== 'Inicio') {
+                    mobileMenuHTML += `<a href="${navItem.href}" class="mobile-nav-link">${navItem.name}</a>`;
+                }
+
+                // Para Inicio: solo mostrar enlace principal, NO las sections
+                if (navItem.name === 'Inicio' && navItem.href) {
+                    mobileMenuHTML += `<a href="${navItem.href}" class="mobile-nav-link">Ir al ${navItem.name}</a>`;
+                }
+
+                // Secciones (para páginas que NO sean Inicio)
+                if (navItem.sections && navItem.sections.length > 0 && navItem.name !== 'Inicio') {
+                    navItem.sections.forEach(section => {
+                        mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
+                    });
+                }
+
+                // Navegación anidada
+                if (navItem.navs && navItem.navs.length > 0) {
+                    navItem.navs.forEach(navSubItem => {
+                        if (navSubItem.submenu && navSubItem.submenu.length > 0) {
+                            // Elemento con submenú - usar clases CSS
+                            mobileMenuHTML += `<div class="mobile-nav-section-header">${navSubItem.name}</div>`;
+                            mobileMenuHTML += `<div class="mobile-submenu">`;
+                            
+                            navSubItem.submenu.forEach(subItem => {
+                                if (subItem.submenu && subItem.submenu.length > 0) {
+                                    // Submenú anidado - usar clases CSS
+                                    mobileMenuHTML += `<div class="mobile-nav-subsection-header">${subItem.name}</div>`;
+                                    mobileMenuHTML += `<div class="mobile-submenu">`;
+                                    subItem.submenu.forEach(nestedItem => {
+                                        mobileMenuHTML += `<a href="${nestedItem.href}" class="mobile-nav-link">${nestedItem.name}</a>`;
+                                    });
+                                    mobileMenuHTML += `</div>`;
+                                } else {
+                                    mobileMenuHTML += `<a href="${subItem.href}" class="mobile-nav-link">${subItem.name}</a>`;
+                                }
+                            });
+                            
+                            mobileMenuHTML += `</div>`;
+                        } else {
+                            // Enlace simple
+                            mobileMenuHTML += `<a href="${navSubItem.href}" class="mobile-nav-link">${navSubItem.name}</a>`;
+                        }
+                    });
+                }
+
+                mobileMenuHTML += `</div>`;
+            });
+
+            mobileContent.innerHTML = mobileMenuHTML;
+            console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
+        }).catch(error => {
+            console.error('❌ [MOBILE-MENU] Error generando contenido:', error);
+        });
+    }
+
+    // Nueva función para obtener las secciones de la página actual
+    getCurrentPageSections() {
+        // Detectar qué tipo de página estamos viendo
+        const currentPath = window.location.pathname;
+        
+        if (currentPath === '/' || currentPath === '/home') {
+            // Para la página de inicio, detectar las secciones reales del DOM
+            const homeSections = [];
+            
+            // Buscar secciones comunes de la página de inicio
+            const sectionSelectors = [
+                { id: 'hero', name: 'Inicio' },
+                { id: 'featured-courses', name: 'Cursos Destacados' },
+                { id: 'about', name: 'Acerca de' },
+                { id: 'contact', name: 'Contacto' },
+                { id: 'testimonials', name: 'Testimonios' }
+            ];
+            
+            sectionSelectors.forEach(section => {
+                const element = document.getElementById(section.id);
+                if (element) {
+                    homeSections.push(section);
+                }
+            });
+            
+            return homeSections.length > 0 ? homeSections : null;
+        }
+        
+        return null;
     }
 
     // Método para navegación programática

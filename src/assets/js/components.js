@@ -37,10 +37,47 @@ function createBadge(text, variant = 'default') {
     return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variants[variant]}" ${variant === 'default' ? 'style="background: var(--color-primary);"' : ''}>${text}</span>`;
 }
 
-// Componente para imagen con fallback
+// Componente para skeleton de tarjeta de curso
+function createCourseCardSkeleton() {
+    return `
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm animate-pulse">
+            <div class="p-0">
+                <div class="relative overflow-hidden rounded-t-lg">
+                    <div class="w-full h-48 bg-gray-200"></div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-16 h-4 bg-gray-200 rounded"></div>
+                    <div class="w-20 h-4 bg-gray-200 rounded"></div>
+                </div>
+                <div class="w-3/4 h-6 bg-gray-200 rounded mb-2"></div>
+                <div class="w-full h-4 bg-gray-200 rounded mb-2"></div>
+                <div class="w-2/3 h-4 bg-gray-200 rounded mb-4"></div>
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-4 bg-gray-200 rounded"></div>
+                        <div class="w-20 h-6 bg-gray-200 rounded"></div>
+                    </div>
+                    <div class="w-full h-10 bg-gray-200 rounded"></div>
+                </div>
+                <div class="mt-4 pt-4 border-t">
+                    <div class="w-24 h-4 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Componente para imagen con fallback y skeleton loader
 function createImageWithFallback(src, alt, className = '') {
     const fallbackSrc = '' + encodeURIComponent(alt);
-    return `<img src="${src}" alt="${alt}" class="${className}" onerror="this.src='${fallbackSrc}'">`;
+    return `<div class="relative ${className}">
+        <div class="absolute inset-0 bg-gray-200 animate-pulse rounded" id="skeleton-${Math.random().toString(36).substr(2, 9)}"></div>
+        <img src="${src}" alt="${alt}" class="${className}" 
+             onerror="this.src='${fallbackSrc}'" 
+             onload="this.previousElementSibling.style.display='none'">
+    </div>`;
 }
 
 // Componente Button
@@ -147,7 +184,7 @@ function createInstructorCard(course) {
         </div>
         <div class="px-6 pb-6">
             <div class="flex items-start gap-4">
-                ${createImageWithFallback(course.instructorImage, course.instructor, 'w-24 h-24 rounded-lg object-cover')}
+                ${createImageWithFallback(course.instructorImage, course.instructor, 'aspect-square w-24 h-24 rounded-lg object-cover')}
                 <div>
                     <h4 class="font-medium mb-2">${course.instructor}</h4>
                     <p class="text-muted-foreground">${course.instructorBio}</p>
@@ -427,7 +464,7 @@ function createAcademyCard(academy) {
                         </div>
                     ` : '<div></div>'}
                     ${academy.disabled ? '' : `
-                        <button class="inline-flex items-center text-primary hover:text-primary/80 text-sm font-medium group-hover:gap-2 transition-all">
+                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4 group" style="background: var(--color-primary);" onclick="navigateToAcademy('${academy.id}')">
                             Explorar
                             ${createChevronRightIcon()}
                         </button>
@@ -447,6 +484,7 @@ export {
     createImageWithFallback,
     createButton,
     createCourseCard,
+    createCourseCardSkeleton,
     createCourseDetails,
     createInstructorCard,
     createCourseContentCard,

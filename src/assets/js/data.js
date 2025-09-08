@@ -1,24 +1,3 @@
-// Datos de academias
-const academies = [
-    {
-        id: 'mikrotik',
-        title: 'MIKROTIK',
-        description: 'Especialízate en administración de redes y RouterOS con certificaciones oficiales Mikrotik.',
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        coursesCount: 1,
-        disabled: false
-    },
-    {
-        id: 'huawei',
-        title: 'HUAWEI',
-        description: 'Conviértete en experto en tecnologías Huawei para redes empresariales y telecomunicaciones.',
-        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwZGF0YSUyMG5ldHdvcmt8ZW58MXx8fHwxNzU1ODEyMDU1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-        coursesCount: 0,
-        showCourseCount: false,
-        disabled: true
-    }
-];
-
 // Datos de cursos
 const courses = [
     {
@@ -32,7 +11,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/images/cursos/Curso Mikrotik MTCNA.png',
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -130,7 +109,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/images/cursos/Curso de Manejo de Cadáveres.jpg',
         category: 'Ciencias de la Salud',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -188,7 +167,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/images/cursos/Curso de Primeros Auxilios.jpg',
         category: 'Ciencias de la Salud',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -246,7 +225,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/images/cursos/Excel Experto.jpg',
         category: 'Ingeniería',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -304,7 +283,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/images/cursos/Tributación Aplicada y Llenado de Formularios.jpg',
         category: 'Ciencias Empresariales',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -362,7 +341,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: 'src/assets/images/cursos/Estrategias de Litigación y Simulacros de Audiencias.jpg',
         category: 'Ciencias Jurídicas',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -419,7 +398,7 @@ const courses = [
         level: 'Intermedio',
         students: 1247,
         rating: 4.8,
-        image: 'https://images.unsplash.com/photo-1669023414166-a4cc7c0fe1f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvdXJzZSUyMGxhcHRvcHxlbnwxfHx8fDE3NTU4MTIwNTR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+        image: '/assets/images/cursos/Desarrollo Web Full Stack.jpg',
         category: 'Desarrollo',
         modules: [
             'Fundamentos de HTML y CSS',
@@ -442,7 +421,7 @@ const courses = [
         level: 'Principiante',
         students: 892,
         rating: 4.9,
-        image: 'https://images.unsplash.com/photo-1611773060335-a3983045bf4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNpZ24lMjB3b3Jrc2hvcCUyMGNyZWF0aXZlfGVufDF8fHx8MTc1NTc1OTc3MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+        image: '/assets/images/cursos/Diseño UX_UI Profesional.jpg',
         category: 'Diseño',
         modules: [
             'Principios de UX',
@@ -493,46 +472,76 @@ function getOtherCourses(excludeCourseId = null) {
     // Filtrar el curso seleccionado y devolver máximo 3 cursos
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
+// Datos de academias
+const academies = [
+    {
+        id: 'mikrotik',
+        title: 'MIKROTIK',
+        description: 'Especialízate en administración de redes y RouterOS con certificaciones oficiales Mikrotik.',
+        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        coursesCount: 1,
+        disabled: false,
+    },
+    {
+        id: 'huawei',
+        title: 'HUAWEI',
+        description: 'Conviértete en experto en tecnologías Huawei para redes empresariales y telecomunicaciones.',
+        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwZGF0YSUyMG5ldHdvcmt8ZW58MXx8fHwxNzU1ODEyMDU1fDA&ixlib=rb-4.1.0&q=80&w=1080',
+        coursesCount: 0,
+        showCourseCount: false,
+        disabled: true,
+    }
+];
+
+// Definir cursos de academias como datos compartidos
+const academyCourses = {
+    mikrotik: [
+        {name: "Curso Mikrotik MTCNA", href: "/curso?id=1"},
+        {name: "Curso Mikrotik MTCNA2", href: "/curso?id=2"}
+    ],
+    huawei: [
+        {name: "Curso Huawei HCNA", href: "/curso?id=3"},
+        {name: "Curso Huawei HCNP", href: "/curso?id=4"}
+    ]
+};
+
+// Definir estructura de facultades como datos compartidos
+const facultyStructure = [
+    {name: "Ciencias de la Salud", href: "/facultades/ciencias-salud", submenu: [
+        {name: "Curso de Manejo de Cadáveres", href: "/curso?id=4"},
+        {name: "Curso de Primeros Auxilios", href: "/curso?id=5"}
+    ]},
+    {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
+        {name: "Excel Experto", href: "/curso?id=6"}
+    ]},
+    {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
+        {name: "Tributación Aplicada y Llenado de Formularios", href: "/curso?id=7"}
+    ]},
+    {name: "Ciencias Jurídicas", href: "/facultades/ciencias-juridicas", submenu: [
+        {name: "Estrategias de Litigación y Simulacros de Audiencias", href: "/curso?id=8"}
+    ]}
+];
+
 const navLinks = [
     { name: 'Inicio', href: '/', navs: [], sections:[
         {name: 'Inicio',id: 'hero-section'},
         {name: 'Cursos',id: 'courses-section'},
         {name: 'Nosotros',id: 'about-section'}
     ] },
-    { name: 'Cursos', href: '/cursos' , navs: [
-        {name: "Facultades", href: "/facultades", submenu: [
-            {name: "Ciencias de la Salud", href: "/facultades/ciencias-salud", submenu: [
-                {name: "Curso de Manejo de Cadáveres", href: "/curso?id=4"},
-                {name: "Curso de Primeros Auxilios", href: "/curso?id=5"}
-            ]},
-            {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
-                {name: "Excel Experto", href: "/curso?id=6"}
-            ]},
-            {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
-                {name: "Tributación Aplicada y Llenado de Formularios", href: "/curso?id=7"}
-            ]},
-            {name: "Ciencias Jurídicas", href: "/facultades/ciencias-juridicas", submenu: [
-                {name: "Estrategias de Litigación y Simulacros de Audiencias", href: "/curso?id=8"}
-            ]}
-        ]},
+    { name: 'Cursos', href: '/cursos', navs: [
+        {name: "Facultades", href: "/facultades", submenu: facultyStructure},
         {name: "Academias", href: "/academias", submenu: [
-            {name: "Mikrotik", href: "/academias/mikrotik", submenu: [
-                {name: "Curso 1", href: "/academias/mikrotik/curso-1"},
-                {name: "Curso 2", href: "/academias/mikrotik/curso-2"}
-            ]},
-            {name: "Huawei", href: "/academias/huawei", submenu: [
-                {name: "Curso 1", href: "/academias/huawei/curso-1"},
-                {name: "Curso 2", href: "/academias/huawei/curso-2"}
-            ]}
+            {name: "Mikrotik", href: "/academias/mikrotik", submenu: academyCourses.mikrotik},
+            {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei}
         ]}
     ] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
-    { name: 'Mikrotik', href: '/mikrotik', navs: [
-        {name: "Curso Mikrotik 1", href: "/curso?id=1"},
-        {name: "Curso Mikrotik 2", href: "/curso?id=2"},
-        {name: "Curso Mikrotik 3", href: "/curso?id=3"},
-    ],sections: []},
+    { name: 'Mikrotik', href: '/mikrotik', navs: academyCourses.mikrotik, sections: []},
+    { name: 'Huawei', href: '/huawei', navs: academyCourses.huawei, sections: []},
 ];
+
+
+
 
 // Exportar datos y funciones
 export {
@@ -544,5 +553,7 @@ export {
     getCourseById,
     getCoursesByCategory,
     getOtherCourses,
-    navLinks
+    navLinks,
+    academyCourses,
+    facultyStructure
 };

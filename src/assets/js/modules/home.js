@@ -102,13 +102,24 @@ function renderAcademiasGrid() {
 function renderCoursesGrid() {
     console.log('📚 [COURSES] Renderizando grilla de cursos');
     
-    import('../data.js').then(module => {
-        const { courses } = module;
-        const coursesGrid = document.getElementById('courses-grid');
+    const coursesGrid = document.getElementById('courses-grid');
+    if (!coursesGrid) {
+        console.error('❌ [COURSES] No se encontró courses-grid');
+        return;
+    }
+    
+    // Mostrar skeletons mientras cargan los datos
+    import('../components.js').then(componentsModule => {
+        const { createCourseCardSkeleton } = componentsModule;
+        const skeletonsHTML = Array(3).fill(0).map(() => createCourseCardSkeleton()).join('');
+        coursesGrid.innerHTML = skeletonsHTML;
         
-        if (coursesGrid && courses) {
-            // Importar función para crear tarjetas de cursos
-            import('../components.js').then(componentsModule => {
+        // Cargar datos reales
+        import('../data.js').then(module => {
+            const { courses } = module;
+            
+            if (courses) {
+                // Importar función para crear tarjetas de cursos
                 const { createCourseCard } = componentsModule;
                 
                 // Renderizar cursos destacados específicos
@@ -116,17 +127,23 @@ function renderCoursesGrid() {
                 const featuredCourses = courses.filter(course => featuredCourseIds.includes(course.id));
                 const coursesHTML = featuredCourses.map(course => createCourseCard(course)).join('');
                 
-                // Limpiar grilla y agregar todo el HTML de una vez
-                coursesGrid.innerHTML = coursesHTML;
-                
-                console.log(`✅ [COURSES] ${featuredCourses.length} cursos renderizados`);
-            }).catch(error => {
-                console.error('❌ [COURSES] Error al importar components:', error);
-            });
-        } else {
-            console.error('❌ [COURSES] No se encontró courses-grid o courses data');
-        }
+                // Reemplazar skeletons con contenido real con un pequeño delay para evitar flash
+                setTimeout(() => {
+                    coursesGrid.innerHTML = coursesHTML;
+                    console.log(`✅ [COURSES] ${featuredCourses.length} cursos renderizados`);
+                }, 200);
+            } else {
+                console.error('❌ [COURSES] No se encontraron datos de cursos');
+            }
+        }).catch(error => {
+            console.error('❌ [COURSES] Error al importar data:', error);
+            coursesGrid.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <p class="text-muted-foreground">Error al cargar los cursos</p>
+                </div>
+            `;
+        });
     }).catch(error => {
-        console.error('❌ [COURSES] Error al importar data:', error);
+        console.error('❌ [COURSES] Error al importar components:', error);
     });
 }

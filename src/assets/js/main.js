@@ -2,6 +2,10 @@
 // Este archivo orquesta la carga de todos los módulos
 import { loadPageContent } from './modules/app.js';
 import { initRouter } from './router.js';
+
+// Asegurar scroll hacia arriba al inicio
+window.scrollTo(0, 0);
+
 // Función para mostrar mensajes de error al usuario
 function showErrorMessage(message) {
     // Crear elemento de error si no existe

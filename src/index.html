@@ -25,10 +25,10 @@
                     <div class="flex-shrink-0">
                         <img src="/assets/images/logos/UPDS-logo.png" 
                             alt="UPDS" 
-                            class="h-12 sm:h-14 md:h-16 lg:h-20 w-auto aspect-square object-contain" />
+                            class="header-logo-left h-12 sm:h-14 md:h-16 lg:h-20 w-auto aspect-square object-contain" />
                     </div>
                     
-                    <!-- Navegación Central -->
+                    <!-- Navegación Central (Desktop) -->
                     <nav class="upds-nav-top flex items-center justify-center gap-1 lg:gap-4 flex-wrap">
                         <!-- Los enlaces se cargan dinámicamente -->
                     </nav>
@@ -37,18 +37,32 @@
                     <div class="flex-shrink-0">
                         <img src="/assets/images/logos/UPDS-title.png" 
                             alt="UPDS" 
-                            class="h-6 sm:h-8 md:h-10 lg:h-12 w-auto object-contain aspect-logo" />
+                            class="header-logo-right h-6 sm:h-8 md:h-10 lg:h-12 w-auto object-contain aspect-logo" />
                     </div>
                 </div>
             </div>
-            <div id="elementor-header" class="elementor-icon-header absolute text-primary text-4xl lg:text-5xl xl:text-6xl bottom-[-45px] lg:bottom-[-45px] z-[60] translate-x-[10px]">
+            <div id="elementor-header" class="elementor-icon-header absolute text-primary text-6xl bottom-[-45px] z-[60] translate-x-[10px]">
                 <i aria-hidden="true" class="fas fa-caret-up"></i>
             </div>
         </div>
     </header>
-    <div class="bg-primary sticky top-0 z-10">
+    
+    <div class="bg-primary sticky top-0 z-10 relative">
         <div class="container mx-auto px-4 py-3">
             <div class="upds-header-contact flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-white text-sm lg:text-base font-semibold py-1 lg:py-2 min-h-[30px]">
+            </div>
+            <!-- Botón Hamburguesa (Móvil) - Posicionado absolutamente -->
+             <button class="hamburger-menu absolute right-4 top-1/2" id="mobile-menu-toggle" aria-label="Abrir menú">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </button>
+        </div>
+        
+        <!-- Menú Móvil Dropdown -->
+        <div class="mobile-menu dropdown" id="mobile-menu">
+            <div class="mobile-menu-content" id="mobile-menu-content">
+                <!-- El contenido del menú se generará dinámicamente -->
             </div>
         </div>
     </div>

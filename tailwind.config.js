@@ -16,6 +16,7 @@ module.exports = {
           700: '#223B87',
           foreground: '#FFFFFF',
           hover: '#7FB5FF',
+          select: '#7FB5FF',
         },
         secondary: {
           DEFAULT: "hsl(210 40% 96%)",
@@ -26,12 +27,12 @@ module.exports = {
           700: "hsl(210 40% 96%)",
         },
         accent: {
-          DEFAULT: '#ee1c25',
-          50: '#fef2f2',
-          100: '#fee2e2',
-          500: '#ee1c25',
-          600: '#dc2626',
-          700: '#b91c1c',
+          DEFAULT: '#c6f2ff',
+          50: '#c6f2ff',
+          100: '#c6f2ff',
+          500: '#c6f2ff',
+          600: '#c6f2ff',
+          700: '#c6f2ff',
         },
         success: {
           DEFAULT: '#25d366',

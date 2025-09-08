@@ -31,7 +31,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: false,  // Mantener console.logs para debugging SPA
+        drop_console: true,  // Mantener console.logs para debugging SPA
         drop_debugger: true,
         dead_code: true,
         unused: true
@@ -77,6 +77,10 @@ export default defineConfig({
         {
           src: 'assets/images/instructor/*',
           dest: 'assets/images/instructor'
+        },
+        {
+          src: 'assets/images/cursos/*',
+          dest: 'assets/images/cursos'
         },
         {
           src: 'assets/images/logos/UPDS2.png',

@@ -1,11 +1,11 @@
 /* ===========================================
-   UPDS HEADER LAYOUT - MODERNIZADO CON TAILWIND
+   UPDS HEADER LAYOUT - MODERNIZADO CON TAILWIND + MENÚ HAMBURGUESA
    Header responsivo con Tailwind CSS + funcionalidad dinámica
    =========================================== */
 
 /* Flecha indicadora - Funcionalidad específica */
 .elementor-icon-header {
-  margin-left: -50px;
+  margin-left: -40px;
   transition: left 0.3s ease-out, transform 0.3s ease-out;
 }
 
@@ -42,8 +42,216 @@
   letter-spacing: -0.3px;
 }
 
+/* === MENÚ HAMBURGUESA PARA MÓVILES === */
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transform: translateY(-50%) !important;
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-50%) !important;
+}
+
+.hamburger-line {
+  width: 22px;
+  height: 2px;
+  background-color: white;
+  margin: 3px 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  border-radius: 1px;
+}
+
+/* Animación del hamburger cuando está activo */
+.hamburger-menu.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Menú móvil dropdown */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-primary);
+  z-index: 9999;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mobile-menu.active {
+  max-height: 500px;
+  opacity: 1;
+  visibility: visible;
+  transition: max-height 0.4s ease-out, opacity 0.2s ease-out;
+}
+
+.mobile-menu-content {
+  padding: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.mobile-nav-section {
+  margin-bottom: 1.5rem;
+}
+
+.mobile-nav-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: "Encode Sans Condensed", Sans-serif;
+}
+
+.mobile-nav-link {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 0.25rem;
+  font-family: "Encode Sans Condensed", Sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+}
+
+.mobile-nav-section-header {
+  font-weight: 700;
+  color: white;
+  cursor: default;
+  display: block;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
+  font-family: "Encode Sans Condensed", Sans-serif;
+  font-size: 0.95rem;
+}
+
+.mobile-nav-subsection-header {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: default;
+  display: block;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
+  font-family: "Encode Sans Condensed", Sans-serif;
+  font-size: 0.9rem;
+}
+
+.mobile-submenu {
+  margin-left: 1rem;
+  margin-top: 0.25rem;
+}
+
+.mobile-submenu .mobile-nav-link {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.mobile-submenu .mobile-nav-link:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 1.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.mobile-close-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
 /* === RESPONSIVE DESIGN === */
-/* Ahora manejado completamente por Tailwind CSS */
+/* Ocultar navegación normal en móvil y mostrar hamburger */
+@media (max-width: 768px) {
+  .upds-nav-top {
+    display: none !important;
+  }
+  
+  .upds-header-contact {
+    display: none !important;
+  }
+  
+  .hamburger-menu {
+    display: flex;
+  }
+  
+  /* Hacer la barra azul más alta en móvil */
+  .bg-primary .container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .bg-primary {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Ocultar flecha en móvil */
+  .elementor-icon-header {
+    display: none;
+  }
+  
+  /* Ajustar logos en móvil */
+  .header-logo-left,
+  .header-logo-right {
+    height: 2.5rem; /* h-10 */
+  }
+}
+
+/* Mostrar navegación normal en desktop y ocultar hamburger */
+@media (min-width: 769px) {
+  .hamburger-menu {
+    display: none !important;
+  }
+  
+  .mobile-menu {
+    display: none !important;
+  }
+  
+  .upds-nav-top {
+    display: flex !important;
+  }
+}
 
 /* Solo ajustes específicos para móvil muy pequeño si es necesario */
 @media (max-width: 480px) {
@@ -54,5 +262,14 @@
   
   .upds-contact-link {
     font-size: 0.8rem;
+  }
+  
+  .mobile-nav-title {
+    font-size: 1.1rem;
+  }
+  
+  .mobile-nav-link {
+    padding: 0.6rem;
+    font-size: 0.95rem;
   }
 }

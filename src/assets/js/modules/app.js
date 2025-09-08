@@ -57,7 +57,7 @@ function selectCourse(courseId) {
 }
 
 // Función para renderizar la vista de categoría
-export function renderCategoryView(categoryName = "Microtik") {
+export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrotik") {
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
     if (!mainContainer) {
@@ -68,12 +68,21 @@ export function renderCategoryView(categoryName = "Microtik") {
     // Limpiar contenido anterior
     mainContainer.innerHTML = '';
     
+    // Descripción por categoría
+    const descriptions = {
+        'Mikrotik': 'Descubre nuestros cursos especializados en networking y administración de redes',
+        'Ciencias de la Salud': 'Cursos especializados en ciencias de la salud y medicina',
+        'Ingeniería': 'Programas técnicos y de ingeniería para profesionales',
+        'Ciencias Empresariales': 'Cursos de administración, contabilidad y gestión empresarial',
+        'Ciencias Jurídicas': 'Formación especializada en derecho y ciencias jurídicas'
+    };
+    
     // Crear la estructura de la vista de categoría
     const categoryHTML = `
         <!-- Page Header -->
         <div class="text-center space-y-4">
             <h1 class="text-4xl font-bold tracking-tight">Cursos de ${categoryName}</h1>
-            <p class="text-xl text-muted-foreground">Descubre nuestros cursos especializados en networking y administración de redes</p>
+            <p class="text-xl text-muted-foreground">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
         </div>
         
         <!-- Courses Grid -->
@@ -85,16 +94,25 @@ export function renderCategoryView(categoryName = "Microtik") {
     mainContainer.innerHTML = categoryHTML;
     
     // Después de cargar el HTML, renderizar los cursos
-    renderCoursesGrid();
+    renderCoursesGridByCategory(category);
 }
 
-// Función para renderizar la grilla de cursos
+// Función para renderizar la grilla de cursos (solo para Mikrotik - legacy)
 function renderCoursesGrid() {
+    renderCoursesGridByCategory('Mikrotik');
+}
+
+// Función para renderizar la grilla de cursos por categoría
+function renderCoursesGridByCategory(category) {
     const coursesGrid = document.getElementById('courses-grid');
     if (!coursesGrid) return;
     
-    const coursesHTML = courses.map(course => createCourseCard(course)).join('');
+    // Filtrar cursos por categoría
+    const categoryCourses = courses.filter(course => course.category === category);
+    const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
     coursesGrid.innerHTML = coursesHTML;
+    
+    console.log(`✅ [COURSES] ${categoryCourses.length} cursos de ${category} renderizados`);
 }
 
 // Función para renderizar la vista principal (home)

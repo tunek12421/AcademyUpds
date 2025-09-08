@@ -20,6 +20,10 @@ class SPARouter {
             '/facultades/ciencias-empresariales/tributacion-aplicada': () => this.loadCursoFacultad('ciencias-empresariales', 'tributacion-aplicada'),
             '/facultades/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
             '/facultades/ciencias-juridicas/estrategias-litigacion': () => this.loadCursoFacultad('ciencias-juridicas', 'estrategias-litigacion'),
+            '/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
+            '/ingenieria': () => this.loadFacultad('ingenieria'),
+            '/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
+            '/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
             '/academias': () => this.loadAcademias(),
             '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
             '/academias/huawei': () => this.loadAcademia('huawei'),
@@ -442,7 +446,11 @@ class SPARouter {
             '/academias/mikrotik': 1,
             '/academias/huawei': 1,
             '/cochabamba': 2,
-            '/mikrotik': 3
+            '/mikrotik': 3,
+            '/ciencias-salud': 1,
+            '/ingenieria': 1,
+            '/ciencias-empresariales': 1,
+            '/ciencias-juridicas': 1
         };
         
         const newIndex = routeToIndex[route] || 0;
@@ -870,9 +878,27 @@ class SPARouter {
             'ciencias-juridicas': 'Ciencias Jurídicas'
         };
         
+        const categoryMappings = {
+            'ciencias-salud': 'Ciencias de la Salud',
+            'ingenieria': 'Ingeniería',
+            'ciencias-empresariales': 'Ciencias Empresariales',
+            'ciencias-juridicas': 'Ciencias Jurídicas'
+        };
+        
         console.log(`📚 [ROUTER] Cargando Facultad de ${facultadNames[nombre]}`);
-        // Por ahora, redirigir a la página principal
-        this.loadHome();
+        
+        const loaded = await this.loadPageContent(nombre);
+        if (loaded) {
+            // Renderizar el contenido de la facultad después de cargar la página
+            setTimeout(async () => {
+                try {
+                    const { renderCategoryView } = await import('./modules/app.js');
+                    renderCategoryView(facultadNames[nombre], categoryMappings[nombre]);
+                } catch (error) {
+                    console.error(`❌ [ROUTER] Error al renderizar facultad ${nombre}:`, error);
+                }
+            }, 100);
+        }
     }
 
     async loadAcademia(nombre) {
@@ -926,6 +952,11 @@ class SPARouter {
             if (mainElement && mainElement.classList.contains('hidden')) {
                 mainElement.classList.remove('hidden');
                 console.log('✅ [ROUTER] Contenido principal mostrado');
+            }
+            // También mostrar el contenedor principal directamente si no hay main
+            if (this.mainSection.classList.contains('hidden')) {
+                this.mainSection.classList.remove('hidden');
+                console.log('✅ [ROUTER] Contenedor principal mostrado');
             }
         } else {
             console.error('❌ [ROUTER] Elemento #main-section NO encontrado en el DOM');

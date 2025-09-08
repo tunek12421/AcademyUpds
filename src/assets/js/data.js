@@ -131,7 +131,7 @@ const courses = [
         students: 756,
         rating: 4.7,
         image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        category: 'Mikrotik',
+        category: 'Ciencias de la Salud',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             'Comprender la Importancia del  manejo coreecto de cadáveres en contextos clinicos, forenses y comunitarios.',
@@ -189,7 +189,7 @@ const courses = [
         students: 756,
         rating: 4.7,
         image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        category: 'Mikrotik',
+        category: 'Ciencias de la Salud',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             'Capacitar a los participantes en técnicas básicas de primeros auxilios para brindar una atención oportuna y efectiva en situaciones de emergencia, minimizando riesgos y preservando la vida.',
@@ -247,7 +247,7 @@ const courses = [
         students: 756,
         rating: 4.7,
         image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        category: 'Mikrotik',
+        category: 'Ingeniería',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             'Introducción al entorno de Excel',
@@ -305,7 +305,7 @@ const courses = [
         students: 756,
         rating: 4.7,
         image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        category: 'Mikrotik',
+        category: 'Ciencias Empresariales',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             'Día 1: Marco normativo y principios básicos de tributación en Bolivia',
@@ -363,7 +363,7 @@ const courses = [
         students: 756,
         rating: 4.7,
         image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
-        category: 'Mikrotik',
+        category: 'Ciencias Jurídicas',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             'Marco general de las medidas cuatelares.',

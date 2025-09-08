@@ -421,6 +421,24 @@ function previewCourse() {
     showNotification('Iniciando vista previa del curso...', 'info');
 }
 
+// Función para navegación a academias
+function navigateToAcademy(academyId) {
+    console.log(`🎓 [NAVIGATION] Navegando a academia: ${academyId}`);
+    
+    if (academyId === 'mikrotik') {
+        // Redirigir a la vista de mikrotik usando el router
+        import('../router.js').then(({ navigateTo }) => {
+            navigateTo('/mikrotik');
+        }).catch(() => {
+            // Fallback si el router no está disponible
+            window.location.href = '/mikrotik.html';
+        });
+    } else if (academyId === 'huawei') {
+        // Por ahora HUAWEI no redirige a ninguna vista
+        showNotification('La academia Huawei estará disponible próximamente', 'info');
+    }
+}
+
 // Funciones para navegación (placeholders)
 function exploreAllCourses() {
     showNotification('Mostrando todos los cursos disponibles...', 'info');
@@ -433,6 +451,7 @@ function login() {
 
 // Exportar funciones globales para uso en HTML
 window.selectCourse = selectCourse;
+window.navigateToAcademy = navigateToAcademy;
 window.exploreAllCourses = exploreAllCourses;
 window.enrollInCourse = enrollInCourse;
 window.previewCourse = previewCourse;

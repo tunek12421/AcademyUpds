@@ -394,6 +394,50 @@ function toggleModule(index) {
 window.toggleFAQ = toggleFAQ;
 window.toggleModule = toggleModule;
 
+// Componente para tarjeta de academia
+function createAcademyCard(academy) {
+    return `
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm group cursor-pointer hover:shadow-lg transition-all duration-300 ${academy.disabled ? 'opacity-75 cursor-not-allowed' : ''}"
+             onclick="${academy.disabled ? '' : `navigateToAcademy('${academy.id}')`}">
+            <div class="p-0">
+                <div class="relative overflow-hidden rounded-t-lg">
+                    ${createImageWithFallback(academy.image, academy.title, 'w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300')}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-3 left-3 right-3">
+                        <h3 class="text-white text-xl font-bold">${academy.title}</h3>
+                    </div>
+                    ${academy.disabled ? `
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <span class="text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full">Próximamente</span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+            <div class="p-4">
+                <p class="text-muted-foreground text-sm mb-4">
+                    ${academy.description}
+                </p>
+                <div class="flex items-center justify-between">
+                    ${academy.showCourseCount !== false ? `
+                        <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
+                            </svg>
+                            ${academy.coursesCount} ${academy.coursesCount === 1 ? 'curso' : 'cursos'}
+                        </div>
+                    ` : '<div></div>'}
+                    ${academy.disabled ? '' : `
+                        <button class="inline-flex items-center text-primary hover:text-primary/80 text-sm font-medium group-hover:gap-2 transition-all">
+                            Explorar
+                            ${createChevronRightIcon()}
+                        </button>
+                    `}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // Exportar todas las funciones de componentes
 export {
     createStarIcon,
@@ -410,5 +454,6 @@ export {
     createPricingCard,
     createOtherCoursesCard,
     createPrerequisitesCard,
-    createFAQCard
+    createFAQCard,
+    createAcademyCard
 };

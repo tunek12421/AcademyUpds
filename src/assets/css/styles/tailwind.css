@@ -8861,6 +8861,10 @@ video {
   inset:0px
 }
 
+.bottom-3{
+  bottom:0.75rem
+}
+
 .bottom-\[-45px\]{
   bottom:-45px
 }
@@ -8879,6 +8883,10 @@ video {
 
 .right-0{
   right:0px
+}
+
+.right-3{
+  right:0.75rem
 }
 
 .right-4{
@@ -8932,6 +8940,10 @@ video {
 
 .mb-6{
   margin-bottom:1.5rem
+}
+
+.mb-8{
+  margin-bottom:2rem
 }
 
 .ml-1{
@@ -9019,6 +9031,10 @@ video {
 
 .h-3{
   height:0.75rem
+}
+
+.h-32{
+  height:8rem
 }
 
 .h-4{
@@ -9154,6 +9170,10 @@ video {
 
 .animate-spin{
   animation:spin 1s linear infinite
+}
+
+.cursor-not-allowed{
+  cursor:not-allowed
 }
 
 .cursor-pointer{
@@ -9334,6 +9354,10 @@ video {
   border-top-color:rgb(34 59 135 / var(--tw-border-opacity, 1))
 }
 
+.bg-black\/30{
+  background-color:rgb(0 0 0 / 0.3)
+}
+
 .bg-black\/50{
   background-color:rgb(0 0 0 / 0.5)
 }
@@ -9389,6 +9413,20 @@ video {
 
 .bg-opacity-80{
   --tw-bg-opacity:0.8
+}
+
+.bg-gradient-to-t{
+  background-image:linear-gradient(to top, var(--tw-gradient-stops))
+}
+
+.from-black\/50{
+  --tw-gradient-from:rgb(0 0 0 / 0.5) var(--tw-gradient-from-position);
+  --tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)
+}
+
+.to-transparent{
+  --tw-gradient-to:transparent var(--tw-gradient-to-position)
 }
 
 .fill-yellow-400{
@@ -9674,6 +9712,10 @@ video {
   opacity:1
 }
 
+.opacity-75{
+  opacity:0.75
+}
+
 .opacity-90{
   opacity:0.9
 }
@@ -9799,6 +9841,10 @@ video {
   color:rgb(34 59 135 / var(--tw-text-opacity, 1))
 }
 
+.hover\:text-primary\/80:hover{
+  color:rgb(34 59 135 / 0.8)
+}
+
 .hover\:text-red-700:hover{
   --tw-text-opacity:1;
   color:rgb(185 28 28 / var(--tw-text-opacity, 1))
@@ -9868,6 +9914,10 @@ video {
   --tw-scale-x:1.05;
   --tw-scale-y:1.05;
   transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+.group:hover .group-hover\:gap-2{
+  gap:0.5rem
 }
 
 @media (min-width: 640px){

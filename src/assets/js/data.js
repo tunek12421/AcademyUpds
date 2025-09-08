@@ -1,3 +1,24 @@
+// Datos de academias
+const academies = [
+    {
+        id: 'mikrotik',
+        title: 'MIKROTIK',
+        description: 'Especialízate en administración de redes y RouterOS con certificaciones oficiales Mikrotik.',
+        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwY2FibGVzJTIwc2VydmVyfGVufDF8fHx8MTc1NTgxMjA1NXww&ixlib=rb-4.1.0&q=80&w=1080',
+        coursesCount: 1,
+        disabled: false
+    },
+    {
+        id: 'huawei',
+        title: 'HUAWEI',
+        description: 'Conviértete en experto en tecnologías Huawei para redes empresariales y telecomunicaciones.',
+        image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwZGF0YSUyMG5ldHdvcmt8ZW58MXx8fHwxNzU1ODEyMDU1fDA&ixlib=rb-4.1.0&q=80&w=1080',
+        coursesCount: 0,
+        showCourseCount: false,
+        disabled: true
+    }
+];
+
 // Datos de cursos
 const courses = [
     {
@@ -472,7 +493,7 @@ function getOtherCourses(excludeCourseId = null) {
     // Filtrar el curso seleccionado y devolver máximo 3 cursos
     return courses.filter(course => course.id !== excludeId).slice(0, 3);
 }
-export const navLinks = [
+const navLinks = [
     { name: 'Inicio', href: '/', navs: [], sections:[
         {name: 'Inicio',id: 'hero-section'},
         {name: 'Cursos',id: 'courses-section'},
@@ -515,6 +536,7 @@ export const navLinks = [
 
 // Exportar datos y funciones
 export {
+    academies,
     courses,
     appState,
     updateState,
@@ -522,4 +544,5 @@ export {
     getCourseById,
     getCoursesByCategory,
     getOtherCourses,
+    navLinks
 };

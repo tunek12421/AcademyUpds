@@ -1578,15 +1578,33 @@ class SPARouter {
                 if (navItem.navs && navItem.navs.length > 0) {
                     navItem.navs.forEach(navSubItem => {
                         if (navSubItem.submenu && navSubItem.submenu.length > 0) {
-                            // Elemento con submenú - usar clases CSS
-                            mobileMenuHTML += `<div class="mobile-nav-section-header">${navSubItem.name}</div>`;
-                            mobileMenuHTML += `<div class="mobile-submenu">`;
+                            // Elemento con submenú - crear dropdown interactivo
+                            const sectionId = `mobile-section-${index}-${navSubItem.name.toLowerCase().replace(/\s+/g, '-')}`;
+                            
+                            mobileMenuHTML += `
+                                <div class="mobile-nav-section-header mobile-dropdown-trigger" data-target="${sectionId}">
+                                    <span>${navSubItem.name}</span>
+                                    <svg class="mobile-dropdown-arrow w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            `;
+                            mobileMenuHTML += `<div id="${sectionId}" class="mobile-submenu mobile-dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">`;
                             
                             navSubItem.submenu.forEach(subItem => {
                                 if (subItem.submenu && subItem.submenu.length > 0) {
-                                    // Submenú anidado - usar clases CSS
-                                    mobileMenuHTML += `<div class="mobile-nav-subsection-header">${subItem.name}</div>`;
-                                    mobileMenuHTML += `<div class="mobile-submenu">`;
+                                    // Submenú anidado - crear dropdown anidado
+                                    const subSectionId = `mobile-subsection-${index}-${subItem.name.toLowerCase().replace(/\s+/g, '-')}`;
+                                    
+                                    mobileMenuHTML += `
+                                        <div class="mobile-nav-subsection-header mobile-dropdown-trigger" data-target="${subSectionId}">
+                                            <span>${subItem.name}</span>
+                                            <svg class="mobile-dropdown-arrow w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    `;
+                                    mobileMenuHTML += `<div id="${subSectionId}" class="mobile-submenu mobile-dropdown-content" style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">`;
                                     subItem.submenu.forEach(nestedItem => {
                                         mobileMenuHTML += `<a href="${nestedItem.href}" class="mobile-nav-link">${nestedItem.name}</a>`;
                                     });
@@ -1608,6 +1626,10 @@ class SPARouter {
             });
 
             mobileContent.innerHTML = mobileMenuHTML;
+            
+            // Inicializar funcionalidad de dropdowns móviles
+            this.initMobileDropdowns();
+            
             console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
         }).catch(error => {
             console.error('❌ [MOBILE-MENU] Error generando contenido:', error);
@@ -1643,6 +1665,45 @@ class SPARouter {
         }
         
         return null;
+    }
+
+    // Inicializar funcionalidad de dropdowns móviles
+    initMobileDropdowns() {
+        const triggers = document.querySelectorAll('.mobile-dropdown-trigger');
+        
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const targetId = trigger.getAttribute('data-target');
+                const content = document.getElementById(targetId);
+                const arrow = trigger.querySelector('.mobile-dropdown-arrow');
+                
+                if (content && arrow) {
+                    const isOpen = content.style.maxHeight !== '0px' && content.style.maxHeight !== '';
+                    
+                    if (isOpen) {
+                        // Cerrar
+                        content.style.maxHeight = '0px';
+                        arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        // Abrir - calcular altura necesaria
+                        content.style.maxHeight = 'none';
+                        const height = content.scrollHeight;
+                        content.style.maxHeight = '0px';
+                        
+                        // Forzar reflow y luego animar
+                        requestAnimationFrame(() => {
+                            content.style.maxHeight = `${height}px`;
+                            arrow.style.transform = 'rotate(180deg)';
+                        });
+                    }
+                }
+            });
+        });
+        
+        console.log(`📱 [MOBILE-DROPDOWNS] ${triggers.length} dropdowns móviles inicializados`);
     }
 
     // Método para navegación programática

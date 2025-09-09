@@ -162,6 +162,32 @@
   font-size: 0.9rem;
 }
 
+/* Dropdowns interactivos para menú móvil */
+.mobile-dropdown-trigger {
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
+}
+
+.mobile-dropdown-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-dropdown-trigger:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-dropdown-arrow {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.mobile-dropdown-content {
+  transition: max-height 0.3s ease-out;
+}
+
 .mobile-submenu {
   margin-left: 1rem;
   margin-top: 0.25rem;

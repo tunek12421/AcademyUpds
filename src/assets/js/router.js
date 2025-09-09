@@ -137,6 +137,9 @@ class SPARouter {
         // Inicializar navegación del header
         this.initHeaderNavigation();
         
+        // Inicializar detección de sticky header
+        this.initStickyHeaderDetection();
+        
         // Inicializar menú móvil
         this.initMobileMenu();
     }
@@ -190,6 +193,48 @@ class SPARouter {
             // Ejecutar inicialmente
             resizeHeader();
         }
+    }
+
+    initStickyHeaderDetection() {
+        console.log('🔄 [ROUTER] Inicializando detección de sticky header');
+        
+        const stickySection = document.querySelector('.bg-primary.sticky');
+        const stickyLogos = document.getElementById('sticky-logos');
+        
+        if (!stickySection || !stickyLogos) {
+            console.warn('⚠️ [ROUTER] No se encontraron elementos sticky header necesarios');
+            return;
+        }
+        
+        let isSticky = false;
+        
+        const handleScroll = () => {
+            const stickyRect = stickySection.getBoundingClientRect();
+            const shouldShowLogos = stickyRect.top <= 0;
+            
+            if (shouldShowLogos && !isSticky) {
+                // Activar logos sticky
+                isSticky = true;
+                stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+                stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                console.log('✨ [STICKY] Logos activados');
+                
+            } else if (!shouldShowLogos && isSticky) {
+                // Desactivar logos sticky
+                isSticky = false;
+                stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                console.log('🔽 [STICKY] Logos desactivados');
+            }
+        };
+        
+        // Agregar listener de scroll
+        window.addEventListener('scroll', handleScroll);
+        
+        // Ejecutar una vez para inicializar
+        handleScroll();
+        
+        console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 
     async loadPageContent(pageName) {

@@ -225,6 +225,62 @@
   color: #374151;
 }
 
+/* === STICKY HEADER ANIMATIONS === */
+.sticky-logos {
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  will-change: opacity, transform;
+}
+
+.sticky-logos.active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+.sticky-logo-left,
+.sticky-logo-right {
+  transition: all 0.3s ease-in-out;
+  will-change: transform, opacity;
+}
+
+/* Animación de entrada escalonada para los logos */
+.sticky-logos.active .sticky-logo-left {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.sticky-logos.active .sticky-logo-right {
+  animation: slideInRight 0.5s ease-out 0.1s both;
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Mejoras para la sección sticky */
+.bg-primary.sticky {
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 /* === RESPONSIVE DESIGN === */
 /* Ocultar navegación normal en móvil y mostrar hamburger */
 @media (max-width: 768px) {
@@ -261,6 +317,15 @@
   .header-logo-left,
   .header-logo-right {
     height: 2.5rem; /* h-10 */
+  }
+  
+  /* Ajustar logos sticky en móvil */
+  .sticky-logo-left {
+    height: 2rem; /* h-8 */
+  }
+  
+  .sticky-logo-right {
+    height: 1.25rem; /* h-5 */
   }
 }
 

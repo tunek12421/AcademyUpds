@@ -8833,6 +8833,14 @@ video {
   }
 }
 
+.pointer-events-none{
+  pointer-events:none
+}
+
+.pointer-events-auto{
+  pointer-events:auto
+}
+
 .visible{
   visibility:visible
 }
@@ -9185,6 +9193,16 @@ video {
 
 .translate-x-\[10px\]{
   --tw-translate-x:10px;
+  transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+.translate-y-0{
+  --tw-translate-y:0px;
+  transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+.translate-y-2{
+  --tw-translate-y:0.5rem;
   transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
 }
 
@@ -9798,6 +9816,16 @@ video {
   outline-style:solid
 }
 
+.brightness-0{
+  --tw-brightness:brightness(0);
+  filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+
+.invert{
+  --tw-invert:invert(100%);
+  filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+
 .filter{
   filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
@@ -9844,6 +9872,10 @@ video {
 
 .duration-300{
   transition-duration:300ms
+}
+
+.duration-500{
+  transition-duration:500ms
 }
 
 .ease-in{
@@ -9975,8 +10007,16 @@ video {
 }
 
 @media (min-width: 640px){
+  .sm\:h-10{
+    height:2.5rem
+  }
+
   .sm\:h-14{
     height:3.5rem
+  }
+
+  .sm\:h-6{
+    height:1.5rem
   }
 
   .sm\:h-8{
@@ -9993,8 +10033,16 @@ video {
     height:2.5rem
   }
 
+  .md\:h-12{
+    height:3rem
+  }
+
   .md\:h-16{
     height:4rem
+  }
+
+  .md\:h-8{
+    height:2rem
   }
 
   .md\:grid-cols-2{

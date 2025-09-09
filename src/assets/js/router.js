@@ -504,24 +504,25 @@ class SPARouter {
             '/spa.html': 0,  // Agregar ruta spa.html
             '/cursos': 1,
             '/curso': 1,
-            '/facultades': 1,
-            '/facultades/ciencias-salud': 1,
-            '/facultades/ciencias-salud/manejo-cadaveres': 1,
-            '/facultades/ciencias-salud/primeros-auxilios': 1,
-            '/facultades/ingenieria': 1,
-            '/facultades/ingenieria/excel-experto': 1,
-            '/facultades/ciencias-empresariales': 1,
-            '/facultades/ciencias-empresariales/tributacion-aplicada': 1,
-            '/facultades/ciencias-juridicas': 1,
-            '/facultades/ciencias-juridicas/estrategias-litigacion': 1,
+            '/facultades': 2,
+            '/facultades/ciencias-salud': 2,
+            '/facultades/ciencias-salud/manejo-cadaveres': 2,
+            '/facultades/ciencias-salud/primeros-auxilios': 2,
+            '/facultades/ingenieria': 2,
+            '/facultades/ingenieria/excel-experto': 2,
+            '/facultades/ciencias-empresariales': 2,
+            '/facultades/ciencias-empresariales/tributacion-aplicada': 2,
+            '/facultades/ciencias-juridicas': 2,
+            '/facultades/ciencias-juridicas/estrategias-litigacion': 2,
             '/academias': 1,
             '/academias/mikrotik': 1,
             '/academias/huawei': 1,
-            '/mikrotik': 3,
-            '/ciencias-salud': 1,
-            '/ingenieria': 1,
-            '/ciencias-empresariales': 1,
-            '/ciencias-juridicas': 1
+            '/mikrotik': 4,
+            '/huawei': 5,
+            '/ciencias-salud': 2,
+            '/ingenieria': 2,
+            '/ciencias-empresariales': 2,
+            '/ciencias-juridicas': 2
         };
         
         const newIndex = routeToIndex[route] || 0;
@@ -794,24 +795,98 @@ class SPARouter {
         if (navBottom) {
             console.log('🔄 [COURSE-SECTIONS] Inicializando navegación para curso:', course.title);
             
-            // Crear enlaces de navegación para las secciones del curso
-            navBottom.innerHTML = `
-                <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                    Información
-                </a>
-                <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                    Instructor
-                </a>
-                <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                    Contenido
-                </a>
-                <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                    Habilidades
-                </a>
-            `;
+            // Detectar si el curso pertenece a una facultad
+            const facultyCategories = [
+                'Ciencias de la Salud',
+                'Ingeniería', 
+                'Ciencias Empresariales',
+                'Ciencias Jurídicas'
+            ];
             
-            console.log('✅ [COURSE-SECTIONS] Navegación de curso inicializada');
+            const isFacultyCourse = facultyCategories.includes(course.category);
+            
+            if (isFacultyCourse) {
+                // Si es un curso de facultad, mostrar la navegación de la facultad
+                console.log(`📚 [COURSE-SECTIONS] Curso de facultad detectado: ${course.category}`);
+                
+                // Importar estructura de facultades y mostrar dropdown
+                import('./data.js').then(module => {
+                    const { facultyStructure } = module;
+                    
+                    // Encontrar la facultad correspondiente
+                    const faculty = facultyStructure.find(f => f.name === course.category);
+                    
+                    if (faculty && faculty.submenu && faculty.submenu.length > 0) {
+                        // Crear dropdown con los cursos de la facultad
+                        const submenuHTML = faculty.submenu.map((course, index) => 
+                            `<a href="${course.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < faculty.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}">${course.name}</a>`
+                        ).join('');
+                        
+                        navBottom.innerHTML = `
+                            <div class="dropdown-container relative inline-block">
+                                <button class="upds-contact-link dropdown-trigger hover:text-primary-hover transition-colors flex items-center" 
+                                        data-dropdown="${faculty.name}">
+                                    ${faculty.name}
+                                    <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                    <div class="py-2">
+                                        ${submenuHTML}
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                                Información
+                            </a>
+                            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                                Instructor
+                            </a>
+                            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                                Contenido
+                            </a>
+                            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                                Habilidades
+                            </a>
+                        `;
+                        
+                        // Inicializar funcionalidad de dropdown después de crear el HTML
+                        setTimeout(() => this.initDropdownFunctionality(), 10);
+                        
+                        console.log(`✅ [COURSE-SECTIONS] Navegación de facultad inicializada para ${faculty.name}`);
+                    } else {
+                        // Si no hay submenu, mostrar navegación normal de curso
+                        this.createDefaultCourseNavigation(navBottom);
+                    }
+                }).catch(error => {
+                    console.error('❌ [COURSE-SECTIONS] Error cargando estructura de facultades:', error);
+                    this.createDefaultCourseNavigation(navBottom);
+                });
+            } else {
+                // Si no es un curso de facultad, mostrar navegación normal de curso
+                this.createDefaultCourseNavigation(navBottom);
+            }
         }
+    }
+    
+    createDefaultCourseNavigation(navBottom) {
+        navBottom.innerHTML = `
+            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                Información
+            </a>
+            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                Instructor
+            </a>
+            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                Contenido
+            </a>
+            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
+                Habilidades
+            </a>
+        `;
+        
+        console.log('✅ [COURSE-SECTIONS] Navegación de curso por defecto inicializada');
     }
 
     updateHeaderForCourseSection(section) {

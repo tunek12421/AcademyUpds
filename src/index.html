@@ -53,19 +53,27 @@
             </div>
             
             <!-- Logos Sticky (ocultos inicialmente) -->
-            <div class="sticky-logos flex items-center justify-between absolute inset-0 px-4 py-3 opacity-0 pointer-events-none transition-all duration-500 ease-in-out transform translate-y-2" id="sticky-logos">
-                <!-- Logo Izquierdo Sticky -->
-                <div class="flex-shrink-0">
-                    <img src="/assets/images/logos/UPDS-logo.png" 
-                        alt="UPDS" 
-                        class="sticky-logo-left h-8 sm:h-10 md:h-12 w-auto aspect-square object-contain brightness-0 invert" />
-                </div>
-                
-                <!-- Logo Derecho Sticky -->
-                <div class="flex-shrink-0">
-                    <img src="/assets/images/logos/UPDS-title.png" 
-                        alt="UPDS" 
-                        class="sticky-logo-right h-4 sm:h-6 md:h-8 w-auto object-contain aspect-logo brightness-0 invert" />
+            <div class="sticky-logos absolute inset-0 opacity-0 pointer-events-none transition-all duration-500 ease-in-out transform translate-y-2" id="sticky-logos">
+                <!-- Container idéntico al header blanco -->
+                <div class="container mx-auto px-4 py-2 h-full">
+                    <div class="flex items-center justify-between gap-4 md:gap-8 lg:gap-12 py-1 h-full">
+                        <!-- Logo Izquierdo Sticky -->
+                        <div class="flex-shrink-0">
+                            <img src="/assets/images/logos/UPDS-logo.png" 
+                                alt="UPDS" 
+                                class="sticky-logo-left h-8 sm:h-10 md:h-12 lg:h-14 w-auto aspect-square object-contain brightness-0 invert" />
+                        </div>
+                        
+                        <!-- Espacio central (igual que el header) -->
+                        <div class="flex-1"></div>
+                        
+                        <!-- Logo Derecho Sticky -->
+                        <div class="flex-shrink-0">
+                            <img src="/assets/images/logos/UPDS-title.png" 
+                                alt="UPDS" 
+                                class="sticky-logo-right h-4 sm:h-6 md:h-8 lg:h-10 w-auto object-contain aspect-logo brightness-0 invert" />
+                        </div>
+                    </div>
                 </div>
             </div>
             

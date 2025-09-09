@@ -10067,8 +10067,16 @@ video {
     grid-column:span 2 / span 2
   }
 
+  .lg\:h-10{
+    height:2.5rem
+  }
+
   .lg\:h-12{
     height:3rem
+  }
+
+  .lg\:h-14{
+    height:3.5rem
   }
 
   .lg\:h-20{

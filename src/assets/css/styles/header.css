@@ -229,6 +229,7 @@
 .sticky-logos {
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
   will-change: opacity, transform;
+  z-index: 20; /* Asegurar que esté por encima del contenido de contacto */
 }
 
 .sticky-logos.active {
@@ -319,13 +320,19 @@
     height: 2.5rem; /* h-10 */
   }
   
-  /* Ajustar logos sticky en móvil */
+  /* Ajustar logos sticky en móvil para que coincidan con los del header */
   .sticky-logo-left {
-    height: 2rem; /* h-8 */
+    height: 2.5rem; /* h-10 - igual que header-logo-left en móvil */
   }
   
   .sticky-logo-right {
-    height: 1.25rem; /* h-5 */
+    height: 1.5rem; /* h-6 - proporcionalmente igual que header-logo-right en móvil */
+  }
+  
+  /* Ocultar contenido de contacto cuando los logos sticky estén activos */
+  .sticky-logos.active ~ .upds-header-contact {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 
@@ -341,6 +348,12 @@
   
   .upds-nav-top {
     display: flex !important;
+  }
+  
+  /* En desktop también ocultar contenido de contacto cuando logos sticky estén activos */
+  .sticky-logos.active ~ .upds-header-contact {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 

@@ -49,21 +49,63 @@
   cursor: pointer;
   padding: 8px;
   border-radius: 4px;
-  transform: translateY(-50%) !important;
+  z-index: 50; /* Mayor z-index para estar por encima de los logos sticky */
+  position: relative; /* Asegurar que el z-index funcione */
 }
 
 .hamburger-menu:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-50%) !important;
 }
 
 .hamburger-line {
   width: 22px;
   height: 2px;
-  background-color: white;
+  background-color: var(--color-primary); /* Azul en el header blanco */
   margin: 3px 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
   border-radius: 1px;
+}
+
+/* Cambiar color cuando esté en modo sticky */
+.bg-primary.sticky-mode .hamburger-line {
+  background-color: white;
+}
+
+/* === MENÚ HAMBURGUESA STICKY === */
+.hamburger-menu-sticky {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  z-index: 50;
+  position: relative;
+}
+
+.hamburger-menu-sticky:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-line-sticky {
+  width: 22px;
+  height: 2px;
+  background-color: white; /* Siempre blanco en sticky */
+  margin: 3px 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  border-radius: 1px;
+}
+
+/* Animación del hamburger sticky cuando está activo */
+.hamburger-menu-sticky.active .hamburger-line-sticky:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu-sticky.active .hamburger-line-sticky:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu-sticky.active .hamburger-line-sticky:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
 }
 
 /* Animación del hamburger cuando está activo */
@@ -229,7 +271,7 @@
 .sticky-logos {
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
   will-change: opacity, transform;
-  z-index: 20; /* Asegurar que esté por encima del contenido de contacto */
+  z-index: 20; /* Asegurar que esté por encima del contenido de contacto pero debajo del hamburger */
 }
 
 .sticky-logos.active {
@@ -303,10 +345,6 @@
     display: none !important;
   }
   
-  .hamburger-menu {
-    display: flex;
-  }
-  
   /* Hacer la barra azul más alta en móvil solo en modo sticky */
   .bg-primary.sticky-mode {
     min-height: 70px !important;
@@ -315,8 +353,14 @@
   }
   
   .bg-primary {
+    min-height: 60px; /* Altura base más alta en móvil */
     display: flex;
     align-items: center;
+  }
+  
+  .bg-primary .container {
+    padding-top: 1rem; /* py-4 */
+    padding-bottom: 1rem;
   }
   
   /* Ocultar flecha en móvil */

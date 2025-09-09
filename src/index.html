@@ -21,15 +21,24 @@
             <!-- Container Principal -->
             <div class="container mx-auto px-4 py-2">
                 <div class="flex items-center justify-between gap-4 md:gap-8 lg:gap-12 py-1">
-                    <!-- Logo Izquierdo -->
-                    <div class="flex-shrink-0">
-                        <img src="/assets/images/logos/UPDS-logo.png" 
-                            alt="UPDS" 
-                            class="header-logo-left h-12 sm:h-14 md:h-16 lg:h-20 w-auto aspect-square object-contain" />
+                    <!-- Logo Izquierdo y Hamburguesa (móvil) -->
+                    <div class="flex items-center gap-4">
+                        <div class="flex-shrink-0">
+                            <img src="/assets/images/logos/UPDS-logo.png" 
+                                alt="UPDS" 
+                                class="header-logo-left h-12 sm:h-14 md:h-16 lg:h-20 w-auto aspect-square object-contain" />
+                        </div>
+                        
+                        <!-- Botón Hamburguesa (Móvil) - En el header blanco -->
+                        <button class="hamburger-menu md:hidden flex" id="mobile-menu-toggle" aria-label="Abrir menú">
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                            <div class="hamburger-line"></div>
+                        </button>
                     </div>
                     
                     <!-- Navegación Central (Desktop) -->
-                    <nav class="upds-nav-top flex items-center justify-center gap-1 lg:gap-4 flex-wrap">
+                    <nav class="upds-nav-top hidden md:flex items-center justify-center gap-1 lg:gap-4 flex-wrap">
                         <!-- Los enlaces se cargan dinámicamente -->
                     </nav>
                     
@@ -57,11 +66,20 @@
                 <!-- Container idéntico al header blanco -->
                 <div class="container mx-auto px-4 py-4 h-full">
                     <div class="flex items-center justify-between gap-4 md:gap-8 lg:gap-12 py-1 h-full">
-                        <!-- Logo Izquierdo Sticky -->
-                        <div class="flex-shrink-0">
-                            <img src="/assets/images/logos/UPDS-logo.png" 
-                                alt="UPDS" 
-                                class="sticky-logo-left h-10 sm:h-12 md:h-14 lg:h-16 w-auto aspect-square object-contain brightness-0 invert" />
+                        <!-- Logo Izquierdo Sticky y Hamburguesa -->
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0">
+                                <img src="/assets/images/logos/UPDS-logo.png" 
+                                    alt="UPDS" 
+                                    class="sticky-logo-left h-10 sm:h-12 md:h-14 lg:h-16 w-auto aspect-square object-contain brightness-0 invert" />
+                            </div>
+                            
+                            <!-- Botón Hamburguesa Sticky (Móvil) -->
+                            <button class="hamburger-menu-sticky md:hidden flex" id="mobile-menu-toggle-sticky" aria-label="Abrir menú">
+                                <div class="hamburger-line-sticky"></div>
+                                <div class="hamburger-line-sticky"></div>
+                                <div class="hamburger-line-sticky"></div>
+                            </button>
                         </div>
                         
                         <!-- Espacio central (igual que el header) -->
@@ -76,13 +94,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Botón Hamburguesa (Móvil) - Posicionado absolutamente -->
-             <button class="hamburger-menu absolute right-4 top-1/2" id="mobile-menu-toggle" aria-label="Abrir menú">
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-                <div class="hamburger-line"></div>
-            </button>
         </div>
         
         <!-- Menú Móvil Dropdown -->

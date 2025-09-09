@@ -1489,6 +1489,7 @@ class SPARouter {
     // Inicializar funcionalidad del menú móvil
     initMobileMenu() {
         const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileToggleSticky = document.getElementById('mobile-menu-toggle-sticky');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileContent = document.getElementById('mobile-menu-content');
 
@@ -1501,6 +1502,7 @@ class SPARouter {
         const openMobileMenu = () => {
             mobileMenu.classList.add('active');
             mobileToggle.classList.add('active');
+            if (mobileToggleSticky) mobileToggleSticky.classList.add('active');
             this.generateMobileMenuContent();
             console.log('📱 [MOBILE-MENU] Menú dropdown abierto');
         };
@@ -1509,6 +1511,7 @@ class SPARouter {
         const closeMobileMenu = () => {
             mobileMenu.classList.remove('active');
             mobileToggle.classList.remove('active');
+            if (mobileToggleSticky) mobileToggleSticky.classList.remove('active');
             console.log('📱 [MOBILE-MENU] Menú dropdown cerrado');
         };
 
@@ -1526,10 +1529,19 @@ class SPARouter {
             e.stopPropagation();
             toggleMobileMenu();
         });
+        
+        // Event listener para el botón sticky
+        if (mobileToggleSticky) {
+            mobileToggleSticky.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+        }
 
         // Cerrar menú al hacer click fuera de él
         document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+            const isToggleClick = mobileToggle.contains(e.target) || (mobileToggleSticky && mobileToggleSticky.contains(e.target));
+            if (!mobileMenu.contains(e.target) && !isToggleClick) {
                 if (mobileMenu.classList.contains('active')) {
                     closeMobileMenu();
                 }

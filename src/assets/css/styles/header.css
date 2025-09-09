@@ -282,6 +282,16 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
+/* Altura adicional solo cuando los logos sticky están activos */
+.bg-primary.sticky-mode {
+  min-height: 80px !important;
+}
+
+.bg-primary.sticky-mode .container {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
 /* === RESPONSIVE DESIGN === */
 /* Ocultar navegación normal en móvil y mostrar hamburger */
 @media (max-width: 768px) {
@@ -297,14 +307,14 @@
     display: flex;
   }
   
-  /* Hacer la barra azul más alta en móvil */
-  .bg-primary .container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+  /* Hacer la barra azul más alta en móvil solo en modo sticky */
+  .bg-primary.sticky-mode {
+    min-height: 70px !important;
+    display: flex;
+    align-items: center;
   }
   
   .bg-primary {
-    min-height: 60px;
     display: flex;
     align-items: center;
   }
@@ -322,11 +332,11 @@
   
   /* Ajustar logos sticky en móvil para que coincidan con los del header */
   .sticky-logo-left {
-    height: 2.5rem; /* h-10 - igual que header-logo-left en móvil */
+    height: 2.5rem; /* h-10 - mantener tamaño base en móvil */
   }
   
   .sticky-logo-right {
-    height: 1.5rem; /* h-6 - proporcionalmente igual que header-logo-right en móvil */
+    height: 1.25rem; /* h-5 - proporcionalmente ajustado */
   }
   
   /* Ocultar contenido de contacto cuando los logos sticky estén activos */
@@ -355,6 +365,8 @@
     opacity: 0;
     pointer-events: none;
   }
+  
+  /* En desktop también aplicar altura aumentada solo en modo sticky */
 }
 
 /* Solo ajustes específicos para móvil muy pequeño si es necesario */

@@ -215,6 +215,7 @@ class SPARouter {
             if (shouldShowLogos && !isSticky) {
                 // Activar logos sticky
                 isSticky = true;
+                stickySection.classList.add('sticky-mode'); // Agregar clase para altura aumentada
                 stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
                 stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
                 console.log('✨ [STICKY] Logos activados');
@@ -222,6 +223,7 @@ class SPARouter {
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
                 isSticky = false;
+                stickySection.classList.remove('sticky-mode'); // Quitar clase de altura aumentada
                 stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
                 stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
                 console.log('🔽 [STICKY] Logos desactivados');

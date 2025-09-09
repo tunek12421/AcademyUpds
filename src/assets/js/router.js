@@ -915,16 +915,22 @@ class SPARouter {
         updateState({ selectedCourse: null });
         window.DATA.name = "home";
         
-        // Si ya estamos en la página home, solo actualizar header (sin efecto de carga)
+        // Verificar si ya estamos en la página home específicamente (no solo que haya contenido)
         const currentContent = document.querySelector('#main-section main');
-        if (currentContent) {
+        const isAlreadyHome = currentContent && (
+            currentContent.querySelector('#hero-section') || 
+            currentContent.querySelector('#courses-section') ||
+            currentContent.querySelector('#about-section')
+        );
+        
+        if (isAlreadyHome) {
             // Ya tenemos contenido de home cargado, solo actualizar navegación
             this.updateHeaderArrow();
             this.updateHeaderBreadcrumbs();
             this.initHomeScrollDetection();
             console.log('✅ [ROUTER] Home: Solo actualización de header (sin recarga)');
         } else {
-            // No hay contenido, cargar desde cero con efecto de carga
+            // No hay contenido de home, cargar desde cero con efecto de carga
             const loaded = await this.loadPageContent('home');
             if (loaded) {
                 // Inicializar vista home después de cargar el contenido
@@ -1001,15 +1007,21 @@ class SPARouter {
         window.DATA.name = "cursos";
         this.cleanupScrollDetection();
         
-        // Si ya estamos en la página home, solo actualizar header (sin efecto de carga)
+        // Verificar si ya estamos en la página home específicamente
         const currentContent = document.querySelector('#main-section main');
-        if (currentContent) {
+        const isAlreadyHome = currentContent && (
+            currentContent.querySelector('#hero-section') || 
+            currentContent.querySelector('#courses-section') ||
+            currentContent.querySelector('#about-section')
+        );
+        
+        if (isAlreadyHome) {
             // Ya tenemos contenido de home cargado, solo actualizar navegación
             this.updateHeaderArrow();
             this.updateHeaderBreadcrumbs();
             console.log('✅ [ROUTER] Cursos: Solo actualización de header (sin recarga)');
         } else {
-            // No hay contenido, cargar desde cero
+            // No hay contenido de home, cargar desde cero
             this.loadHome();
         }
     }
@@ -1019,15 +1031,21 @@ class SPARouter {
         window.DATA.name = "facultades";
         this.cleanupScrollDetection();
         
-        // Si ya estamos en la página home, solo actualizar header (sin efecto de carga)
+        // Verificar si ya estamos en la página home específicamente
         const currentContent = document.querySelector('#main-section main');
-        if (currentContent) {
+        const isAlreadyHome = currentContent && (
+            currentContent.querySelector('#hero-section') || 
+            currentContent.querySelector('#courses-section') ||
+            currentContent.querySelector('#about-section')
+        );
+        
+        if (isAlreadyHome) {
             // Ya tenemos contenido de home cargado, solo actualizar navegación
             this.updateHeaderArrow();
             this.updateHeaderBreadcrumbs();
             console.log('✅ [ROUTER] Facultades: Solo actualización de header (sin recarga)');
         } else {
-            // No hay contenido, cargar desde cero
+            // No hay contenido de home, cargar desde cero
             this.loadHome();
         }
     }

@@ -41,32 +41,32 @@ class SPARouter {
             return;
         }
 
-        console.log('✅ [ROUTER] Contenedor principal encontrado:', this.mainSection);
+        // console.log('✅ [ROUTER] Contenedor principal encontrado:', this.mainSection);
         
         // Interceptar clicks en enlaces (usando capture phase para mayor prioridad)
-        console.log('🎯 [ROUTER] Registrando event listener global de clicks con CAPTURE');
+        // console.log('🎯 [ROUTER] Registrando event listener global de clicks con CAPTURE');
         document.addEventListener('click', (e) => {
-            console.log('🖱️ [DEBUG] CLICK GLOBAL detectado en:', e.target);
+            // console.log('🖱️ [DEBUG] CLICK GLOBAL detectado en:', e.target);
             const link = e.target.matches('a') ? e.target : e.target.closest('a');
             if (!link) {
-                console.log('❌ [DEBUG] No es un enlace, ignorando');
+                // console.log('❌ [DEBUG] No es un enlace, ignorando');
                 return;
             }
             
             const href = link.getAttribute('href');
             
             // DEBUG: Log detallado de todos los clicks en enlaces
-            console.log('🖱️ [DEBUG] Click detectado:', {
-                href: href,
-                target: e.target,
-                link: link,
-                classes: link.className,
-                hasUpdsNavLink: link.classList.contains('upds-nav-link')
-            });
+            // console.log('🖱️ [DEBUG] Click detectado:', {
+            //     href: href,
+            //     target: e.target,
+            //     link: link,
+            //     classes: link.className,
+            //     hasUpdsNavLink: link.classList.contains('upds-nav-link')
+            // });
             
             // Interceptar clicks en navegación principal (upds-nav-link)
             if (link.classList.contains('upds-nav-link')) {
-                console.log('🎯 [DEBUG] Navegación principal detectada (upds-nav-link)');
+                // console.log('🎯 [DEBUG] Navegación principal detectada (upds-nav-link)');
                 // Caso especial para Cochabamba - abrir enlace externo directamente
                 if (href && href.includes('cochabamba')) {
                     window.open('https://www.upds.edu.bo/sede/cochabamba/', '_blank');
@@ -80,15 +80,15 @@ class SPARouter {
                 if (navTop) {
                     const navLinks = navTop.querySelectorAll('.upds-nav-link');
                     const clickedIndex = Array.from(navLinks).indexOf(link);
-                    console.log('🔢 [DEBUG] Click en navegable:', {
-                        linkText: link.textContent,
-                        clickedIndex: clickedIndex,
-                        totalLinks: navLinks.length,
-                        currentHeadIndex: window.DATA.headIndex
-                    });
+                    // console.log('🔢 [DEBUG] Click en navegable:', {
+                    //     linkText: link.textContent,
+                    //     clickedIndex: clickedIndex,
+                    //     totalLinks: navLinks.length,
+                    //     currentHeadIndex: window.DATA.headIndex
+                    // });
                     if (clickedIndex !== -1) {
                         // Actualizar el índice del header
-                        console.log(`🎯 [DEBUG] Actualizando headIndex de ${window.DATA.headIndex} a ${clickedIndex}`);
+                        // console.log(`🎯 [DEBUG] Actualizando headIndex de ${window.DATA.headIndex} a ${clickedIndex}`);
                         window.DATA.headIndex = clickedIndex;
                         // Actualizar la posición de la flecha inmediatamente
                         this.updateHeaderArrow();
@@ -106,7 +106,7 @@ class SPARouter {
             
             // Interceptar enlaces de secciones (#section-id)
             if (href && href.startsWith('#')) {
-                console.log('🔗 [DEBUG] Link de sección detectado:', href);
+                // console.log('🔗 [DEBUG] Link de sección detectado:', href);
                 e.preventDefault();
                 this.scrollToSection(href.substring(1)); // Remover el #
                 return;
@@ -114,11 +114,11 @@ class SPARouter {
             
             // Interceptar enlaces de páginas
             if (e.target.matches('a[href^="/"]') || e.target.closest('a[href^="/"]')) {
-                console.log('📄 [DEBUG] Link de página detectado:', href);
+                // console.log('📄 [DEBUG] Link de página detectado:', href);
                 
                 // NUEVO: Actualización inmediata del header para navegación desde dropdown
                 if (href === '/mikrotik') {
-                    console.log('🎯 [ROUTER] Click en Mikrotik desde dropdown - actualizando header inmediatamente');
+                    // console.log('🎯 [ROUTER] Click en Mikrotik desde dropdown - actualizando header inmediatamente');
                     window.DATA.headIndex = 2; // Índice para Mikrotik
                     this.updateHeaderArrow();
                 }
@@ -148,10 +148,10 @@ class SPARouter {
                     return;
                 }
                 
-                console.log('🚀 [DEBUG] Ejecutando navigate() con href:', href);
+                // console.log('🚀 [DEBUG] Ejecutando navigate() con href:', href);
                 this.navigate(href);
             } else {
-                console.log('❌ [DEBUG] Click no interceptado - no es link de página');
+                // console.log('❌ [DEBUG] Click no interceptado - no es link de página');
             }
         });
 
@@ -190,13 +190,13 @@ class SPARouter {
                 // DEBUGGING: Agregar event listener específico para Mikrotik
                 const mikrotikLink = Array.from(navTop.querySelectorAll('.upds-nav-link')).find(link => link.textContent.trim() === 'Mikrotik');
                 if (mikrotikLink) {
-                    console.log('🎯 [DEBUG] Encontrado navegable Mikrotik, agregando listener específico');
+                    // console.log('🎯 [DEBUG] Encontrado navegable Mikrotik, agregando listener específico');
                     mikrotikLink.addEventListener('click', (e) => {
-                        console.log('🔥 [DEBUG] CLICK DIRECTO EN MIKROTIK DETECTADO!', {
-                            target: e.target,
-                            href: e.target.href,
-                            index: Array.from(navTop.querySelectorAll('.upds-nav-link')).indexOf(e.target)
-                        });
+                        // console.log('🔥 [DEBUG] CLICK DIRECTO EN MIKROTIK DETECTADO!', {
+                        //     target: e.target,
+                        //     href: e.target.href,
+                        //     index: Array.from(navTop.querySelectorAll('.upds-nav-link')).indexOf(e.target)
+                        // });
                         
                         // Forzar actualización inmediata del header
                         e.preventDefault();
@@ -251,7 +251,7 @@ class SPARouter {
     }
 
     initStickyHeaderDetection() {
-        console.log('🔄 [ROUTER] Inicializando detección de sticky header');
+        // console.log('🔄 [ROUTER] Inicializando detección de sticky header');
         
         const stickySection = document.querySelector('.bg-primary.sticky');
         const stickyLogos = document.getElementById('sticky-logos');
@@ -291,12 +291,12 @@ class SPARouter {
         // Ejecutar una vez para inicializar
         handleScroll();
         
-        console.log('✅ [ROUTER] Detección de sticky header inicializada');
+        // console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 
     async loadPageContent(pageName) {
         try {
-            console.log(`🔄 [ROUTER] Cargando página: ${pageName}`);
+            // console.log(`🔄 [ROUTER] Cargando página: ${pageName}`);
             
             // 1. Preservar la altura actual del contenedor
             const currentHeight = this.mainSection.offsetHeight;
@@ -307,7 +307,7 @@ class SPARouter {
             if (currentContent) {
                 currentContent.style.transition = 'opacity 0.2s ease-out';
                 currentContent.style.opacity = '0';
-                console.log('👻 [ROUTER] Contenido actual ocultado');
+                // console.log('👻 [ROUTER] Contenido actual ocultado');
             }
             
             // 3. Mostrar indicador discreto de carga
@@ -350,7 +350,7 @@ class SPARouter {
             // 11. Mostrar el nuevo contenido con transición suave
             if (newContent) {
                 newContent.style.opacity = '1';
-                console.log('✨ [ROUTER] Nuevo contenido mostrado');
+                // console.log('✨ [ROUTER] Nuevo contenido mostrado');
             }
             
             
@@ -359,7 +359,7 @@ class SPARouter {
                 this.mainSection.style.minHeight = '';
             }, 300);
             
-            console.log(`✅ [ROUTER] Página ${pageName} cargada correctamente`);
+            // console.log(`✅ [ROUTER] Página ${pageName} cargada correctamente`);
             return true;
             
         } catch (error) {
@@ -736,19 +736,19 @@ class SPARouter {
     }
 
     initHomeScrollDetection() {
-        console.log('🔄 [HOME-SECTIONS] Inicializando detección de scroll para secciones');
+        // console.log('🔄 [HOME-SECTIONS] Inicializando detección de scroll para secciones');
         
         // Remover listener anterior si existe
         if (this.scrollListener) {
             window.removeEventListener('scroll', this.scrollListener);
-            console.log('🧹 [HOME-SECTIONS] Listener anterior removido');
+            // console.log('🧹 [HOME-SECTIONS] Listener anterior removido');
         }
 
         // Importar configuración de secciones
         import('./data.js').then(module => {
             const { navLinks } = module;
             const homeSections = navLinks[0].sections; // Obtener secciones de la página de inicio
-            console.log('📋 [HOME-SECTIONS] Secciones cargadas:', homeSections.map(s => s.id));
+            // console.log('📋 [HOME-SECTIONS] Secciones cargadas:', homeSections.map(s => s.id));
             
             this.scrollListener = () => {
                 const scrollY = window.scrollY;
@@ -768,7 +768,7 @@ class SPARouter {
                 
                 // Actualizar header solo si cambió la sección
                 if (this.currentHomeSection !== currentSection.id) {
-                    console.log('📍 [HOME-SECTIONS] Cambio de sección:', this.currentHomeSection, '→', currentSection.id);
+                    // console.log('📍 [HOME-SECTIONS] Cambio de sección:', this.currentHomeSection, '→', currentSection.id);
                     this.currentHomeSection = currentSection.id;
                     this.updateHeaderForHomeSection(currentSection);
                 }
@@ -776,7 +776,7 @@ class SPARouter {
             
             // Agregar listener
             window.addEventListener('scroll', this.scrollListener);
-            console.log('👂 [HOME-SECTIONS] Listener de scroll agregado');
+            // console.log('👂 [HOME-SECTIONS] Listener de scroll agregado');
             
             // Ejecutar una vez para inicializar
             this.scrollListener();
@@ -786,7 +786,7 @@ class SPARouter {
     initHomeSectionNavigation() {
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
-            console.log('🔄 [HOME-SECTIONS] Inicializando navegación de secciones');
+            // console.log('🔄 [HOME-SECTIONS] Inicializando navegación de secciones');
             
             // Obtener secciones de navLinks
             const homeSections = navLinks[0].sections;
@@ -798,14 +798,14 @@ class SPARouter {
                 </a>`
             ).join('');
             
-            console.log('✅ [HOME-SECTIONS] Navegación de secciones inicializada');
+            // console.log('✅ [HOME-SECTIONS] Navegación de secciones inicializada');
         }
     }
 
     updateHeaderForHomeSection(section) {
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
-            console.log('🎨 [HOME-SECTIONS] Resaltando sección activa:', section.name);
+            // console.log('🎨 [HOME-SECTIONS] Resaltando sección activa:', section.name);
             
             // Remover clase activa de todos los enlaces
             const allLinks = navBottom.querySelectorAll('.upds-section-link');
@@ -819,19 +819,19 @@ class SPARouter {
             if (activeLink) {
                 activeLink.classList.remove('text-white');
                 activeLink.classList.add('text-primary-hover', 'font-bold');
-                console.log('✅ [HOME-SECTIONS] Sección resaltada:', section.name);
+                // console.log('✅ [HOME-SECTIONS] Sección resaltada:', section.name);
             }
         }
     }
 
     cleanupScrollDetection() {
         if (this.scrollListener) {
-            console.log('🧹 [SECTIONS] Limpiando detección de scroll');
+            // console.log('🧹 [SECTIONS] Limpiando detección de scroll');
             window.removeEventListener('scroll', this.scrollListener);
             this.scrollListener = null;
             this.currentHomeSection = null;
             this.currentCourseSection = null;
-            console.log('✅ [SECTIONS] Scroll detection limpiado');
+            // console.log('✅ [SECTIONS] Scroll detection limpiado');
         }
     }
 
@@ -1204,7 +1204,7 @@ class SPARouter {
         this.cleanupScrollDetection(); // Limpiar scroll detection de home/curso
         
         // Actualizar header INMEDIATAMENTE al inicio
-        console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
+        // console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
         window.DATA.headIndex = 2; // Índice para Mikrotik
         this.updateHeaderArrow();
         this.updateHeaderBreadcrumbs();
@@ -1220,7 +1220,7 @@ class SPARouter {
                     
                     // Asegurar que el header se mantiene correcto después del renderizado
                     setTimeout(() => {
-                        console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
+                        // console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
                         window.DATA.headIndex = 2; // Re-confirmar
                         this.updateHeaderArrow();
                         this.updateHeaderBreadcrumbs();
@@ -1374,7 +1374,7 @@ class SPARouter {
             const mainElement = this.mainSection.querySelector('main');
             if (mainElement && mainElement.classList.contains('hidden')) {
                 mainElement.classList.remove('hidden');
-                console.log('✅ [ROUTER] Contenido principal mostrado');
+                // console.log('✅ [ROUTER] Contenido principal mostrado');
             }
             // También mostrar el contenedor principal directamente si no hay main
             if (this.mainSection.classList.contains('hidden')) {
@@ -1388,7 +1388,7 @@ class SPARouter {
 
     // Función para inicializar la funcionalidad de dropdowns
     initDropdownFunctionality() {
-        console.log('🔽 [DROPDOWN] Inicializando funcionalidad de dropdowns');
+        // console.log('🔽 [DROPDOWN] Inicializando funcionalidad de dropdowns');
         
         // Limpiar listeners anteriores si existen
         this.cleanupDropdownListeners();
@@ -1567,7 +1567,7 @@ class SPARouter {
         window.addEventListener('resize', resizeListener);
         this.dropdownListeners.push({ element: window, event: 'resize', listener: resizeListener });
         
-        console.log(`✅ [DROPDOWN] ${dropdownTriggers.length} dropdowns inicializados`);
+        // console.log(`✅ [DROPDOWN] ${dropdownTriggers.length} dropdowns inicializados`);
     }
     
     toggleDropdown(container) {
@@ -1753,7 +1753,7 @@ class SPARouter {
             }
         });
 
-        console.log('📱 [MOBILE-MENU] Funcionalidad dropdown inicializada');
+        // console.log('📱 [MOBILE-MENU] Funcionalidad dropdown inicializada');
     }
 
     // Generar contenido del menú móvil

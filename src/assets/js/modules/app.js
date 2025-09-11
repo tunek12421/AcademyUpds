@@ -112,7 +112,7 @@ function renderCoursesGridByCategory(category) {
     const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
     coursesGrid.innerHTML = coursesHTML;
     
-    console.log(`✅ [COURSES] ${categoryCourses.length} cursos de ${category} renderizados`);
+    // console.log(`✅ [COURSES] ${categoryCourses.length} cursos de ${category} renderizados`);
 }
 
 // Función para renderizar la vista principal (home)

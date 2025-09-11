@@ -2,7 +2,7 @@
 
 // Función para renderizar la vista principal (home) - Solo configuración dinámica
 export function renderHomeView() {
-    console.log('🏠 [HOME] Configurando vista home');
+    // console.log('🏠 [HOME] Configurando vista home');
     
     // El HTML ya está cargado desde home.html, solo configuramos la funcionalidad dinámica
     
@@ -27,22 +27,22 @@ export function renderHomeView() {
     // 5. Renderizar los cursos en la grilla
     renderCoursesGrid();
     
-    console.log('✅ [HOME] Vista home configurada');
+    // console.log('✅ [HOME] Vista home configurada');
 }
 
 // Funciones auxiliares para home
 function loadAcademiasSection() {
-    console.log('🎓 [HOME] Cargando sección de academias');
+    // console.log('🎓 [HOME] Cargando sección de academias');
     // La lógica para cargar academias dinámicamente se maneja en renderAcademiasGrid()
 }
 
 function loadCoursesSection() {
-    console.log('📚 [HOME] Cargando sección de cursos');
+    // console.log('📚 [HOME] Cargando sección de cursos');
     // La lógica para cargar cursos dinámicamente se maneja en renderCoursesGrid()
 }
 
 function setupHomeEventListeners() {
-    console.log('🎧 [HOME] Configurando event listeners');
+    // console.log('🎧 [HOME] Configurando event listeners');
     
     // Configurar todos los botones "Explorar cursos" en el hero
     // Usar un selector válido y buscar por contenido de texto
@@ -69,7 +69,7 @@ function setupHomeEventListeners() {
 
 // Función para renderizar la grilla de academias
 function renderAcademiasGrid() {
-    console.log('🎓 [ACADEMIAS] Renderizando grilla de academias');
+    // console.log('🎓 [ACADEMIAS] Renderizando grilla de academias');
     
     import('../data.js').then(module => {
         const { academies } = module;
@@ -86,7 +86,7 @@ function renderAcademiasGrid() {
                 // Limpiar grilla y agregar todo el HTML de una vez
                 academiasGrid.innerHTML = academiasHTML;
                 
-                console.log(`✅ [ACADEMIAS] ${academies.length} academias renderizadas`);
+                // console.log(`✅ [ACADEMIAS] ${academies.length} academias renderizadas`);
             }).catch(error => {
                 console.error('❌ [ACADEMIAS] Error al importar components:', error);
             });
@@ -100,7 +100,7 @@ function renderAcademiasGrid() {
 
 // Función para renderizar la grilla de cursos
 function renderCoursesGrid() {
-    console.log('📚 [COURSES] Renderizando grilla de cursos');
+    // console.log('📚 [COURSES] Renderizando grilla de cursos');
     
     const coursesGrid = document.getElementById('courses-grid');
     if (!coursesGrid) {
@@ -130,7 +130,7 @@ function renderCoursesGrid() {
                 // Reemplazar skeletons con contenido real con un pequeño delay para evitar flash
                 setTimeout(() => {
                     coursesGrid.innerHTML = coursesHTML;
-                    console.log(`✅ [COURSES] ${featuredCourses.length} cursos renderizados`);
+                    // console.log(`✅ [COURSES] ${featuredCourses.length} cursos renderizados`);
                 }, 200);
             } else {
                 console.error('❌ [COURSES] No se encontraron datos de cursos');

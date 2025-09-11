@@ -43,15 +43,30 @@ class SPARouter {
 
         console.log('✅ [ROUTER] Contenedor principal encontrado:', this.mainSection);
         
-        // Interceptar clicks en enlaces
+        // Interceptar clicks en enlaces (usando capture phase para mayor prioridad)
+        console.log('🎯 [ROUTER] Registrando event listener global de clicks con CAPTURE');
         document.addEventListener('click', (e) => {
+            console.log('🖱️ [DEBUG] CLICK GLOBAL detectado en:', e.target);
             const link = e.target.matches('a') ? e.target : e.target.closest('a');
-            if (!link) return;
+            if (!link) {
+                console.log('❌ [DEBUG] No es un enlace, ignorando');
+                return;
+            }
             
             const href = link.getAttribute('href');
             
+            // DEBUG: Log detallado de todos los clicks en enlaces
+            console.log('🖱️ [DEBUG] Click detectado:', {
+                href: href,
+                target: e.target,
+                link: link,
+                classes: link.className,
+                hasUpdsNavLink: link.classList.contains('upds-nav-link')
+            });
+            
             // Interceptar clicks en navegación principal (upds-nav-link)
             if (link.classList.contains('upds-nav-link')) {
+                console.log('🎯 [DEBUG] Navegación principal detectada (upds-nav-link)');
                 // Caso especial para Cochabamba - abrir enlace externo directamente
                 if (href && href.includes('cochabamba')) {
                     window.open('https://www.upds.edu.bo/sede/cochabamba/', '_blank');
@@ -65,8 +80,15 @@ class SPARouter {
                 if (navTop) {
                     const navLinks = navTop.querySelectorAll('.upds-nav-link');
                     const clickedIndex = Array.from(navLinks).indexOf(link);
+                    console.log('🔢 [DEBUG] Click en navegable:', {
+                        linkText: link.textContent,
+                        clickedIndex: clickedIndex,
+                        totalLinks: navLinks.length,
+                        currentHeadIndex: window.DATA.headIndex
+                    });
                     if (clickedIndex !== -1) {
                         // Actualizar el índice del header
+                        console.log(`🎯 [DEBUG] Actualizando headIndex de ${window.DATA.headIndex} a ${clickedIndex}`);
                         window.DATA.headIndex = clickedIndex;
                         // Actualizar la posición de la flecha inmediatamente
                         this.updateHeaderArrow();
@@ -84,6 +106,7 @@ class SPARouter {
             
             // Interceptar enlaces de secciones (#section-id)
             if (href && href.startsWith('#')) {
+                console.log('🔗 [DEBUG] Link de sección detectado:', href);
                 e.preventDefault();
                 this.scrollToSection(href.substring(1)); // Remover el #
                 return;
@@ -91,6 +114,15 @@ class SPARouter {
             
             // Interceptar enlaces de páginas
             if (e.target.matches('a[href^="/"]') || e.target.closest('a[href^="/"]')) {
+                console.log('📄 [DEBUG] Link de página detectado:', href);
+                
+                // NUEVO: Actualización inmediata del header para navegación desde dropdown
+                if (href === '/mikrotik') {
+                    console.log('🎯 [ROUTER] Click en Mikrotik desde dropdown - actualizando header inmediatamente');
+                    window.DATA.headIndex = 3; // Índice para Mikrotik
+                    this.updateHeaderArrow();
+                }
+                
                 // Caso especial para Cochabamba - abrir enlace externo directamente
                 if (href && href.includes('cochabamba')) {
                     e.preventDefault();
@@ -116,7 +148,10 @@ class SPARouter {
                     return;
                 }
                 
+                console.log('🚀 [DEBUG] Ejecutando navigate() con href:', href);
                 this.navigate(href);
+            } else {
+                console.log('❌ [DEBUG] Click no interceptado - no es link de página');
             }
         });
 
@@ -151,6 +186,26 @@ class SPARouter {
             let navTop = header.querySelector(".upds-nav-top");
             if (navTop) {
                 navTop.innerHTML = `${navLinks.map(link => `<a class="upds-nav-link" href="${link.href}">${link.name}</a>`).join('')}`;
+                
+                // DEBUGGING: Agregar event listener específico para Mikrotik
+                const mikrotikLink = Array.from(navTop.querySelectorAll('.upds-nav-link')).find(link => link.textContent.trim() === 'Mikrotik');
+                if (mikrotikLink) {
+                    console.log('🎯 [DEBUG] Encontrado navegable Mikrotik, agregando listener específico');
+                    mikrotikLink.addEventListener('click', (e) => {
+                        console.log('🔥 [DEBUG] CLICK DIRECTO EN MIKROTIK DETECTADO!', {
+                            target: e.target,
+                            href: e.target.href,
+                            index: Array.from(navTop.querySelectorAll('.upds-nav-link')).indexOf(e.target)
+                        });
+                        
+                        // Forzar actualización inmediata del header
+                        e.preventDefault();
+                        window.DATA.headIndex = 3;
+                        this.updateHeaderArrow();
+                        this.updateHeaderBreadcrumbs();
+                        this.navigate('/mikrotik');
+                    });
+                }
             }
             
             // Crear navegación inferior inicial (se actualizará dinámicamente)
@@ -922,9 +977,9 @@ class SPARouter {
                         
                         // Crear dropdown "Academias" con sub-dropdowns anidados
                         const academyStructure = [
-                            {name: "Mikrotik", href: "/academias/mikrotik", submenu: academyCourses.mikrotik},
+                            {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
                             // Solo mostrar Huawei si está habilitado
-                            // {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei}
+                            // {name: "Huawei", href: "/huawei", submenu: academyCourses.huawei}
                         ];
                         
                         const allAcademiesHTML = academyStructure.map((academy, index) => {
@@ -1148,6 +1203,13 @@ class SPARouter {
         window.DATA.name = "category";
         this.cleanupScrollDetection(); // Limpiar scroll detection de home/curso
         
+        // Actualizar header INMEDIATAMENTE al inicio
+        console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
+        window.DATA.headIndex = 3; // Índice para Mikrotik
+        this.updateHeaderArrow();
+        this.updateHeaderBreadcrumbs();
+        
+        // Cargar contenido HTML primero
         const loaded = await this.loadPageContent('mikrotik');
         if (loaded) {
             // Renderizar el contenido de mikrotik después de cargar la página
@@ -1155,6 +1217,14 @@ class SPARouter {
                 try {
                     const { renderCategoryView } = await import('./modules/app.js');
                     renderCategoryView('Mikrotik');
+                    
+                    // Asegurar que el header se mantiene correcto después del renderizado
+                    setTimeout(() => {
+                        console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
+                        window.DATA.headIndex = 3; // Re-confirmar
+                        this.updateHeaderArrow();
+                        this.updateHeaderBreadcrumbs();
+                    }, 50);
                 } catch (error) {
                     console.error('❌ [ROUTER] Error al renderizar mikrotik:', error);
                 }

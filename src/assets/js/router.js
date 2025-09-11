@@ -119,7 +119,7 @@ class SPARouter {
                 // NUEVO: Actualización inmediata del header para navegación desde dropdown
                 if (href === '/mikrotik') {
                     console.log('🎯 [ROUTER] Click en Mikrotik desde dropdown - actualizando header inmediatamente');
-                    window.DATA.headIndex = 3; // Índice para Mikrotik
+                    window.DATA.headIndex = 2; // Índice para Mikrotik
                     this.updateHeaderArrow();
                 }
                 
@@ -200,7 +200,7 @@ class SPARouter {
                         
                         // Forzar actualización inmediata del header
                         e.preventDefault();
-                        window.DATA.headIndex = 3;
+                        window.DATA.headIndex = 2;
                         this.updateHeaderArrow();
                         this.updateHeaderBreadcrumbs();
                         this.navigate('/mikrotik');
@@ -594,8 +594,8 @@ class SPARouter {
             const courseId = urlParams.get('id');
             
             if (courseId === '1') {
-                // Curso Mikrotik MTCNA debe ir al índice 3 (Mikrotik)
-                window.DATA.headIndex = 3;
+                // Curso Mikrotik MTCNA debe ir al índice 2 (Mikrotik)
+                window.DATA.headIndex = 2;
                 return;
             }
         }
@@ -619,7 +619,7 @@ class SPARouter {
             '/academias': 1,
             '/academias/mikrotik': 1,
             // '/academias/huawei': 1, // Temporalmente oculto
-            '/mikrotik': 3,
+            '/mikrotik': 2,
             // '/huawei': 4, // Temporalmente oculto
             '/ciencias-salud': 1,
             '/ingenieria': 1,
@@ -1205,7 +1205,7 @@ class SPARouter {
         
         // Actualizar header INMEDIATAMENTE al inicio
         console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
-        window.DATA.headIndex = 3; // Índice para Mikrotik
+        window.DATA.headIndex = 2; // Índice para Mikrotik
         this.updateHeaderArrow();
         this.updateHeaderBreadcrumbs();
         
@@ -1221,7 +1221,7 @@ class SPARouter {
                     // Asegurar que el header se mantiene correcto después del renderizado
                     setTimeout(() => {
                         console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
-                        window.DATA.headIndex = 3; // Re-confirmar
+                        window.DATA.headIndex = 2; // Re-confirmar
                         this.updateHeaderArrow();
                         this.updateHeaderBreadcrumbs();
                     }, 50);

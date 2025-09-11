@@ -31,7 +31,7 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,  // Mantener console.logs para debugging SPA
+        drop_console: false,  // Permitir console.logs para debugging SPA
         drop_debugger: true,
         dead_code: true,
         unused: true

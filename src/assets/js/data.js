@@ -533,13 +533,13 @@ const navLinks = [
         {name: "Academias", href: "/academias", submenu: [
             {name: "Mikrotik", href: "/academias/mikrotik", submenu: academyCourses.mikrotik},
             {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei}
-        ]}
+        ]},
+        ...facultyStructure.map(faculty => ({
+            name: faculty.name,
+            href: faculty.href,
+            submenu: faculty.submenu || []
+        }))
     ] },
-    { name: 'Facultades', href: '/facultades', navs: facultyStructure.map(faculty => ({
-        name: faculty.name,
-        href: faculty.href,
-        submenu: faculty.submenu || []
-    })), sections: [] },
     { name: 'Cochabamba', href: '/cochabamba', navs: [] },
     { name: 'Mikrotik', href: '/mikrotik', navs: academyCourses.mikrotik, sections: []},
     { name: 'Huawei', href: '/huawei', navs: academyCourses.huawei, sections: []},

@@ -25,7 +25,7 @@ class SPARouter {
             '/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
             '/academias': () => this.loadAcademias(),
             '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
-            '/academias/huawei': () => this.loadAcademia('huawei'),
+            // '/academias/huawei': () => this.loadAcademia('huawei'), // Temporalmente oculto
         };
         
         this.currentRoute = window.location.pathname;
@@ -563,9 +563,9 @@ class SPARouter {
             '/facultades/ciencias-juridicas/estrategias-litigacion': 1,
             '/academias': 1,
             '/academias/mikrotik': 1,
-            '/academias/huawei': 1,
+            // '/academias/huawei': 1, // Temporalmente oculto
             '/mikrotik': 3,
-            '/huawei': 4,
+            // '/huawei': 4, // Temporalmente oculto
             '/ciencias-salud': 1,
             '/ingenieria': 1,
             '/ciencias-empresariales': 1,
@@ -1148,7 +1148,7 @@ class SPARouter {
         
         const academiaNames = {
             'mikrotik': 'Mikrotik',
-            'huawei': 'Huawei'
+            // 'huawei': 'Huawei' // Temporalmente oculto
         };
         
         console.log(`🎓 [ROUTER] Cargando Academia ${academiaNames[nombre]}`);

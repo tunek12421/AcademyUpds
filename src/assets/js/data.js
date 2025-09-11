@@ -16,47 +16,47 @@ const courses = [
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
             {
-                title: 'Capítulo 1: RouterOS',
+                title: 'Unidad 1: RouterOS',
                 content: 'Introducción a MikroTik RouterOS, explorando su arquitectura y las funcionalidades de las versiones 6 y 7. Se abordan los diferentes productos MikroTik, métodos de acceso a routers, configuración básica, actualización de firmware, administración de usuarios y servicios, backups e instalación de licencias.',
                 duration: '2 horas'
             },
             {
-                title: 'Capítulo 2: Ruteo Estático',
+                title: 'Unidad 2: Ruteo Estático',
                 content: 'Se abordan los principios del ruteo estático, incluyendo conceptos como bogon IPs y routing, comprensión de la métrica, selección de la mejor ruta y gestión de la tabla de enrutamiento.',
                 duration: '1.5 horas'
             },
             {
-                title: 'Capítulo 3: Bridge',
-                content: 'Este capítulo se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
+                title: 'Unidad 3: Bridge',
+                content: 'Esta unidad se enfoca en las capas físicas y de enlace de datos, abarcando medios físicos, direcciones MAC, IP, clasificación de direcciones, y diferencias entre IPv4 e IPv6.',
                 duration: '1.5 horas'
             },
             {
-                title: 'Capítulo 4: Wireless (IEEE 802.11)',
+                title: 'Unidad 4: Wireless (IEEE 802.11)',
                 content: 'Se detallan los estándares IEEE 802.11 para redes inalámbricas, frecuencias, configuración de canales, tasas de datos, modulación, filtrado de MAC, mejora de cobertura, y herramientas de monitoreo.',
                 duration: '2 horas'
             },
             {
-                title: 'Capítulo 5: Network Management',
+                title: 'Unidad 5: Network Management',
                 content: 'Cubre gestión de redes, protocolos ARP y RARP, servidor y cliente DHCP, y proporciona un laboratorio práctico y preguntas de repaso para consolidar el aprendizaje.',
                 duration: '1.5 horas'
             },
             {
-                title: 'Capítulo 6: Firewall',
+                title: 'Unidad 6: Firewall',
                 content: 'Se explica el funcionamiento del Firewall, flujo de paquetes, Connection Tracking, estructura de chains y acciones, protección de routers y clientes, address-lists, y NAT.',
                 duration: '2.5 horas'
             },
             {
-                title: 'Capítulo 7: Colas Simples y QoS',
+                title: 'Unidad 7: Colas Simples y QoS',
                 content: 'Presenta cambios en RouterOS v6, conceptos de limitación de velocidad, funcionamiento de Simple Queues, identificación de flujo, HTB, tipos de colas, y PCQ.',
                 duration: '2 horas'
             },
             {
-                title: 'Capítulo 8: Túneles PPP',
+                title: 'Unidad 8: Túneles PPP',
                 content: 'Introduce Túneles PPP, configuraciones de /ppp, PPPoE, IPIP, EoIP, PPTP, L2TP, SSTP, y OpenVPN, y discute la configuración de rutas a través de túneles.',
                 duration: '2 horas'
             },
             {
-                title: 'Capítulo 9: Herramientas RouterOS',
+                title: 'Unidad 9: Herramientas RouterOS',
                 content: 'Explora herramientas como correo electrónico, Netwatch, Ping, Traceroute, Profile, Torch, SNMP, System Identity, IP Neighbor, soporte técnico, y otras herramientas de diagnóstico y monitoreo.',
                 duration: '1.5 horas'
             }
@@ -387,52 +387,6 @@ const courses = [
         },
         skills: ['RouterOS', 'Networking', 'Firewall', 'Wireless', 'QoS', 'MTCNA Certification', 'PPP Tunnels', 'Network Management', 'Static Routing']
     },
-    {
-        id: '2',
-        title: 'Desarrollo Web Full Stack',
-        description: 'Aprende a crear aplicaciones web completas desde cero utilizando las tecnologías más demandadas del mercado.',
-        instructor: 'Alfaro Bazán Boris Fernando',
-        instructorBio: 'Desarrolladora Senior con más de 8 años de experiencia en empresas tecnológicas. Especialista en React, Node.js y arquitecturas modernas.',
-        instructorImage: '/assets/images/instructor/AlfaroBazan.jpeg',
-        duration: '12 semanas',
-        level: 'Intermedio',
-        students: 1247,
-        rating: 4.8,
-        image: '/assets/images/cursos/Desarrollo Web Full Stack.jpg',
-        category: 'Desarrollo',
-        modules: [
-            'Fundamentos de HTML y CSS',
-            'JavaScript Moderno',
-            'React y Hooks',
-            'Node.js y Express',
-            'Bases de datos',
-            'Proyecto Final'
-        ],
-        skills: ['JavaScript', 'React', 'Node.js', 'MongoDB', 'Git', 'API REST']
-    },
-    {
-        id: '3',
-        title: 'Diseño UX/UI Profesional',
-        description: 'Domina las herramientas y metodologías para crear experiencias de usuario excepcionales y interfaces atractivas.',
-        instructor: 'Alfaro Bazán Boris Fernando',
-        instructorBio: 'Diseñador UX con más de 6 años de experiencia en startups y grandes corporaciones. Especialista en investigación de usuarios y prototipado.',
-        instructorImage: '/assets/images/instructor/AlfaroBazan.jpeg',
-        duration: '10 semanas',
-        level: 'Principiante',
-        students: 892,
-        rating: 4.9,
-        image: '/assets/images/cursos/Diseño UX_UI Profesional.jpg',
-        category: 'Diseño',
-        modules: [
-            'Principios de UX',
-            'Investigación de usuarios',
-            'Wireframing y prototipado',
-            'Figma avanzado',
-            'Testing de usabilidad',
-            'Portfolio profesional'
-        ],
-        skills: ['Figma', 'Adobe XD', 'Prototyping', 'User Research', 'Wireframing', 'Design Systems']
-    }
 ];
 
 // Estado global de la aplicación
@@ -525,14 +479,14 @@ const facultyStructure = [
 const navLinks = [
     { name: 'Inicio', href: '/', navs: [], sections:[
         {name: 'Inicio',id: 'hero-section'},
-        {name: 'Cursos',id: 'courses-section'},
+        {name: 'Cursos Destacados',id: 'courses-section'},
         {name: 'Nosotros',id: 'about-section'}
     ] },
     { name: 'Cursos', href: '/cursos', navs: [
         {name: "Facultades", href: "/facultades", submenu: facultyStructure},
         {name: "Academias", href: "/academias", submenu: [
             {name: "Mikrotik", href: "/academias/mikrotik", submenu: academyCourses.mikrotik},
-            {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei}
+            // {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei} // Temporalmente oculto
         ]},
         ...facultyStructure.map(faculty => ({
             name: faculty.name,
@@ -540,9 +494,9 @@ const navLinks = [
             submenu: faculty.submenu || []
         }))
     ] },
-    { name: 'Cochabamba', href: '/cochabamba', navs: [] },
+    // { name: 'Cochabamba', href: '/cochabamba', navs: [] }, // Temporalmente oculto
     { name: 'Mikrotik', href: '/mikrotik', navs: academyCourses.mikrotik, sections: []},
-    { name: 'Huawei', href: '/huawei', navs: academyCourses.huawei, sections: []},
+    // { name: 'Huawei', href: '/huawei', navs: academyCourses.huawei, sections: []}, // Temporalmente oculto
 ];
 
 

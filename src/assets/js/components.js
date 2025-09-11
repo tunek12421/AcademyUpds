@@ -112,14 +112,6 @@ function createCourseCard(course) {
                 </div>
             </div>
             <div class="p-6">
-                <div class="flex items-center gap-2 mb-2">
-                    <div class="flex items-center">
-                        ${createStarIcon(true)}
-                        <span class="ml-1">${course.rating}</span>
-                    </div>
-                    <span class="text-muted-foreground">•</span>
-                    <span class="text-muted-foreground">${course.students} estudiantes</span>
-                </div>
                 <h3 class="text-lg font-semibold mb-2">${course.title}</h3>
                 <p class="text-muted-foreground mb-4 line-clamp-2">
                     ${course.description}
@@ -157,11 +149,6 @@ function createCourseDetails(course) {
         </div>
         <div class="px-6 pb-6">
             <div class="flex items-center gap-6 mb-6">
-                <div class="flex items-center gap-2">
-                    ${createStarIcon(true)}
-                    <span class="font-medium">${course.rating}</span>
-                    <span class="text-muted-foreground">(${course.students} estudiantes)</span>
-                </div>
                 ${createBadge(course.level, 'secondary')}
             </div>
         </div>
@@ -190,7 +177,7 @@ function createInstructorCard(course) {
 function createCourseContentCard(course) {
     const modulesHTML = course.modules.map((module, index) => {
         // Verificar si module es un string o un objeto
-        const moduleTitle = typeof module === 'string' ? `Punto ${index + 1}` : module.title;
+        const moduleTitle = typeof module === 'string' ? `Unidad ${index + 1}` : module.title;
         const moduleContent = typeof module === 'string' ? module : module.content;
         
         return `
@@ -299,12 +286,6 @@ function createOtherCoursesCard(otherCourses = []) {
             <div class="flex-1 min-w-0">
                 <h4 class="font-medium text-sm truncate">${course.title}</h4>
                 <p class="text-muted-foreground text-xs">${course.instructor}</p>
-                <div class="flex items-center gap-1 mt-1">
-                    <svg class="h-3 w-3 fill-yellow-400 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="m3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                    </svg>
-                    <span class="text-xs">${course.rating}</span>
-                </div>
             </div>
         </div>
     `).join('');

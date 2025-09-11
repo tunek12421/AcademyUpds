@@ -123,7 +123,7 @@ function renderCoursesGrid() {
                 const { createCourseCard } = componentsModule;
                 
                 // Renderizar cursos destacados específicos
-                const featuredCourseIds = ['1', '2', '3']; // Curso Mikrotik MTCNA, Desarrollo Web Full Stack, Diseño UX/UI Profesional
+                const featuredCourseIds = ['1', '4', '5']; // Curso Mikrotik MTCNA, Curso de Manejo de Cadáveres, Curso de Primeros Auxilios
                 const featuredCourses = courses.filter(course => featuredCourseIds.includes(course.id));
                 const coursesHTML = featuredCourses.map(course => createCourseCard(course)).join('');
                 

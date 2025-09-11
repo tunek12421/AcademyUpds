@@ -875,14 +875,30 @@ class SPARouter {
                         // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
                         const allFacultiesHTML = facultyStructure.map((fac, index) => {
                             if (fac.submenu && fac.submenu.length > 0) {
+                                // Verificar si esta es la facultad actual
+                                const isCurrentFaculty = fac.name === course.category;
+                                
                                 // Facultad con submenu de cursos (estructura anidada)
-                                const nestedSubmenuHTML = fac.submenu.map((course, courseIndex) => 
-                                    `<a href="${course.href}" class="nested-dropdown-item block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''}">${course.name}</a>`
-                                ).join('');
+                                const nestedSubmenuHTML = fac.submenu.map((courseItem, courseIndex) => {
+                                    // Verificar si este es el curso actual
+                                    const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
+                                    
+                                    // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
+                                    const currentCourseStyles = isCurrentCourse 
+                                        ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
+                                    
+                                    return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
+                                }).join('');
+                                
+                                // Estilos para la facultad actual: bg-primary-50 (fondo azul muy claro)
+                                const currentFacultyStyles = isCurrentFaculty 
+                                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
                                 
                                 return `
                                     <div class="nested-dropdown-container relative">
-                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}" 
+                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentFacultyStyles}" 
                                              data-nested-dropdown="${fac.name}">
                                             <span>${fac.name}</span>
                                             <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -126,10 +126,6 @@ function createCourseCard(course) {
                 </p>
                 <div class="flex flex-col gap-3 justify-between">
                     <div class="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div class="flex items-center gap-1">
-                            ${createClockIcon()}
-                            ${course.duration}
-                        </div>
                         ${createBadge(course.level, 'secondary')}
                     </div>
                     ${createButton(`Ver detalles ${createChevronRightIcon()}`, 'default', 'default', `selectCourse('${course.id}')`, 'group')}
@@ -166,10 +162,6 @@ function createCourseDetails(course) {
                     <span class="font-medium">${course.rating}</span>
                     <span class="text-muted-foreground">(${course.students} estudiantes)</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    ${createClockIcon()}
-                    <span>${course.duration}</span>
-                </div>
                 ${createBadge(course.level, 'secondary')}
             </div>
         </div>
@@ -200,7 +192,6 @@ function createCourseContentCard(course) {
         // Verificar si module es un string o un objeto
         const moduleTitle = typeof module === 'string' ? `Punto ${index + 1}` : module.title;
         const moduleContent = typeof module === 'string' ? module : module.content;
-        const moduleDuration = typeof module === 'string' ? '' : module.duration;
         
         return `
         <div class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -214,12 +205,6 @@ function createCourseContentCard(course) {
                     </span>
                     <div class="flex-1">
                         <h4 class="font-semibold text-gray-900">${moduleTitle}</h4>
-                        ${moduleDuration ? `<div class="flex items-center gap-2 mt-1">
-                            <svg class="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm text-gray-500">${moduleDuration}</span>
-                        </div>` : ''}
                     </div>
                 </div>
                 <svg 
@@ -258,7 +243,6 @@ function createCourseContentCard(course) {
     return `
         <div class="p-6">
             <h3 class="text-xl font-bold mb-4">Contenido del curso</h3>
-            <p class="text-muted-foreground mb-4">9 capítulos · 16 horas de contenido</p>
         </div>
         <div class="px-6 pb-6">
             <div class="space-y-3">

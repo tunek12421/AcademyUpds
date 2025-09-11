@@ -386,7 +386,7 @@
   /* Ocultar contenido de contacto cuando los logos sticky estén activos */
   .sticky-logos.active ~ .upds-header-contact {
     opacity: 0;
-    pointer-events: none;
+    /* REMOVIDO: pointer-events: none; - Los enlaces deben seguir siendo clickeables */
   }
 }
 
@@ -407,7 +407,7 @@
   /* En desktop también ocultar contenido de contacto cuando logos sticky estén activos */
   .sticky-logos.active ~ .upds-header-contact {
     opacity: 0;
-    pointer-events: none;
+    /* REMOVIDO: pointer-events: none; - Los enlaces deben seguir siendo clickeables */
   }
   
   /* En desktop también aplicar altura aumentada solo en modo sticky */
@@ -432,4 +432,27 @@
     padding: 0.6rem;
     font-size: 0.95rem;
   }
+}
+
+/* ASEGURAR QUE LOS ENLACES DE SECCIÓN SEAN SEMPRE CLICKEABLES */
+.upds-section-link,
+.upds-contact-link {
+  position: relative !important;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Asegurar que el contenedor de enlaces de contacto sea clickeable */
+.upds-header-contact {
+  position: relative !important;
+  z-index: 99 !important;
+  pointer-events: auto !important;
+}
+
+/* Asegurar que todos los enlaces dentro del header sticky sean clickeables */
+.bg-primary a {
+  position: relative !important;
+  z-index: 100 !important;
+  pointer-events: auto !important;
 }

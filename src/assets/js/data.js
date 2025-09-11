@@ -341,7 +341,9 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: 'src/assets/images/cursos/Estrategias de Litigación y Simulacros de Audiencias.jpg',
+        // ...existing code...
+        image: '/assets/images/cursos/Estrategias de Litigación y Simulacros de Audiencias.jpg',
+// ...existing code...
         category: 'Ciencias Jurídicas',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [

@@ -47,6 +47,8 @@ class SPARouter {
         // console.log('🎯 [ROUTER] Registrando event listener global de clicks con CAPTURE');
         document.addEventListener('click', (e) => {
             // console.log('🖱️ [DEBUG] CLICK GLOBAL detectado en:', e.target);
+            
+            // Buscar el enlace más cercano (incluyendo el elemento clickeado)
             const link = e.target.matches('a') ? e.target : e.target.closest('a');
             if (!link) {
                 // console.log('❌ [DEBUG] No es un enlace, ignorando');
@@ -56,13 +58,60 @@ class SPARouter {
             const href = link.getAttribute('href');
             
             // DEBUG: Log detallado de todos los clicks en enlaces
-            // console.log('🖱️ [DEBUG] Click detectado:', {
-            //     href: href,
-            //     target: e.target,
-            //     link: link,
-            //     classes: link.className,
-            //     hasUpdsNavLink: link.classList.contains('upds-nav-link')
-            // });
+            console.log('🖱️ [DEBUG] Click detectado:', {
+                href: href,
+                target: e.target,
+                link: link,
+                classes: link.className,
+                hasUpdsNavLink: link.classList.contains('upds-nav-link'),
+                hasUpdsContactLink: link.classList.contains('upds-contact-link'),
+                hasUpdsSectionLink: link.classList.contains('upds-section-link'),
+                dataSection: link.getAttribute('data-section'),
+                currentRoute: this.currentRoute,
+                elementVisible: window.getComputedStyle(link).visibility !== 'hidden',
+                elementOpacity: window.getComputedStyle(link).opacity,
+                pointerEvents: window.getComputedStyle(link).pointerEvents
+            });
+            
+            // PRIORIDAD 1: Interceptar enlaces de secciones (upds-section-link o #section-id)
+            if (link.classList.contains('upds-section-link') || 
+                link.classList.contains('upds-contact-link') || 
+                (href && href.startsWith('#'))) {
+                
+                console.log('🔗 [DEBUG] Link de sección detectado - INTERCEPTANDO');
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Obtener el ID de la sección
+                let sectionId = '';
+                if (href && href.startsWith('#')) {
+                    sectionId = href.substring(1); // Remover el #
+                } else if (link.hasAttribute('data-section')) {
+                    sectionId = link.getAttribute('data-section');
+                }
+                
+                console.log('🎯 [DEBUG] SectionId extraído:', sectionId);
+                
+                if (sectionId) {
+                    // FORZAR navegación a home si no estamos allí, sin importar el estado actual
+                    if (this.currentRoute !== '/' && this.currentRoute !== '/home') {
+                        console.log('📍 [DEBUG] No estamos en home, navegando primero...');
+                        this.navigate('/');
+                        // Esperar más tiempo para asegurar que la página se cargue completamente
+                        setTimeout(() => {
+                            console.log('⏰ [DEBUG] Timeout completado, haciendo scroll a:', sectionId);
+                            this.scrollToSection(sectionId);
+                        }, 300);
+                    } else {
+                        console.log('🏠 [DEBUG] Ya estamos en home, scroll directo a:', sectionId);
+                        // Si ya estamos en home, hacer scroll directamente
+                        this.scrollToSection(sectionId);
+                    }
+                } else {
+                    console.warn('⚠️ [DEBUG] No se pudo extraer sectionId del enlace');
+                }
+                return;
+            }
             
             // Interceptar clicks en navegación principal (upds-nav-link)
             if (link.classList.contains('upds-nav-link')) {
@@ -101,14 +150,6 @@ class SPARouter {
                 if (href && !href.startsWith('http') && !href.startsWith('mailto') && !href.startsWith('tel')) {
                     this.navigate(href);
                 }
-                return;
-            }
-            
-            // Interceptar enlaces de secciones (#section-id)
-            if (href && href.startsWith('#')) {
-                // console.log('🔗 [DEBUG] Link de sección detectado:', href);
-                e.preventDefault();
-                this.scrollToSection(href.substring(1)); // Remover el #
                 return;
             }
             
@@ -153,7 +194,7 @@ class SPARouter {
             } else {
                 // console.log('❌ [DEBUG] Click no interceptado - no es link de página');
             }
-        });
+        }, true); // Usar capture phase para interceptar antes que otros listeners
 
         // Manejar botón atrás/adelante del navegador
         window.addEventListener('popstate', () => {
@@ -168,6 +209,9 @@ class SPARouter {
         });
         // Cargar ruta inicial
         this.loadRoute(window.location.pathname + window.location.search);
+        
+        // Registrar listeners adicionales para elementos dinámicos
+        this.setupDynamicEventListeners();
         
         // Inicializar navegación del header
         this.initHeaderNavigation();
@@ -216,7 +260,7 @@ class SPARouter {
                     navBottom.innerHTML = `${currentNav.navs.map(link => `<a href="${link.href}" class="upds-contact-link">${link.name}</a>`).join('')}`;
                 } else if (currentNav.sections && currentNav.sections.length > 0) {
                     // Si no hay navs pero sí sections (como en Inicio), usar sections
-                    navBottom.innerHTML = `${currentNav.sections.map(section => `<a href="#${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`).join('')}`;
+                    navBottom.innerHTML = `${currentNav.sections.map(section => `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`).join('')}`;
                 }
             }
             
@@ -492,31 +536,64 @@ class SPARouter {
 
     scrollToSection(sectionId) {
         console.log(`🎯 [SCROLL] Navegando a sección: ${sectionId}`);
-        const element = document.getElementById(sectionId);
-        if (element) {
-            // Calcular la posición teniendo en cuenta el header sticky
-            const elementPosition = element.offsetTop-80;
+        
+        // Función que realiza el scroll
+        const performScroll = (attempt = 1) => {
+            console.log(`🔍 [SCROLL] Intento ${attempt} - Buscando elemento: #${sectionId}`);
+            const element = document.getElementById(sectionId);
             
-            // Scroll suave
-            window.scrollTo({
-                top: elementPosition, // Asegurar que no sea negativo
-                behavior: 'smooth'
-            });
-            
-            console.log(`✅ [SCROLL] Scroll suave a ${sectionId} completado (posición: ${elementPosition}px)`);
-            
-            // Actualizar el estado de la sección actual manualmente
-            // para que el header se actualice inmediatamente
-            if (this.currentRoute === '/' || this.currentRoute === '/home') {
-                // Encontrar la sección correspondiente en navLinks
-                const homeSections = navLinks[0].sections;
-                const section = homeSections.find(s => s.id === sectionId);
-                if (section) {
-                    this.updateHeaderForHomeSection(section);
+            if (element) {
+                // Calcular la posición teniendo en cuenta el header sticky
+                const elementPosition = Math.max(0, element.offsetTop - 80);
+                
+                console.log(`📍 [SCROLL] Elemento encontrado. Posición calculada: ${elementPosition}px`);
+                
+                // Scroll suave
+                window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth'
+                });
+                
+                console.log(`✅ [SCROLL] Scroll suave a ${sectionId} completado (posición: ${elementPosition}px)`);
+                
+                // Actualizar el estado de la sección actual manualmente
+                // para que el header se actualice inmediatamente
+                if (this.currentRoute === '/' || this.currentRoute === '/home') {
+                    // Encontrar la sección correspondiente en navLinks
+                    const homeSections = navLinks[0].sections;
+                    const section = homeSections.find(s => s.id === sectionId);
+                    if (section) {
+                        console.log(`🎨 [SCROLL] Actualizando header para sección: ${section.name}`);
+                        this.updateHeaderForHomeSection(section);
+                    }
                 }
+                return true;
+            } else {
+                console.warn(`⚠️ [SCROLL] Intento ${attempt} - Sección no encontrada: ${sectionId}`);
+                return false;
             }
-        } else {
-            console.error(`❌ [SCROLL] Sección no encontrada: ${sectionId}`);
+        };
+        
+        // Intentar scroll inmediato
+        if (!performScroll(1)) {
+            // Si no se encuentra la sección, esperar un poco y reintentar hasta 3 veces
+            console.log(`🔄 [SCROLL] Reintentando scroll a ${sectionId} en 200ms...`);
+            setTimeout(() => {
+                if (!performScroll(2)) {
+                    console.log(`🔄 [SCROLL] Segundo reintento a ${sectionId} en 500ms...`);
+                    setTimeout(() => {
+                        if (!performScroll(3)) {
+                            console.error(`❌ [SCROLL] No se pudo encontrar la sección después de 3 intentos: ${sectionId}`);
+                            // Como último recurso, intentar scroll al inicio de la página
+                            console.log(`🏠 [SCROLL] Fallback: navegando al inicio de la página`);
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 500);
+                }
+            }, 200);
         }
     }
 
@@ -1951,6 +2028,102 @@ class SPARouter {
     // Método para navegación programática
     goTo(path) {
         this.navigate(path);
+    }
+    
+    // Configurar event listeners adicionales para elementos dinámicos
+    setupDynamicEventListeners() {
+        console.log('🔧 [ROUTER] Configurando event listeners dinámicos');
+        
+        // Función que se ejecuta periódicamente para verificar nuevos elementos
+        const checkForNewElements = () => {
+            // Buscar todos los enlaces de sección que puedan haberse creado dinámicamente
+            const sectionLinks = document.querySelectorAll('.upds-section-link, .upds-contact-link, a[href^="#"]');
+            
+            sectionLinks.forEach(link => {
+                if (!link.hasAttribute('data-router-handled')) {
+                    console.log('🆕 [ROUTER] Nuevo enlace de sección encontrado:', link.href, link.className);
+                    link.setAttribute('data-router-handled', 'true');
+                    
+                    // FORZAR CLICKEABILIDAD
+                    link.style.position = 'relative';
+                    link.style.zIndex = '100';
+                    link.style.pointerEvents = 'auto';
+                    link.style.cursor = 'pointer';
+                    
+                    // Agregar event listener específico como respaldo
+                    link.addEventListener('click', (e) => {
+                        console.log('🔥 [ROUTER] Click directo en enlace de sección:', e.target.href);
+                        // El event listener principal debería manejar esto, pero por si acaso
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const href = e.target.getAttribute('href');
+                        let sectionId = '';
+                        
+                        if (href && href.startsWith('#')) {
+                            sectionId = href.substring(1);
+                        } else if (e.target.hasAttribute('data-section')) {
+                            sectionId = e.target.getAttribute('data-section');
+                        }
+                        
+                        if (sectionId) {
+                            if (this.currentRoute !== '/' && this.currentRoute !== '/home') {
+                                this.navigate('/');
+                                setTimeout(() => {
+                                    this.scrollToSection(sectionId);
+                                }, 300);
+                            } else {
+                                this.scrollToSection(sectionId);
+                            }
+                        }
+                    }, true);
+                }
+                
+                // FORZAR CLICKEABILIDAD EN CADA CHEQUEO (por si el CSS se resetea)
+                link.style.pointerEvents = 'auto';
+                link.style.cursor = 'pointer';
+            });
+            
+            // También asegurar que el contenedor sea clickeable
+            const headerContact = document.querySelector('.upds-header-contact');
+            if (headerContact) {
+                headerContact.style.pointerEvents = 'auto';
+                headerContact.style.position = 'relative';
+                headerContact.style.zIndex = '99';
+            }
+        };
+        
+        // Ejecutar inmediatamente
+        checkForNewElements();
+        
+        // Ejecutar cada vez que se modifica el DOM
+        const observer = new MutationObserver(() => {
+            checkForNewElements();
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class', 'href']
+        });
+        
+        // Guardar referencia para cleanup
+        this.dynamicObserver = observer;
+        
+        // Ejecutar chequeo periódico cada 2 segundos para mantener clickeabilidad
+        this.clickabilityInterval = setInterval(() => {
+            const sectionLinks = document.querySelectorAll('.upds-section-link, .upds-contact-link, a[href^="#"]');
+            sectionLinks.forEach(link => {
+                link.style.pointerEvents = 'auto';
+                link.style.cursor = 'pointer';
+            });
+            
+            const headerContact = document.querySelector('.upds-header-contact');
+            if (headerContact) {
+                headerContact.style.pointerEvents = 'auto';
+            }
+        }, 2000);
     }
 }
 

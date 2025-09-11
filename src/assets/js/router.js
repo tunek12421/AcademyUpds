@@ -856,6 +856,9 @@ class SPARouter {
                 // Si es un curso de facultad, mostrar la navegación de la facultad
                 console.log(`📚 [COURSE-SECTIONS] Curso de facultad detectado: ${course.category}`);
                 
+                // Guardar referencia a this para usar dentro del import
+                const self = this;
+                
                 // Importar estructura de facultades y mostrar dropdown
                 import('./data.js').then(module => {
                     const { facultyStructure } = module;
@@ -864,23 +867,53 @@ class SPARouter {
                     const faculty = facultyStructure.find(f => f.name === course.category);
                     
                     if (faculty && faculty.submenu && faculty.submenu.length > 0) {
-                        // Crear dropdown con los cursos de la facultad
-                        const submenuHTML = faculty.submenu.map((course, index) => 
+                        // Crear dropdown con los cursos de la facultad específica
+                        const facultySubmenuHTML = faculty.submenu.map((course, index) => 
                             `<a href="${course.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < faculty.submenu.length - 1 ? 'border-b-2 border-gray-200' : ''}">${course.name}</a>`
                         ).join('');
+                        
+                        // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
+                        const allFacultiesHTML = facultyStructure.map((fac, index) => {
+                            if (fac.submenu && fac.submenu.length > 0) {
+                                // Facultad con submenu de cursos (estructura anidada)
+                                const nestedSubmenuHTML = fac.submenu.map((course, courseIndex) => 
+                                    `<a href="${course.href}" class="nested-dropdown-item block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''}">${course.name}</a>`
+                                ).join('');
+                                
+                                return `
+                                    <div class="nested-dropdown-container relative">
+                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}" 
+                                             data-nested-dropdown="${fac.name}">
+                                            <span>${fac.name}</span>
+                                            <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                            <div class="py-1">
+                                                ${nestedSubmenuHTML}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            } else {
+                                // Facultad sin submenu (enlace simple)
+                                return `<a href="${fac.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${fac.name}</a>`;
+                            }
+                        }).join('');
                         
                         navBottom.innerHTML = `
                             <div class="dropdown-container relative inline-block">
                                 <button class="upds-contact-link dropdown-trigger hover:text-primary-hover transition-colors flex items-center" 
-                                        data-dropdown="${faculty.name}">
-                                    ${faculty.name}
+                                        data-dropdown="Facultades">
+                                    Facultades
                                     <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
                                     <div class="py-2">
-                                        ${submenuHTML}
+                                        ${allFacultiesHTML}
                                     </div>
                                 </div>
                             </div>
@@ -899,16 +932,16 @@ class SPARouter {
                         `;
                         
                         // Inicializar funcionalidad de dropdown después de crear el HTML
-                        setTimeout(() => this.initDropdownFunctionality(), 10);
+                        setTimeout(() => self.initDropdownFunctionality(), 10);
                         
                         console.log(`✅ [COURSE-SECTIONS] Navegación de facultad inicializada para ${faculty.name}`);
                     } else {
                         // Si no hay submenu, mostrar navegación normal de curso
-                        this.createDefaultCourseNavigation(navBottom);
+                        self.createDefaultCourseNavigation(navBottom);
                     }
                 }).catch(error => {
                     console.error('❌ [COURSE-SECTIONS] Error cargando estructura de facultades:', error);
-                    this.createDefaultCourseNavigation(navBottom);
+                    self.createDefaultCourseNavigation(navBottom);
                 });
             } else {
                 // Si no es un curso de facultad, mostrar navegación normal de curso

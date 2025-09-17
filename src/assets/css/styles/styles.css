@@ -24,6 +24,10 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    line-height: 1.5;
+    max-height: 3em; /* 2 líneas * 1.5 line-height */
 }
 
 /* Mejoras para transiciones suaves */

@@ -482,5 +482,6 @@ export {
     exploreAllCourses,
     login,
     handleImageError,
-    loadPageContent
+    loadPageContent,
+    renderCoursesGridByCategory
 };

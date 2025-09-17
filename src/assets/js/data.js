@@ -452,8 +452,7 @@ const academies = [
 // Definir cursos de academias como datos compartidos
 const academyCourses = {
     mikrotik: [
-        {name: "Curso Mikrotik MTCNA", href: "/curso?id=1"},
-        {name: "Curso Mikrotik MTCNA2", href: "/curso?id=2"}
+        {name: "Curso Mikrotik MTCNA", href: "/curso?id=1"}
     ],
     huawei: [
         {name: "Curso Huawei HCNA", href: "/curso?id=3"},

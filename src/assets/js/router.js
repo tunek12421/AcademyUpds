@@ -824,6 +824,12 @@ class SPARouter {
                     if (window.DATA.name === 'home') {
                         this.initHomeScrollDetection();
                     }
+                }
+                
+                // === FUNCIONALIDAD ESPECIAL PARA PÁGINA DE CURSOS ===
+                // Si estamos en la página de cursos, convertir los enlaces del navbar en scrolls a secciones
+                if (window.DATA.name === 'cursos') {
+                    this.initCursosScrollNavigation();
                 } else if (window.DATA.name === 'home') {
                     // Fallback para home si no hay sections definidas
                     this.initHomeSectionNavigation();
@@ -936,6 +942,75 @@ class SPARouter {
     // Mantener compatibilidad con el nombre anterior
     cleanupHomeScrollDetection() {
         this.cleanupScrollDetection();
+    }
+
+    // === NAVEGACIÓN POR SCROLL PARA PÁGINA DE CURSOS ===
+    initCursosScrollNavigation() {
+        console.log('🎯 [CURSOS-SCROLL] Inicializando navegación por scroll para página de cursos');
+        
+        // Esperar un poco para que el DOM esté completamente cargado
+        setTimeout(() => {
+            // Buscar todos los enlaces del navbar que corresponden a secciones de cursos
+            const navLinks = document.querySelectorAll('.upds-contact-link');
+            
+            navLinks.forEach(link => {
+                const linkText = link.textContent.trim();
+                console.log('🔍 [CURSOS-SCROLL] Procesando enlace del navbar:', linkText);
+                
+                // Mapear nombres de enlaces a IDs de secciones
+                let sectionId = null;
+                switch(linkText) {
+                    case 'Mikrotik':
+                        sectionId = 'mikrotik-courses';
+                        break;
+                    case 'Ciencias de la Salud':
+                        sectionId = 'ciencias-de-la-salud-courses';
+                        break;
+                    case 'Ingeniería':
+                        sectionId = 'ingenieria-courses';
+                        break;
+                    case 'Ciencias Empresariales':
+                        sectionId = 'ciencias-empresariales-courses';
+                        break;
+                    case 'Ciencias Jurídicas':
+                        sectionId = 'ciencias-juridicas-courses';
+                        break;
+                }
+                
+                if (sectionId) {
+                    console.log(`🎯 [CURSOS-SCROLL] Configurando scroll para "${linkText}" → ${sectionId}`);
+                    
+                    // Remover el href original y agregar event listener para scroll
+                    link.removeAttribute('href');
+                    link.style.cursor = 'pointer';
+                    
+                    // Agregar event listener para hacer scroll a la sección
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        console.log(`🎯 [CURSOS-SCROLL] Haciendo scroll a sección: ${sectionId}`);
+                        
+                        const targetElement = document.getElementById(sectionId);
+                        if (targetElement) {
+                            // Calcular posición con offset para el header
+                            const headerHeight = 120; // Ajustar según la altura del header
+                            const targetPosition = targetElement.offsetTop - headerHeight;
+                            
+                            // Hacer scroll suave
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                            
+                            console.log(`✅ [CURSOS-SCROLL] Scroll exitoso a ${sectionId} en posición ${targetPosition}`);
+                        } else {
+                            console.warn(`⚠️ [CURSOS-SCROLL] Elemento ${sectionId} no encontrado en el DOM`);
+                        }
+                    });
+                }
+            });
+            
+            console.log('✅ [CURSOS-SCROLL] Navegación por scroll configurada para página de cursos');
+        }, 500); // Esperar 500ms para que las secciones se hayan generado
     }
 
     initCourseScrollDetection(course) {

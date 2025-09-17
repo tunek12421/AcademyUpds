@@ -478,6 +478,55 @@ const facultyStructure = [
     ]}
 ];
 
+// Información de categorías para cursos organizados
+const categoryInfo = {
+    'Mikrotik': {
+        description: 'Especialízate en tecnologías de networking y administración de redes con certificaciones reconocidas internacionalmente.',
+        callToAction: {
+            default: 'Más cursos de Mikrotik próximamente',
+            alternative: 'Explora nuestra creciente oferta en tecnologías Mikrotik'
+        },
+        threshold: 2,
+        type: 'academia'
+    },
+    'Ciencias de la Salud': {
+        description: 'Cursos especializados en el área de la salud con enfoques prácticos y científicos.',
+        callToAction: {
+            default: 'Ampliando nuestra oferta en ciencias de la salud',
+            alternative: 'Nuevos cursos de salud en desarrollo'
+        },
+        threshold: 3,
+        type: 'facultad'
+    },
+    'Ingeniería': {
+        description: 'Formación técnica avanzada en diferentes ramas de la ingeniería y tecnología.',
+        callToAction: {
+            default: 'Nuevos cursos de ingeniería en desarrollo',
+            alternative: 'Expandiendo nuestra oferta técnica'
+        },
+        threshold: 3,
+        type: 'facultad'
+    },
+    'Ciencias Empresariales': {
+        description: 'Desarrolla habilidades empresariales y de gestión para el mundo profesional moderno.',
+        callToAction: {
+            default: 'Expandiendo nuestra oferta empresarial',
+            alternative: 'Más cursos de gestión próximamente'
+        },
+        threshold: 3,
+        type: 'facultad'
+    },
+    'Ciencias Jurídicas': {
+        description: 'Formación especializada en derecho y práctica jurídica aplicada.',
+        callToAction: {
+            default: 'Más cursos jurídicos próximamente',
+            alternative: 'Ampliando nuestra oferta legal'
+        },
+        threshold: 3,
+        type: 'facultad'
+    }
+};
+
 const navLinks = [
     { name: 'Inicio', href: '/', navs: [], sections:[
         {name: 'Inicio',id: 'hero-section'},
@@ -516,5 +565,6 @@ export {
     getOtherCourses,
     navLinks,
     academyCourses,
-    facultyStructure
+    facultyStructure,
+    categoryInfo
 };

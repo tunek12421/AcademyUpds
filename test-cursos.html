@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cursos - Academy UPDS</title>
+    <script type="module">
+        // Importar datos directamente
+        import { courses, getCoursesByCategory } from '/src/assets/js/data.js';
+        
+        console.log('📋 Todos los cursos:', courses);
+        console.log('📋 Total de cursos:', courses.length);
+        
+        // Obtener categorías únicas
+        const allCategories = [...new Set(courses.map(course => course.category))];
+        console.log('📋 Categorías encontradas:', allCategories);
+        
+        // Verificar cursos por categoría
+        allCategories.forEach(category => {
+            const coursesInCategory = getCoursesByCategory(category);
+            console.log(`📋 Categoría "${category}": ${coursesInCategory.length} cursos`, coursesInCategory.map(c => c.title));
+        });
+    </script>
+</head>
+<body>
+    <h1>Test de Cursos</h1>
+    <p>Revisa la consola del navegador para ver los datos.</p>
+</body>
+</html>

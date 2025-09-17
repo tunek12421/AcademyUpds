@@ -49,12 +49,7 @@ export default defineConfig({
         home: resolve(__dirname, 'src/assets/pages/home.html'),
         mikrotik: resolve(__dirname, 'src/assets/pages/mikrotik.html'),
         curso: resolve(__dirname, 'src/assets/pages/curso.html'),
-        'ciencias-salud': resolve(__dirname, 'src/assets/pages/ciencias-salud.html'),
-        'ingenieria': resolve(__dirname, 'src/assets/pages/ingenieria.html'),
-        'ciencias-empresariales': resolve(__dirname, 'src/assets/pages/ciencias-empresariales.html'),
-        'ciencias-juridicas': resolve(__dirname, 'src/assets/pages/ciencias-juridicas.html'),
-        //header: resolve(__dirname, 'src/assets/sections/header.html'),
-        //footer: resolve(__dirname, 'src/assets/sections/footer.html'),
+        cursos: resolve(__dirname, 'src/assets/pages/cursos.html'),
       }
     }
   },

@@ -1,5 +1,5 @@
 // Router SPA para navegación sin recargar página
-import { updateState, getState, getCourseById, navLinks } from './data.js';
+import { updateState, getState, getCourseById, navLinks, categoryInfo } from './data.js';
 
 class SPARouter {
     constructor() {
@@ -9,23 +9,9 @@ class SPARouter {
             '/cursos': () => this.loadCursos(),
             '/curso': () => this.loadCourse(),
             '/mikrotik': () => this.loadMikrotik(),
-            '/facultades': () => this.loadFacultades(),
-            '/facultades/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
-            '/facultades/ciencias-salud/manejo-cadaveres': () => this.loadCursoFacultad('ciencias-salud', 'manejo-cadaveres'),
-            '/facultades/ciencias-salud/primeros-auxilios': () => this.loadCursoFacultad('ciencias-salud', 'primeros-auxilios'),
-            '/facultades/ingenieria': () => this.loadFacultad('ingenieria'),
-            '/facultades/ingenieria/excel-experto': () => this.loadCursoFacultad('ingenieria', 'excel-experto'),
-            '/facultades/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
-            '/facultades/ciencias-empresariales/tributacion-aplicada': () => this.loadCursoFacultad('ciencias-empresariales', 'tributacion-aplicada'),
-            '/facultades/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
-            '/facultades/ciencias-juridicas/estrategias-litigacion': () => this.loadCursoFacultad('ciencias-juridicas', 'estrategias-litigacion'),
-            '/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
-            '/ingenieria': () => this.loadFacultad('ingenieria'),
-            '/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
-            '/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
             '/academias': () => this.loadAcademias(),
             '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
-            // '/academias/huawei': () => this.loadAcademia('huawei'), // Temporalmente oculto
+            // Rutas obsoletas removidas - ahora se usa /curso?id=x en su lugar
         };
         
         this.currentRoute = window.location.pathname;
@@ -683,25 +669,10 @@ class SPARouter {
             '/spa.html': 0,  // Agregar ruta spa.html
             '/cursos': 1,
             '/curso': 1,
-            '/facultades': 1,
-            '/facultades/ciencias-salud': 1,
-            '/facultades/ciencias-salud/manejo-cadaveres': 1,
-            '/facultades/ciencias-salud/primeros-auxilios': 1,
-            '/facultades/ingenieria': 1,
-            '/facultades/ingenieria/excel-experto': 1,
-            '/facultades/ciencias-empresariales': 1,
-            '/facultades/ciencias-empresariales/tributacion-aplicada': 1,
-            '/facultades/ciencias-juridicas': 1,
-            '/facultades/ciencias-juridicas/estrategias-litigacion': 1,
+            '/mikrotik': 2,
             '/academias': 1,
             '/academias/mikrotik': 1,
-            // '/academias/huawei': 1, // Temporalmente oculto
-            '/mikrotik': 2,
-            // '/huawei': 4, // Temporalmente oculto
-            '/ciencias-salud': 1,
-            '/ingenieria': 1,
-            '/ciencias-empresariales': 1,
-            '/ciencias-juridicas': 1
+            // Rutas obsoletas removidas - ahora se usa /curso?id=x
         };
         
         const newIndex = routeToIndex[route] || 0;
@@ -1314,23 +1285,442 @@ class SPARouter {
         window.DATA.name = "cursos";
         this.cleanupScrollDetection();
         
-        // Verificar si ya estamos en la página home específicamente
-        const currentContent = document.querySelector('#main-section main');
-        const isAlreadyHome = currentContent && (
-            currentContent.querySelector('#hero-section') || 
-            currentContent.querySelector('#courses-section') ||
-            currentContent.querySelector('#about-section')
-        );
-        
-        if (isAlreadyHome) {
-            // Ya tenemos contenido de home cargado, solo actualizar navegación
-            this.updateHeaderArrow();
-            this.updateHeaderBreadcrumbs();
-            console.log('✅ [ROUTER] Cursos: Solo actualización de header (sin recarga)');
-        } else {
-            // No hay contenido de home, cargar desde cero
-            this.loadHome();
+        try {
+            console.log('🔄 [ROUTER] Cargando página de cursos...');
+            
+            // Cargar el contenido HTML
+            const response = await fetch('/assets/pages/cursos.html');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const html = await response.text();
+            const mainSection = document.querySelector('#main-section');
+            
+            if (mainSection) {
+                mainSection.innerHTML = html;
+                
+                // Generar todo el contenido dinámicamente
+                this.generateCursosContent();
+                
+                // Actualizar navegación
+                this.updateHeaderArrow();
+                this.updateHeaderBreadcrumbs();
+                
+                console.log('✅ [ROUTER] Página de cursos cargada exitosamente');
+            }
+            
+        } catch (error) {
+            console.error('❌ [ROUTER] Error al cargar cursos:', error);
+            this.handleError('Error al cargar la página de cursos');
         }
+    }
+
+    generateCursosContent() {
+        const contentContainer = document.getElementById('cursos-content');
+        if (!contentContainer) return;
+        
+        // Crear la estructura con secciones de Academias y Facultades
+        contentContainer.innerHTML = `
+            <div class="space-y-16">
+                <!-- Page Header -->
+                <div class="text-center space-y-4">
+                    <h1 class="text-4xl font-bold text-gray-900">Todos los Cursos</h1>
+                </div>
+                
+                <!-- Academias Section -->
+                <div id="academias-section" class="rounded-2xl p-6 border border-gray-200">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Academias Especializadas</h2>
+                        <p class="text-gray-700 text-lg">Cursos técnicos especializados en tecnologías específicas</p>
+                    </div>
+                    <div id="academias-content" class="space-y-8"></div>
+                </div>
+                
+                <!-- Facultades Section -->
+                <div id="facultades-section" class="rounded-2xl p-6 border border-gray-200">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Facultades Universitarias</h2>
+                        <p class="text-gray-700 text-lg">Cursos profesionales organizados por áreas académicas tradicionales</p>
+                    </div>
+                    <div id="facultades-content" class="space-y-8"></div>
+                </div>
+            </div>
+        `;
+        
+        // Luego cargar las categorías organizadas
+        this.loadOrganizedCategories();
+    }
+
+    loadOrganizedCategories() {
+        // Importar datos y funciones necesarias
+        Promise.all([
+            import('./data.js'),
+            import('./modules/app.js')
+        ]).then(([dataModule, appModule]) => {
+            const { courses, getCoursesByCategory } = dataModule;
+            const { renderCoursesGridByCategory } = appModule;
+            
+            // Definir categorías de academias y facultades
+            const academiasCategories = ['Mikrotik'];
+            const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
+            
+            // Obtener todas las categorías únicas de los cursos
+            const allCategories = [...new Set(courses.map(course => course.category))];
+            console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
+            console.log('📋 [ROUTER] Total de cursos:', courses.length);
+            
+            // Separar categorías
+            const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
+            const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
+            
+            console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
+            console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
+            
+            // Renderizar Academias
+            this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
+            
+            // Renderizar Facultades
+            this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
+            
+        }).catch(error => {
+            console.error('❌ [ROUTER] Error al cargar categorías organizadas:', error);
+            // Fallback al método anterior si falla
+            this.generateCursosContentFallback();
+        });
+    }
+
+    renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
+        const container = document.getElementById(containerId);
+        if (!container || categories.length === 0) return;
+        
+        console.log(`🎨 [ROUTER] Renderizando sección ${sectionType} con categorías:`, categories);
+        
+        // Generar HTML para cada categoría sin estilos especiales
+        let categoriesHTML = '';
+        
+        categories.forEach(category => {
+            const categoryId = category.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+            const coursesInCategory = getCoursesByCategoryFunc(category);
+            
+            // Información adicional por categoría
+            const categoryInfo = this.getCategoryInfo(category, coursesInCategory.length);
+            
+            categoriesHTML += `
+                <div class="category-item bg-white rounded-xl p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold text-gray-800">${category}</h3>
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                            ${coursesInCategory.length} curso${coursesInCategory.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                    ${categoryInfo.description ? `<p class="text-gray-600 mb-4">${categoryInfo.description}</p>` : ''}
+                    <div id="${categoryId}-courses" class="mb-4"></div>
+                    ${categoryInfo.callToAction ? `
+                        <div class="text-center mt-6 pt-4 border-t border-gray-200">
+                            <p class="text-sm text-gray-500">${categoryInfo.callToAction}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+        
+        container.innerHTML = categoriesHTML;
+        
+        // Renderizar cursos para cada categoría
+        categories.forEach(category => {
+            const categoryId = category.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+            const containerId = `${categoryId}-courses`;
+            
+            console.log(`🎨 [ROUTER] Renderizando categoría: ${category} en contenedor: ${containerId}`);
+            this.renderCategoryUsingExistingFunction(category, containerId, renderFunction, getCoursesByCategoryFunc);
+        });
+        
+        console.log(`✅ [ROUTER] Sección ${sectionType} renderizada con ${categories.length} categorías`);
+    }
+
+    getCategoryInfo(categoryName, courseCount) {
+        // Usar información de categorías importada desde data.js
+        const info = categoryInfo[categoryName];
+        
+        if (!info) {
+            // Fallback para categorías no definidas
+            return {
+                description: 'Cursos especializados en esta área de conocimiento.',
+                callToAction: courseCount < 2 ? 'Más cursos próximamente' : null
+            };
+        }
+        
+        // Usar el threshold definido en la configuración
+        const threshold = info.threshold || 2;
+        const showCallToAction = courseCount < threshold;
+        
+        // Seleccionar mensaje de call-to-action (usar alternative si está disponible para variedad)
+        let callToActionMessage = null;
+        if (showCallToAction && info.callToAction) {
+            if (typeof info.callToAction === 'string') {
+                callToActionMessage = info.callToAction;
+            } else {
+                // Usar el mensaje default, pero ocasionalmente el alternative para variedad
+                const useAlternative = Math.random() > 0.7; // 30% chance de usar alternative
+                callToActionMessage = useAlternative && info.callToAction.alternative 
+                    ? info.callToAction.alternative 
+                    : info.callToAction.default;
+            }
+        }
+        
+        return {
+            description: info.description,
+            callToAction: callToActionMessage,
+            type: info.type || 'general',
+            threshold: threshold
+        };
+    }
+
+    generateCursosContentFallback() {
+        // Método de respaldo con categorías dinámicas también
+        const contentContainer = document.getElementById('cursos-content');
+        if (!contentContainer) return;
+        
+        // Primero crear el header
+        contentContainer.innerHTML = `
+            <div class="space-y-12">
+                <!-- Page Header -->
+                <div class="text-center space-y-4">
+                    <h1 class="text-4xl font-bold text-gray-900 mb-4">Todos los Cursos</h1>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Explora nuestra oferta académica completa organizada por academias y facultades
+                    </p>
+                </div>
+                <!-- Categories will be loaded here -->
+                <div id="dynamic-categories-fallback"></div>
+            </div>
+        `;
+        
+        // Cargar categorías dinámicamente también en el fallback
+        import('./data.js').then(module => {
+            const { courses } = module;
+            
+            // Obtener todas las categorías únicas de los cursos
+            const allCategories = [...new Set(courses.map(course => course.category))];
+            console.log('📋 [ROUTER] Categorías fallback encontradas:', allCategories);
+            
+            // Generar HTML para todas las categorías dinámicamente
+            const categoriesContainer = document.getElementById('dynamic-categories-fallback');
+            let categoriesHTML = '';
+            
+            allCategories.forEach(category => {
+                const categoryId = category.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const containerId = `${categoryId}-courses`;
+                
+                categoriesHTML += `
+                    <!-- ${category} -->
+                    <div id="courses-section">
+                        <h3 class="text-3xl font-bold mb-6">${category}</h3>
+                        <div id="${containerId}"></div>
+                    </div>
+                `;
+            });
+            
+            categoriesContainer.innerHTML = categoriesHTML;
+            
+            // Cargar cursos por categoría después de generar el HTML
+            setTimeout(() => {
+                this.loadCoursesByCategories_fallback();
+            }, 100);
+            
+        }).catch(error => {
+            console.error('❌ [ROUTER] Error en fallback completo:', error);
+            // Si todo falla, crear contenido mínimo
+            const categoriesContainer = document.getElementById('dynamic-categories-fallback');
+            categoriesContainer.innerHTML = `
+                <div class="text-center py-8">
+                    <h3 class="text-xl font-semibold mb-4">Error al cargar cursos</h3>
+                    <p class="text-gray-600">No se pudieron cargar las categorías de cursos.</p>
+                </div>
+            `;
+        });
+    }
+
+    loadCoursesByCategories() {
+        // Importar las funciones necesarias desde data.js y app.js
+        Promise.all([
+            import('./data.js'),
+            import('./modules/app.js')
+        ]).then(([dataModule, appModule]) => {
+            const { courses, getCoursesByCategory } = dataModule;
+            const { renderCoursesGridByCategory } = appModule;
+            
+            // Obtener todas las categorías únicas de los cursos
+            const allCategories = [...new Set(courses.map(course => course.category))];
+            
+            // Renderizar cada categoría en su contenedor correspondiente
+            allCategories.forEach(category => {
+                const categoryId = category.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const containerId = `${categoryId}-courses`;
+                
+                this.renderCategoryUsingExistingFunction(category, containerId, renderCoursesGridByCategory, getCoursesByCategory);
+            });
+        }).catch(error => {
+            console.error('❌ [ROUTER] Error al importar funciones:', error);
+            // Fallback: usar renderizado manual
+            this.loadCoursesByCategories_fallback();
+        });
+    }
+
+    renderCategoryUsingExistingFunction(categoryName, containerId, renderFunction, getCoursesByCategoryFunc) {
+        console.log(`🎨 [ROUTER] Iniciando renderizado de categoría: "${categoryName}" en contenedor: "${containerId}"`);
+        
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`❌ [ROUTER] Contenedor no encontrado: ${containerId}`);
+            return;
+        }
+        
+        // Filtrar cursos por categoría usando la función importada
+        const categoryCourses = getCoursesByCategoryFunc(categoryName);
+        console.log(`📊 [ROUTER] Cursos encontrados para "${categoryName}":`, categoryCourses.length);
+        
+        if (categoryCourses.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center">No hay cursos disponibles en esta categoría.</p>';
+            console.log(`⚠️ [ROUTER] Sin cursos para categoría: ${categoryName}`);
+            return;
+        }
+        
+        // Crear grid adaptativo basado en el número de cursos
+        let gridCols = 'md:grid-cols-2 lg:grid-cols-3';
+        if (categoryCourses.length === 1) {
+            // Para 1 curso, usar el ancho de 2 cursos pero centrado
+            gridCols = 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl mx-auto';
+        } else if (categoryCourses.length === 2) {
+            gridCols = 'md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto';
+        }
+        
+        // Crear un grid container con ID único para esta categoría
+        const uniqueGridId = `courses-grid-${categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`;
+        container.innerHTML = `<div id="${uniqueGridId}" class="grid ${gridCols} gap-8 justify-items-center"></div>`;
+        console.log(`🔧 [ROUTER] Creado contenedor grid con ID: ${uniqueGridId}`);
+        
+        // Temporalmente cambiar el ID del container al esperado por la función
+        const gridContainer = document.getElementById(uniqueGridId);
+        if (gridContainer) {
+            // Guardar el ID original
+            const originalId = gridContainer.id;
+            // Cambiar temporalmente al ID esperado
+            gridContainer.id = 'courses-grid';
+            console.log(`🔄 [ROUTER] ID cambiado temporalmente: ${originalId} → courses-grid`);
+            
+            try {
+                // Usar la función importada para renderizar los cursos
+                console.log(`⚙️ [ROUTER] Llamando renderFunction para: ${categoryName}`);
+                renderFunction(categoryName);
+                console.log(`✅ [ROUTER] Categoría ${categoryName} renderizada con ${categoryCourses.length} cursos`);
+            } catch (error) {
+                console.error(`❌ [ROUTER] Error renderizando ${categoryName}:`, error);
+                // Fallback manual si la función falla
+                console.log(`🔄 [ROUTER] Usando fallback manual para: ${categoryName}`);
+                this.renderCoursesManually(gridContainer, categoryCourses);
+            } finally {
+                // Restaurar el ID único
+                gridContainer.id = originalId;
+                console.log(`🔄 [ROUTER] ID restaurado: courses-grid → ${originalId}`);
+            }
+        } else {
+            console.error(`❌ [ROUTER] No se pudo encontrar el grid container: ${uniqueGridId}`);
+        }
+    }
+
+    loadCoursesByCategories_fallback() {
+        // Función de respaldo que también es dinámica
+        import('./data.js').then(module => {
+            const { courses, getCoursesByCategory } = module;
+            
+            // Obtener todas las categorías únicas de los cursos
+            const allCategories = [...new Set(courses.map(course => course.category))];
+            
+            // Renderizar cada categoría en su contenedor correspondiente
+            allCategories.forEach(category => {
+                const categoryId = category.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const containerId = `${categoryId}-courses`;
+                
+                const categoryCourses = getCoursesByCategory(category);
+                this.renderCoursesManually(document.getElementById(containerId), categoryCourses);
+            });
+            
+            console.log(`✅ [ROUTER] ${allCategories.length} categorías renderizadas en fallback dinámico`);
+            
+        }).catch(error => {
+            console.error('❌ [ROUTER] Error en fallback dinámico:', error);
+        });
+    }
+
+    renderCoursesManually(container, courses) {
+        if (!container) return;
+        
+        if (courses.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-center col-span-full">No hay cursos disponibles en esta categoría.</p>';
+            return;
+        }
+        
+        // Crear un grid container si no existe
+        let gridContainer = container.querySelector('.grid');
+        if (!gridContainer) {
+            gridContainer = document.createElement('div');
+            
+            // Grid adaptativo basado en el número de cursos
+            let gridCols = 'md:grid-cols-2 lg:grid-cols-3';
+            if (courses.length === 1) {
+                // Para 1 curso, usar el ancho de 2 cursos pero centrado
+                gridCols = 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl mx-auto';
+            } else if (courses.length === 2) {
+                gridCols = 'md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto';
+            }
+            
+            gridContainer.className = `grid ${gridCols} gap-8 justify-items-center`;
+            container.innerHTML = '';
+            container.appendChild(gridContainer);
+        }
+        
+        gridContainer.innerHTML = courses.map(course => `
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                <div class="relative h-48 overflow-hidden">
+                    <img src="${course.image || '/assets/images/cursos/default.jpg'}" 
+                         alt="${course.title}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='/assets/images/cursos/default.jpg'">
+                    <div class="absolute top-2 right-2">
+                        <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+                            ${course.level || 'Intermedio'}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">${course.title}</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${course.description}</p>
+                    <div class="flex items-center justify-between text-sm text-gray-500 mb-3">
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            ${course.rating || '4.5'}
+                        </span>
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            ${course.students || '0'} estudiantes
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 text-sm">${course.duration || '8 semanas'}</span>
+                        <button onclick="window.router.navigate('/curso?id=${course.id}')" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition-colors">
+                            Ver curso
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
 
     async loadFacultades() {

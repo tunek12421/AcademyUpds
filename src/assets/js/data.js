@@ -533,7 +533,6 @@ const navLinks = [
         {name: 'Nosotros',id: 'about-section'}
     ] },
     { name: 'Cursos', href: '/cursos', navs: [
-        {name: "Facultades", href: "/facultades", submenu: facultyStructure},
         {name: "Academias", href: "/academias", submenu: [
             {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
             // {name: "Huawei", href: "/academias/huawei", submenu: academyCourses.huawei} // Temporalmente oculto

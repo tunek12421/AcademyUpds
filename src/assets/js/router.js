@@ -1073,11 +1073,17 @@ class SPARouter {
                             }
                         }).join('');
                         
-                        // Crear dropdown "Academias" con sub-dropdowns anidados
-                        const academyStructure = [
-                            {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
-                            // Solo mostrar Huawei si está habilitado
-                            // {name: "Huawei", href: "/huawei", submenu: academyCourses.huawei}
+                        // Crear dropdown "Academias" con sub-dropdowns anidados (usando datos dinámicos)
+                        // Extraer estructura de academias del navLinks de data.js
+                        const academyNav = module.navLinks.find(nav => nav.name === 'Cursos');
+                        const academySubmenu = academyNav ? academyNav.navs.find(nav => nav.name === 'Academias') : null;
+                        const academyStructure = academySubmenu ? academySubmenu.submenu.map(academy => ({
+                            name: academy.name,
+                            href: academy.href,
+                            submenu: academy.submenu || []
+                        })) : [
+                            // Fallback en caso de que no se encuentre en navLinks
+                            {name: "Mikrotik", href: "/mikrotik", submenu: module.academyCourses.mikrotik}
                         ];
                         
                         const allAcademiesHTML = academyStructure.map((academy, index) => {

@@ -456,3 +456,22 @@
   z-index: 100 !important;
   pointer-events: auto !important;
 }
+
+/* === OCULTAR DROPDOWNS/TOOLTIPS DEL NAVBAR === */
+/* Ocultar todos los menús dropdown que aparecen al pasar el mouse */
+.dropdown-menu,
+.dropdown-container .dropdown-menu,
+.nested-dropdown-menu {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Asegurar que los contenedores dropdown no muestren contenido */
+.dropdown-container:hover .dropdown-menu,
+.dropdown-trigger:hover + .dropdown-menu,
+.nested-dropdown-container:hover .nested-dropdown-menu {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}

@@ -122,9 +122,7 @@ function createCourseCard(course) {
                     </div>
                     ${createButton(`Ver detalles ${createChevronRightIcon()}`, 'default', 'default', `selectCourse('${course.id}')`, 'group')}
                 </div>
-                <div class="mt-4 pt-4 border-t">
-                    <span class="text-muted-foreground">Por ${course.instructor}</span>
-                </div>
+               
             </div>
         </div>
     `;

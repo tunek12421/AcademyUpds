@@ -947,107 +947,153 @@ class SPARouter {
         this.cleanupScrollDetection();
     }
 
-    // === NAVEGACIÓN POR SCROLL PARA PÁGINA DE CURSOS ===
+    // === NAVEGACIÓN POR SCROLL PARA PÁGINA DE CURSOS - VERSIÓN ROBUSTA ===
     initCursosScrollNavigation() {
-        console.log('🎯 [CURSOS-SCROLL] Inicializando navegación por scroll para página de cursos');
+        console.log('🎯 [CURSOS-SCROLL] Inicializando navegación por scroll ROBUSTA para página de cursos');
         
-        // Esperar un poco más para que el DOM esté completamente cargado
-        setTimeout(() => {
-            // Buscar todos los enlaces del navbar que corresponden a secciones de cursos
-            const navLinks = document.querySelectorAll('.upds-contact-link');
-            console.log('🔍 [CURSOS-SCROLL] Enlaces encontrados:', navLinks.length);
+        // Función para mapear nombres a IDs de sección
+        const getSectionId = (linkText) => {
+            const mapping = {
+                'Mikrotik': 'mikrotik-courses',
+                'Ciencias de la Salud': 'ciencias-de-la-salud-courses', 
+                'Ingeniería': 'ingenieria-courses',
+                'Ciencias Empresariales': 'ciencias-empresariales-courses',
+                'Ciencias Jurídicas': 'ciencias-juridicas-courses'
+            };
+            return mapping[linkText] || null;
+        };
+
+        // Función para hacer scroll suave
+        const scrollToSection = (sectionId) => {
+            console.log(`🎯 [CURSOS-SCROLL] Intentando scroll a: ${sectionId}`);
             
+            let targetElement = document.getElementById(sectionId);
+            
+            // Si no se encuentra, intentar con el ID alternativo (-section en lugar de -courses)
+            if (!targetElement) {
+                const altSectionId = sectionId.replace('-courses', '-section');
+                console.log(`🔄 [CURSOS-SCROLL] Probando ID alternativo: ${altSectionId}`);
+                targetElement = document.getElementById(altSectionId);
+            }
+            
+            if (!targetElement) {
+                console.warn(`⚠️ [CURSOS-SCROLL] Elemento ${sectionId} no encontrado`);
+                // Listar todos los elementos con ID para debug
+                const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
+                console.log('🔍 [CURSOS-SCROLL] IDs disponibles:', allIds);
+                return false;
+            }
+
+            console.log(`✅ [CURSOS-SCROLL] Elemento encontrado:`, targetElement.id);
+
+            // Calcular posición con offset
+            const headerHeight = 100;
+            const elementRect = targetElement.getBoundingClientRect();
+            const currentScrollY = window.pageYOffset;
+            const targetPosition = currentScrollY + elementRect.top - headerHeight;
+
+            console.log(`📍 [CURSOS-SCROLL] Posiciones:`, {
+                elementTop: elementRect.top,
+                currentScroll: currentScrollY,
+                targetPosition: targetPosition,
+                headerOffset: headerHeight
+            });
+
+            // Hacer scroll
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+
+            // Verificar después de 500ms
+            setTimeout(() => {
+                const newScrollY = window.pageYOffset;
+                console.log(`✅ [CURSOS-SCROLL] Scroll completado. Posición actual: ${newScrollY}`);
+            }, 500);
+
+            return true;
+        };
+
+        // Función principal para configurar enlaces
+        const setupScrollLinks = () => {
+            console.log('🔧 [CURSOS-SCROLL] Configurando enlaces de scroll...');
+            
+            // Buscar todos los enlaces del navbar
+            const navLinks = document.querySelectorAll('.upds-contact-link');
+            console.log(`🔍 [CURSOS-SCROLL] Enlaces encontrados: ${navLinks.length}`);
+
+            if (navLinks.length === 0) {
+                console.warn('⚠️ [CURSOS-SCROLL] No se encontraron enlaces del navbar');
+                return;
+            }
+
             navLinks.forEach((link, index) => {
                 const linkText = link.textContent.trim();
-                console.log(`🔍 [CURSOS-SCROLL] Procesando enlace ${index + 1}:`, linkText);
+                const sectionId = getSectionId(linkText);
                 
-                // Mapear nombres de enlaces a IDs de secciones
-                let sectionId = null;
-                switch(linkText) {
-                    case 'Mikrotik':
-                        sectionId = 'mikrotik-courses';
-                        break;
-                    case 'Ciencias de la Salud':
-                        sectionId = 'ciencias-de-la-salud-courses';
-                        break;
-                    case 'Ingeniería':
-                        sectionId = 'ingenieria-courses';
-                        break;
-                    case 'Ciencias Empresariales':
-                        sectionId = 'ciencias-empresariales-courses';
-                        break;
-                    case 'Ciencias Jurídicas':
-                        sectionId = 'ciencias-juridicas-courses';
-                        break;
-                }
-                
+                console.log(`� [CURSOS-SCROLL] Procesando enlace ${index + 1}: "${linkText}" → ${sectionId}`);
+
                 if (sectionId) {
-                    console.log(`🎯 [CURSOS-SCROLL] Configurando scroll para "${linkText}" → ${sectionId}`);
-                    
-                    // Clonar el enlace para evitar problemas con event listeners existentes
+                    // Remover event listeners existentes clonando el elemento
                     const newLink = link.cloneNode(true);
                     link.parentNode.replaceChild(newLink, link);
-                    
-                    // Remover el href original y configurar para scroll
-                    newLink.removeAttribute('href');
+
+                    // Configurar el nuevo enlace
                     newLink.style.cursor = 'pointer';
+                    newLink.removeAttribute('href');
                     newLink.setAttribute('data-scroll-target', sectionId);
-                    
-                    // Agregar event listener para hacer scroll a la sección
+
+                    // Agregar event listener
                     newLink.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log(`🎯 [CURSOS-SCROLL] Click detectado! Haciendo scroll a sección: ${sectionId}`);
                         
-                        // Buscar el elemento objetivo
-                        const targetElement = document.getElementById(sectionId);
-                        console.log(`🔍 [CURSOS-SCROLL] Elemento objetivo encontrado:`, targetElement);
-                        
-                        if (targetElement) {
-                            // Calcular posición con offset para el header
-                            const headerHeight = 150; // Aumentar offset para mayor seguridad
-                            const targetPosition = targetElement.offsetTop - headerHeight;
-                            
-                            console.log(`📍 [CURSOS-SCROLL] Posición calculada: ${targetPosition} (elemento en ${targetElement.offsetTop}, header: ${headerHeight})`);
-                            
-                            // Hacer scroll suave
-                            window.scrollTo({
-                                top: targetPosition,
-                                behavior: 'smooth'
-                            });
-                            
-                            console.log(`✅ [CURSOS-SCROLL] Scroll iniciado hacia ${sectionId} en posición ${targetPosition}`);
-                            
-                            // Verificar después de un momento si el scroll fue exitoso
-                            setTimeout(() => {
-                                console.log(`📊 [CURSOS-SCROLL] Posición actual del scroll: ${window.scrollY}`);
-                            }, 1000);
-                        } else {
-                            console.warn(`⚠️ [CURSOS-SCROLL] Elemento ${sectionId} no encontrado en el DOM`);
-                            console.log('📋 [CURSOS-SCROLL] Elementos disponibles con ID:', 
-                                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-                        }
+                        console.log(`🖱️ [CURSOS-SCROLL] Click en "${linkText}" → scrolling a ${sectionId}`);
+                        scrollToSection(sectionId);
                     });
-                    
-                    console.log(`✅ [CURSOS-SCROLL] Event listener agregado para "${linkText}"`);
+
+                    console.log(`✅ [CURSOS-SCROLL] Configurado: "${linkText}"`);
                 } else {
-                    console.log(`⚠️ [CURSOS-SCROLL] No se mapeo sectionId para: "${linkText}"`);
+                    console.log(`❌ [CURSOS-SCROLL] No mapeado: "${linkText}"`);
                 }
             });
-            
-            console.log('✅ [CURSOS-SCROLL] Navegación por scroll configurada para página de cursos');
-            
-            // Verificar que las secciones existen en el DOM
+
+            console.log('✅ [CURSOS-SCROLL] Configuración de enlaces completada');
+        };
+
+        // Función para verificar que las secciones existen
+        const verifySections = () => {
+            console.log('🔍 [CURSOS-SCROLL] Verificando existencia de secciones...');
+            const expectedSections = [
+                'mikrotik-courses',
+                'ciencias-de-la-salud-courses', 
+                'ingenieria-courses',
+                'ciencias-empresariales-courses',
+                'ciencias-juridicas-courses'
+            ];
+
+            expectedSections.forEach(id => {
+                const element = document.getElementById(id);
+                console.log(`   ${id}: ${element ? '✅ Existe' : '❌ No encontrado'}`);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    console.log(`      Posición: top=${rect.top}, height=${rect.height}`);
+                }
+            });
+        };
+
+        // Ejecutar con múltiples intentos para asegurar que funcione
+        const attempts = [100, 500, 1000, 2000, 3000];
+        
+        attempts.forEach((delay, index) => {
             setTimeout(() => {
-                const sectionIds = ['mikrotik-courses', 'ciencias-de-la-salud-courses', 'ingenieria-courses', 'ciencias-empresariales-courses', 'ciencias-juridicas-courses'];
-                console.log('🔍 [CURSOS-SCROLL] Verificando existencia de secciones:');
-                sectionIds.forEach(id => {
-                    const element = document.getElementById(id);
-                    console.log(`   ${id}: ${element ? '✅ Encontrado' : '❌ No encontrado'}`);
-                });
-            }, 1000);
-            
-        }, 1000); // Aumentar timeout a 1000ms para dar más tiempo
+                console.log(`🔄 [CURSOS-SCROLL] Intento ${index + 1} (${delay}ms)`);
+                verifySections();
+                setupScrollLinks();
+            }, delay);
+        });
+
+        console.log('🎯 [CURSOS-SCROLL] Sistema de scroll robusto inicializado con múltiples intentos');
     }
 
     initCourseScrollDetection(course) {
@@ -1571,7 +1617,7 @@ class SPARouter {
             const coursesInCategory = getCoursesByCategoryFunc(category);
             
             categoriesHTML += `
-                <div class="category-item bg-white rounded-xl p-6 border border-gray-200">
+                <div id="${categoryId}-section" class="category-item bg-white rounded-xl p-6 border border-gray-200">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-2xl font-bold text-gray-800">${category}</h3>
                         <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">

@@ -112,7 +112,7 @@ class SPARouter {
                     const isCourseSection = courseSections.includes(sectionId);
 
                     // Verificar si es una sección de cursos usando normalización
-                    const cursosCategories = ['Mikrotik', 'Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
+                    const cursosCategories = ['Academias', 'Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
                     const cursosSections = cursosCategories.map(cat => this.normalizeToId(cat) + '-section');
                     const isCursosSection = cursosSections.includes(sectionId);
 
@@ -1650,7 +1650,7 @@ class SPARouter {
             const { renderCoursesGridByCategory } = appModule;
             
             // Definir categorías de academias y facultades
-            const academiasCategories = ['Mikrotik'];
+            const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
             const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
             
             // Obtener todas las categorías únicas de los cursos
@@ -1680,17 +1680,25 @@ class SPARouter {
 
     renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
         const container = document.getElementById(containerId);
-        if (!container || categories.length === 0) return;
-        
+        if (!container) return;
+
         console.log(`🎨 [ROUTER] Renderizando sección ${sectionType} con categorías:`, categories);
-        
+
+        // Si es la sección de academias, usar el contenido de la página de inicio
+        if (sectionType === 'academia' || containerId === 'academias-content') {
+            this.renderAcademiasFromHome(container);
+            return;
+        }
+
+        if (categories.length === 0) return;
+
         // Generar HTML para cada categoría sin estilos especiales
         let categoriesHTML = '';
-        
+
         categories.forEach(category => {
             const categoryId = this.normalizeToId(category);
             const coursesInCategory = getCoursesByCategoryFunc(category);
-            
+
             categoriesHTML += `
                 <div id="${categoryId}-section" class="category-item bg-white rounded-xl p-6 border border-gray-200">
                     <div class="flex items-center justify-between mb-4">
@@ -1703,19 +1711,64 @@ class SPARouter {
                 </div>
             `;
         });
-        
+
         container.innerHTML = categoriesHTML;
-        
+
         // Renderizar cursos para cada categoría
         categories.forEach(category => {
             const categoryId = this.normalizeToId(category);
             const containerId = `${categoryId}-courses`;
-            
+
             console.log(`🎨 [ROUTER] Renderizando categoría: ${category} en contenedor: ${containerId}`);
             this.renderCategoryUsingExistingFunction(category, containerId, renderFunction, getCoursesByCategoryFunc);
         });
-        
+
         console.log(`✅ [ROUTER] Sección ${sectionType} renderizada con ${categories.length} categorías`);
+    }
+
+    renderAcademiasFromHome(container) {
+        console.log('🎓 [ROUTER] Renderizando academias usando contenido de inicio');
+
+        // Importar lo necesario para renderizar academias
+        Promise.all([
+            import('./data.js'),
+            import('./components.js')
+        ]).then(([dataModule, componentsModule]) => {
+            const { academies } = dataModule;
+            const { createAcademyCard } = componentsModule;
+
+            if (academies && academies.length > 0) {
+                // Crear sección de academias con el mismo ID que en inicio para navegación
+                const academiasHTML = `
+                    <div id="academias-section" class="category-item bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                            <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
+                        </div>
+                        <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
+                            ${academies.map(academy => createAcademyCard(academy)).join('')}
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = academiasHTML;
+                console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
+            } else {
+                console.error('❌ [ROUTER] No se encontraron datos de academias');
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">No hay academias disponibles.</p>
+                    </div>
+                `;
+            }
+        }).catch(error => {
+            console.error('❌ [ROUTER] Error al cargar academias:', error);
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-500">Error al cargar academias.</p>
+                </div>
+            `;
+        });
     }
 
     renderCategoryUsingExistingFunction(categoryName, containerId, renderFunction, getCoursesByCategoryFunc) {

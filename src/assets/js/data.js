@@ -529,11 +529,12 @@ const categoryInfo = {
 const navLinks = [
     { name: 'Inicio', href: '/', navs: [], sections:[
         {name: 'Inicio',id: 'hero-section'},
+        {name: 'Nuestras Academias',id: 'academias-section'},
         {name: 'Cursos Destacados',id: 'courses-section'},
         {name: 'Nosotros',id: 'about-section'}
     ] },
     { name: 'Cursos', href: '/cursos', navs: [
-        {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
+        {name: "Academias", href: "/academias", submenu: []},
         ...facultyStructure.map(faculty => ({
             name: faculty.name,
             href: faculty.href,

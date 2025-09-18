@@ -1,5 +1,5 @@
 // Router SPA para navegación sin recargar página
-import { updateState, getState, getCourseById, navLinks } from './data.js';
+import { updateState, getState, getCourseById, navLinks, facultyStructure, academyCourses } from './data.js';
 
 class SPARouter {
     constructor() {
@@ -1019,159 +1019,176 @@ class SPARouter {
                     console.log(`🎓 [COURSE-SECTIONS] Curso de academia detectado: ${course.category}`);
                 }
                 
-                // Guardar referencia a this para usar dentro del import
-                const self = this;
-                
-                // Importar estructura de facultades y academias
-                import('./data.js').then(module => {
-                    const { facultyStructure, academyCourses } = module;
-                    
-                    // Siempre mostrar los dropdowns de Facultades y Academias
-                    // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
-                        const allFacultiesHTML = facultyStructure.map((fac, index) => {
-                            if (fac.submenu && fac.submenu.length > 0) {
-                                // Verificar si esta es la facultad actual
-                                const isCurrentFaculty = fac.name === course.category;
-                                
-                                // Facultad con submenu de cursos (estructura anidada)
-                                const nestedSubmenuHTML = fac.submenu.map((courseItem, courseIndex) => {
-                                    // Verificar si este es el curso actual
-                                    const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
-                                    
-                                    // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
-                                    const currentCourseStyles = isCurrentCourse 
-                                        ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
-                                    
-                                    return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
-                                }).join('');
-                                
-                                // Estilos para la facultad actual: bg-primary-50 (fondo azul muy claro)
-                                const currentFacultyStyles = isCurrentFaculty 
-                                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
-                                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
-                                
-                                return `
-                                    <div class="nested-dropdown-container relative">
-                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentFacultyStyles}" 
-                                             data-nested-dropdown="${fac.name}">
-                                            <span>${fac.name}</span>
-                                            <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                            <div class="py-1">
-                                                ${nestedSubmenuHTML}
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                            } else {
-                                // Facultad sin submenu (enlace simple)
-                                return `<a href="${fac.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${fac.name}</a>`;
-                            }
+                // Usar datos importados estáticamente en lugar de import dinámico
+                // Siempre mostrar los dropdowns de Facultades y Academias
+                // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
+                const allFacultiesHTML = facultyStructure.map((fac, index) => {
+                    if (fac.submenu && fac.submenu.length > 0) {
+                        // Verificar si esta es la facultad actual
+                        const isCurrentFaculty = fac.name === course.category;
+                        
+                        // Facultad con submenu de cursos (estructura anidada)
+                        const nestedSubmenuHTML = fac.submenu.map((courseItem, courseIndex) => {
+                            // Verificar si este es el curso actual
+                            const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
+                            
+                            // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
+                            const currentCourseStyles = isCurrentCourse 
+                                ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
+                            
+                            return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
                         }).join('');
                         
-                        // Crear dropdown "Academias" con sub-dropdowns anidados
-                        const academyStructure = [
-                            {name: "Mikrotik", href: "/mikrotik", submenu: module.academyCourses.mikrotik},
-                            // Solo mostrar Huawei si está habilitado
-                            // {name: "Huawei", href: "/huawei", submenu: module.academyCourses.huawei}
-                        ];
+                        // Estilos para la facultad actual: bg-primary-50 (fondo azul muy claro)
+                        const currentFacultyStyles = isCurrentFaculty 
+                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
                         
-                        const allAcademiesHTML = academyStructure.map((academy, index) => {
-                            if (academy.submenu && academy.submenu.length > 0) {
-                                // Verificar si esta es la academia actual
-                                const isCurrentAcademy = academy.name === course.category;
-                                
-                                // Academia con submenu de cursos (estructura anidada)
-                                const nestedSubmenuHTML = academy.submenu.map((courseItem, courseIndex) => {
-                                    // Verificar si este es el curso actual
-                                    const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
-                                    
-                                    // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
-                                    const currentCourseStyles = isCurrentCourse 
-                                        ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
-                                    
-                                    return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < academy.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
-                                }).join('');
-                                
-                                // Estilos para la academia actual: bg-primary-50 (fondo azul muy claro)
-                                const currentAcademyStyles = isCurrentAcademy 
-                                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
-                                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
-                                
-                                return `
-                                    <div class="nested-dropdown-container relative">
-                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentAcademyStyles}" 
-                                             data-nested-dropdown="${academy.name}">
-                                            <span>${academy.name}</span>
-                                            <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                            <div class="py-1">
-                                                ${nestedSubmenuHTML}
-                                            </div>
-                                        </div>
+                        return `
+                            <div class="nested-dropdown-container relative">
+                                <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentFacultyStyles}" 
+                                     data-nested-dropdown="${fac.name}">
+                                    <span>${fac.name}</span>
+                                    <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                    <div class="py-1">
+                                        ${nestedSubmenuHTML}
                                     </div>
-                                `;
-                            } else {
-                                // Academia sin submenu (enlace simple)
-                                return `<a href="${academy.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${academy.name}</a>`;
-                            }
-                        }).join('');
-                        
-                        navBottom.innerHTML = `
-                            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Información
-                            </a>
-                            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Instructor
-                            </a>
-                            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Contenido
-                            </a>
-                            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Habilidades
-                            </a>
+                                </div>
+                            </div>
                         `;
+                    } else {
+                        // Facultad sin submenu (enlace simple)
+                        return `<a href="${fac.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${fac.name}</a>`;
+                    }
+                }).join('');
+                
+                // Crear dropdown "Academias" con sub-dropdowns anidados
+                const academyStructure = [
+                    {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
+                    // Solo mostrar Huawei si está habilitado
+                    // {name: "Huawei", href: "/huawei", submenu: academyCourses.huawei}
+                ];
+                
+                const allAcademiesHTML = academyStructure.map((academy, index) => {
+                    if (academy.submenu && academy.submenu.length > 0) {
+                        // Verificar si esta es la academia actual
+                        const isCurrentAcademy = academy.name === course.category;
                         
-                        // Inicializar funcionalidad de dropdown después de crear el HTML
-                        setTimeout(() => self.initDropdownFunctionality(), 10);
+                        // Academia con submenu de cursos (estructura anidada)
+                        const nestedSubmenuHTML = academy.submenu.map((courseItem, courseIndex) => {
+                            // Verificar si este es el curso actual
+                            const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
+                            
+                            // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
+                            const currentCourseStyles = isCurrentCourse 
+                                ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
+                            
+                            return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < academy.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
+                        }).join('');
                         
-                        console.log(`✅ [COURSE-SECTIONS] Navegación completa inicializada para curso: ${course.title}`);
-                }).catch(error => {
-                    console.error('❌ [COURSE-SECTIONS] Error cargando estructura de navegación:', error);
-                    self.createDefaultCourseNavigation(navBottom);
-                });
+                        // Estilos para la academia actual: bg-primary-50 (fondo azul muy claro)
+                        const currentAcademyStyles = isCurrentAcademy 
+                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
+                        
+                        return `
+                            <div class="nested-dropdown-container relative">
+                                <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentAcademyStyles}" 
+                                     data-nested-dropdown="${academy.name}">
+                                    <span>${academy.name}</span>
+                                    <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                    <div class="py-1">
+                                        ${nestedSubmenuHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Academia sin submenu (enlace simple)
+                        return `<a href="${academy.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${academy.name}</a>`;
+                    }
+                }).join('');
+                
+                // Usar navegación dinámica en lugar de hardcodeada
+                this.createDefaultCourseNavigation(navBottom, course);
+                
+                // Inicializar funcionalidad de dropdown después de crear el HTML
+                setTimeout(() => this.initDropdownFunctionality(), 10);
+                
+                console.log(`✅ [COURSE-SECTIONS] Navegación completa inicializada para curso: ${course.title}`);
             } else {
                 // Si no es un curso de facultad ni academia, mostrar navegación normal de curso
-                this.createDefaultCourseNavigation(navBottom);
+                this.createDefaultCourseNavigation(navBottom, course);
             }
         }
     }
     
-    createDefaultCourseNavigation(navBottom) {
-        navBottom.innerHTML = `
-            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Información
-            </a>
-            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Instructor
-            </a>
-            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Contenido
-            </a>
-            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Habilidades
-            </a>
-        `;
+    createDefaultCourseNavigation(navBottom, course) {
+        console.log('🔄 [COURSE-NAV] Iniciando detección dinámica de secciones para:', course.title);
         
-        console.log('✅ [COURSE-SECTIONS] Navegación de curso por defecto inicializada');
+        // Detectar qué secciones realmente existen en el DOM para este curso
+        const possibleSections = [
+            { id: 'course-main-card', name: 'Información' },
+            { id: 'instructor-card', name: 'Instructor' },
+            { id: 'course-content-card', name: 'Contenido' },
+            { id: 'skills-card', name: 'Habilidades' },
+            { id: 'faq-card', name: 'Preguntas Frecuentes' }
+        ];
+        
+        // Filtrar solo las secciones que realmente existen en el DOM
+        const existingSections = [];
+        possibleSections.forEach(section => {
+            const element = document.getElementById(section.id);
+            if (element) {
+                existingSections.push(section);
+                console.log(`✅ [COURSE-NAV] Sección encontrada: ${section.name} (${section.id})`);
+            } else {
+                console.log(`❌ [COURSE-NAV] Sección no encontrada: ${section.name} (${section.id})`);
+            }
+        });
+        
+        console.log(`📋 [COURSE-NAV] Total de secciones detectadas: ${existingSections.length} de ${possibleSections.length}`);
+        
+        if (existingSections.length === 0) {
+            // Si no hay secciones, crear navegación mínima
+            navBottom.innerHTML = `
+                <span class="text-white opacity-75">Sin navegación disponible</span>
+            `;
+            console.log('⚠️ [COURSE-NAV] No se detectaron secciones, navegación mínima creada');
+            return;
+        }
+        
+        // Crear navegación solo para las secciones que existen
+        const navigationHTML = existingSections.map(section => 
+            `<a href="#${section.id}" data-section="${section.id}" class="upds-course-link hover:text-primary-hover transition-colors">
+                ${section.name}
+            </a>`
+        ).join('');
+        
+        navBottom.innerHTML = navigationHTML;
+        
+        // Agregar event listeners para scroll suave
+        existingSections.forEach(section => {
+            const link = navBottom.querySelector(`a[data-section="${section.id}"]`);
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.scrollToSection(section.id, 80); // 80px offset para el header
+                });
+            }
+        });
+        
+        console.log(`✅ [COURSE-NAV] Navegación dinámica creada con ${existingSections.length} secciones para: ${course.title}`);
     }
 
     updateHeaderForCourseSection(section) {

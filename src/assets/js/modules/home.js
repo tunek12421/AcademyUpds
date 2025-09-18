@@ -48,27 +48,9 @@ function loadCoursesSection() {
 function setupHomeEventListeners() {
     // console.log('🎧 [HOME] Configurando event listeners');
     
-    // Configurar todos los botones "Explorar cursos" en el hero
-    // Usar un selector válido y buscar por contenido de texto
-    const allButtons = document.querySelectorAll('button');
-    const exploreButtons = Array.from(allButtons).filter(button => 
-        button.textContent.includes('Explorar') || 
-        button.getAttribute('onclick')?.includes('exploreAllCourses')
-    );
-    
-    exploreButtons.forEach(button => {
-        // Remover el onclick inline
-        button.removeAttribute('onclick');
-        
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Scroll hacia la sección de cursos
-            const coursesSection = document.getElementById('courses-section');
-            if (coursesSection) {
-                coursesSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
+    // Ya no necesitamos configurar event listeners aquí porque ambos botones 
+    // "Explorar cursos" y "Ver todos los cursos" ahora tienen onclick="exploreAllCourses()"
+    // que los llevará directamente a /cursos
 }
 
 // Función para renderizar la grilla de academias

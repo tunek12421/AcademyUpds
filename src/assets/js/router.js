@@ -1,5 +1,8 @@
 // Router SPA para navegación sin recargar página
-import { updateState, getState, getCourseById, navLinks, facultyStructure, academyCourses } from './data.js';
+import { updateState, getState, getCourseById, navLinks, facultyStructure, academyCourses, courses, getCoursesByCategory, academies } from './data.js';
+import { renderCoursesGridByCategory, renderCourseView, renderCategoryView } from './modules/app.js';
+import { renderHomeView } from './modules/home.js';
+import { createAcademyCard } from './components.js';
 
 class SPARouter {
     constructor() {
@@ -695,13 +698,12 @@ class SPARouter {
     }
 
     updateHeaderBreadcrumbs() {
-        // Importar navLinks desde data.js
-        import('./data.js').then(module => {
-            const navBottom = document.querySelector(".upds-header-contact");
-            if (navBottom && module.navLinks) {
-                const currentNav = module.navLinks[window.DATA.headIndex];
-                const currentNavs = currentNav?.navs || [];
-                const currentSections = currentNav?.sections || [];
+        // Usar navLinks importado estáticamente
+        const navBottom = document.querySelector(".upds-header-contact");
+        if (navBottom && navLinks) {
+            const currentNav = navLinks[window.DATA.headIndex];
+            const currentNavs = currentNav?.navs || [];
+            const currentSections = currentNav?.sections || [];
                 
                 if (currentNavs.length > 0) {
                     // NAVS: Para navegación a otras páginas/URLs
@@ -737,8 +739,8 @@ class SPARouter {
                     this.initHomeScrollDetection();
                 }
             }
-        });
-    }
+        }
+    
 
     initCursosScrollDetection() {
         console.log('🔄 [CURSOS-SECTIONS] Inicializando detección de scroll para secciones de cursos');
@@ -749,26 +751,24 @@ class SPARouter {
             console.log('🧹 [CURSOS-SECTIONS] Listener anterior removido');
         }
 
-        // Importar configuración de navegación
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            const cursosNavigation = navLinks[1]; // navLinks[1] es "Cursos"
-            const cursosSections = cursosNavigation.sections || []; // Usar sections en lugar de navs
+        // Usar navLinks importado estáticamente
+        const cursosNavigation = navLinks[1]; // navLinks[1] es "Cursos"
+        const cursosSections = cursosNavigation.sections || []; // Usar sections en lugar de navs
 
-            console.log('📋 [CURSOS-SECTIONS] Secciones cargadas:', cursosSections.map(s => s.name));
+        console.log('📋 [CURSOS-SECTIONS] Secciones cargadas:', cursosSections.map(s => s.name));
 
-            this.scrollListener = () => {
-                const scrollY = window.scrollY;
-                const scrollPosition = scrollY + 150; // Offset para activar antes
-                let currentSection = cursosSections[0]; // Default: primera sección
+        this.scrollListener = () => {
+            const scrollY = window.scrollY;
+            const scrollPosition = scrollY + 150; // Offset para activar antes
+            let currentSection = cursosSections[0]; // Default: primera sección
 
-                // Encontrar la sección actual basada en scroll
-                for (const section of cursosSections) {
-                    const element = document.getElementById(section.id); // Usar section.id directamente
-                    if (element) {
-                        const elementTop = element.offsetTop - 150;
-                        if (scrollPosition >= elementTop) {
-                            currentSection = section;
+            // Encontrar la sección actual basada en scroll
+            for (const section of cursosSections) {
+                const element = document.getElementById(section.id); // Usar section.id directamente
+                if (element) {
+                    const elementTop = element.offsetTop - 150;
+                    if (scrollPosition >= elementTop) {
+                        currentSection = section;
                         }
                     }
                 }
@@ -787,9 +787,6 @@ class SPARouter {
 
             // Ejecutar una vez para inicializar
             this.scrollListener();
-        }).catch(error => {
-            console.error('❌ [CURSOS-SECTIONS] Error cargando secciones:', error);
-        });
     }
 
     initHomeScrollDetection() {
@@ -801,19 +798,16 @@ class SPARouter {
             // console.log('🧹 [HOME-SECTIONS] Listener anterior removido');
         }
 
-        // Importar configuración de secciones
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            
-            // Detectar las secciones de la página actual
-            let currentSections = [];
-            if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
-                currentSections = navLinks[window.DATA.headIndex].sections || [];
-            }
-            
-            console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
-            
-            this.scrollListener = () => {
+        // Usar navLinks importado estáticamente
+        // Detectar las secciones de la página actual
+        let currentSections = [];
+        if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
+            currentSections = navLinks[window.DATA.headIndex].sections || [];
+        }
+        
+        console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
+        
+        this.scrollListener = () => {
                 const scrollY = window.scrollY;
                 const scrollPosition = scrollY + 100; // Offset para activar antes
                 let currentSection = currentSections[0]; // Default: primera sección
@@ -843,7 +837,6 @@ class SPARouter {
             
             // Ejecutar una vez para inicializar
             this.scrollListener();
-        });
     }
 
     updateHeaderForSection(section) {
@@ -1238,7 +1231,6 @@ class SPARouter {
                 // Inicializar vista home después de cargar el contenido
                 setTimeout(async () => {
                     try {
-                        const { renderHomeView } = await import('./modules/home.js');
                         renderHomeView();
                         this.initHomeScrollDetection();
                     } catch (error) {
@@ -1269,7 +1261,6 @@ class SPARouter {
                     // Renderizar el contenido del curso después de cargar la página
                     setTimeout(async () => {
                         try {
-                            const { renderCourseView } = await import('./modules/app.js');
                             renderCourseView(course);
                             this.initCourseScrollDetection(course);
                         } catch (error) {
@@ -1302,7 +1293,6 @@ class SPARouter {
             // Renderizar el contenido de mikrotik después de cargar la página
             setTimeout(async () => {
                 try {
-                    const { renderCategoryView } = await import('./modules/app.js');
                     renderCategoryView('Mikrotik');
                     
                     // Asegurar que el header se mantiene correcto después del renderizado
@@ -1391,41 +1381,28 @@ class SPARouter {
     }
 
     loadOrganizedCategories() {
-        // Importar datos y funciones necesarias
-        Promise.all([
-            import('./data.js'),
-            import('./modules/app.js')
-        ]).then(([dataModule, appModule]) => {
-            const { courses, getCoursesByCategory } = dataModule;
-            const { renderCoursesGridByCategory } = appModule;
-            
-            // Definir categorías de academias y facultades
-            const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
-            const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
-            
-            // Obtener todas las categorías únicas de los cursos
-            const allCategories = [...new Set(courses.map(course => course.category))];
-            console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
-            console.log('📋 [ROUTER] Total de cursos:', courses.length);
-            
-            // Separar categorías
-            const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
-            const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
-            
-            console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
-            console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
-            
-            // Renderizar Academias
-            this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
-            
-            // Renderizar Facultades
-            this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
-            
-        }).catch(error => {
-            console.error('❌ [ROUTER] Error al cargar categorías organizadas:', error);
-            // Fallback al método anterior si falla
-            this.generateCursosContentFallback();
-        });
+        // Usar funciones importadas estáticamente
+        // Definir categorías de academias y facultades
+        const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
+        const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
+        
+        // Obtener todas las categorías únicas de los cursos
+        const allCategories = [...new Set(courses.map(course => course.category))];
+        console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
+        console.log('📋 [ROUTER] Total de cursos:', courses.length);
+        
+        // Separar categorías
+        const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
+        const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
+        
+        console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
+        console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
+        
+        // Renderizar Academias
+        this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
+        
+        // Renderizar Facultades
+        this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
     }
 
     renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
@@ -1479,46 +1456,31 @@ class SPARouter {
     renderAcademiasFromHome(container) {
         console.log('🎓 [ROUTER] Renderizando academias usando contenido de inicio');
 
-        // Importar lo necesario para renderizar academias
-        Promise.all([
-            import('./data.js'),
-            import('./components.js')
-        ]).then(([dataModule, componentsModule]) => {
-            const { academies } = dataModule;
-            const { createAcademyCard } = componentsModule;
-
-            if (academies && academies.length > 0) {
-                // Crear sección de academias con el mismo ID que en inicio para navegación
-                const academiasHTML = `
-                    <div id="academias-section">
-                        <div class="text-center mb-6">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
-                            <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
-                        </div>
-                        <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
-                            ${academies.map(academy => createAcademyCard(academy)).join('')}
-                        </div>
+        // Usar imports estáticos
+        if (academies && academies.length > 0) {
+            // Crear sección de academias con el mismo ID que en inicio para navegación
+            const academiasHTML = `
+                <div id="academias-section">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                        <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
                     </div>
-                `;
-
-                container.innerHTML = academiasHTML;
-                console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
-            } else {
-                console.error('❌ [ROUTER] No se encontraron datos de academias');
-                container.innerHTML = `
-                    <div class="text-center py-8">
-                        <p class="text-gray-500">No hay academias disponibles.</p>
+                    <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
+                        ${academies.map(academy => createAcademyCard(academy)).join('')}
                     </div>
-                `;
-            }
-        }).catch(error => {
-            console.error('❌ [ROUTER] Error al cargar academias:', error);
-            container.innerHTML = `
-                <div class="text-center py-8">
-                    <p class="text-gray-500">Error al cargar academias.</p>
                 </div>
             `;
-        });
+
+            container.innerHTML = academiasHTML;
+            console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
+        } else {
+            console.error('❌ [ROUTER] No se encontraron datos de academias');
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No hay academias disponibles.</p>
+                </div>
+            `;
+        }
     }
 
     renderCategoryUsingExistingFunction(categoryName, containerId, renderFunction, getCoursesByCategoryFunc) {
@@ -1717,7 +1679,6 @@ class SPARouter {
             // Renderizar el contenido de la facultad después de cargar la página
             setTimeout(async () => {
                 try {
-                    const { renderCategoryView } = await import('./modules/app.js');
                     renderCategoryView(facultadNames[nombre], categoryMappings[nombre]);
                 } catch (error) {
                     console.error(`❌ [ROUTER] Error al renderizar facultad ${nombre}:`, error);
@@ -2163,25 +2124,22 @@ class SPARouter {
         const mobileContent = document.getElementById('mobile-menu-content');
         if (!mobileContent) return;
 
-        // Importar navLinks
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            
-            let mobileMenuHTML = '';
+        // Usar navLinks importado estáticamente
+        let mobileMenuHTML = '';
 
-            // PRIMERO: Agregar las secciones de la página actual al inicio
-            const currentPageSections = this.getCurrentPageSections();
-            if (currentPageSections && currentPageSections.length > 0) {
-                mobileMenuHTML += `<div class="mobile-nav-section">`;
-                mobileMenuHTML += `<div class="mobile-nav-title">Navegación de Página</div>`;
-                currentPageSections.forEach(section => {
-                    mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
-                });
-                mobileMenuHTML += `</div>`;
-            }
+        // PRIMERO: Agregar las secciones de la página actual al inicio
+        const currentPageSections = this.getCurrentPageSections();
+        if (currentPageSections && currentPageSections.length > 0) {
+            mobileMenuHTML += `<div class="mobile-nav-section">`;
+            mobileMenuHTML += `<div class="mobile-nav-title">Navegación de Página</div>`;
+            currentPageSections.forEach(section => {
+                mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
+            });
+            mobileMenuHTML += `</div>`;
+        }
 
-            // SEGUNDO: Agregar las categorías principales
-            navLinks.forEach((navItem, index) => {
+        // SEGUNDO: Agregar las categorías principales
+        navLinks.forEach((navItem, index) => {
                 if (navItem.name === 'Cochabamba') {
                     // Enlace externo especial
                     mobileMenuHTML += `
@@ -2266,18 +2224,15 @@ class SPARouter {
                     });
                 }
 
-                mobileMenuHTML += `</div>`;
-            });
-
-            mobileContent.innerHTML = mobileMenuHTML;
-            
-            // Inicializar funcionalidad de dropdowns móviles
-            this.initMobileDropdowns();
-            
-            console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
-        }).catch(error => {
-            console.error('❌ [MOBILE-MENU] Error generando contenido:', error);
+            mobileMenuHTML += `</div>`;
         });
+
+        mobileContent.innerHTML = mobileMenuHTML;
+        
+        // Inicializar funcionalidad de dropdowns móviles
+        this.initMobileDropdowns();
+        
+        console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
     }
 
     // Nueva función para obtener las secciones de la página actual

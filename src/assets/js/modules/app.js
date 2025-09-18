@@ -16,6 +16,8 @@ import {
     createFAQCard
 } from '../components.js';
 
+import { navigateTo } from '../router.js';
+
 // Aplicación principal - Manejo de estado y eventos
 
 // Función para mostrar mensajes de error
@@ -48,12 +50,12 @@ function showErrorMessage(message) {
 // Función para seleccionar curso
 function selectCourse(courseId) {
     // Usar navegación SPA en lugar de cambiar la URL
-    import('../router.js').then(({ navigateTo }) => {
+    try {
         navigateTo(`/curso?id=${courseId}`);
-    }).catch(() => {
+    } catch (error) {
         // Fallback si el router no está disponible
         window.location.href = `/curso.html?id=${courseId}`;
-    });
+    }
 }
 
 // Función para renderizar la vista de categoría
@@ -413,12 +415,12 @@ function navigateToAcademy(academyId) {
     
     if (academyId === 'mikrotik') {
         // Redirigir a la vista de mikrotik usando el router
-        import('../router.js').then(({ navigateTo }) => {
+        try {
             navigateTo('/mikrotik');
-        }).catch(() => {
+        } catch (error) {
             // Fallback si el router no está disponible
             window.location.href = '/mikrotik.html';
-        });
+        }
     } else if (academyId === 'huawei') {
         // Por ahora HUAWEI no redirige a ninguna vista
         showNotification('La academia Huawei estará disponible próximamente', 'info');

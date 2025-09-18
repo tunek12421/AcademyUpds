@@ -990,16 +990,14 @@ class SPARouter {
             // Remover clase activa de todos los enlaces
             const allLinks = navBottom.querySelectorAll('.upds-section-link');
             allLinks.forEach(link => {
-                link.classList.remove('text-primary-hover', 'font-bold', 'text-blue-600', 'bg-blue-50', 'px-3', 'py-1', 'rounded-md');
-                link.classList.add('text-white');
+                link.classList.remove('text-primary-hover', 'font-bold', 'text-blue-600', 'bg-blue-50', 'px-3', 'py-1', 'rounded-md', 'text-white');
             });
 
             // Encontrar el enlace correspondiente por el texto del nombre de la sección
             const sectionId = this.normalizeToId(section.name) + '-section';
             const activeLink = navBottom.querySelector(`[data-section="${sectionId}"]`);
             if (activeLink) {
-                activeLink.classList.remove('text-white');
-                activeLink.classList.add('text-blue-600', 'font-bold', 'bg-blue-50', 'px-3', 'py-1', 'rounded-md');
+                activeLink.classList.add('text-primary-hover', 'font-bold');
                 console.log('✅ [CURSOS-SECTIONS] Sección resaltada:', section.name);
             } else {
                 console.warn('⚠️ [CURSOS-SECTIONS] No se encontró enlace para sección:', sectionId);

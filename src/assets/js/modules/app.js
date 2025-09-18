@@ -286,9 +286,17 @@ function navigateToAcademy(academyId) {
 function exploreAllCourses() {
     try {
         navigateTo('/cursos');
+        // Scroll al inicio de la página
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 100);
     } catch (error) {
         // Fallback si el router no está disponible
         window.location.href = '/cursos';
+        // Scroll al inicio también en el fallback
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+        }, 100);
     }
 }
 

@@ -70,7 +70,7 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
     
     // Descripción por categoría
     const descriptions = {
-        'Mikrotik': 'Descubre nuestros cursos especializados en networking y administración de redes',
+        'Mikrotik': 'En La Universidad Privada Domingo Savio, formamos a la próxima generación de expertos en Redes y Telecomunicaciones. Como Academia MikroTik certificada, te ofrecemos la oportunidad de aprender con instructores expertos, practicar con equipos reales y obtener la certificaciones internacionales que permitirán impulsar tu carrera profesional.',
         'Ciencias de la Salud': 'Cursos especializados en ciencias de la salud y medicina',
         'Ingeniería': 'Programas técnicos y de ingeniería para profesionales',
         'Ciencias Empresariales': 'Cursos de administración, contabilidad y gestión empresarial',
@@ -82,7 +82,7 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
         <!-- Page Header -->
         <div class="text-center space-y-4">
             <h1 class="text-4xl font-bold tracking-tight">Cursos de ${categoryName}</h1>
-            <p class="text-xl text-muted-foreground">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
+            <p class="text-xl text-muted-foreground text-justify">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
         </div>
         
         <!-- Courses Grid -->

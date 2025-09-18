@@ -9680,6 +9680,10 @@ video {
   text-align:center
 }
 
+.text-justify{
+  text-align:justify
+}
+
 .font-sans{
   font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
 }

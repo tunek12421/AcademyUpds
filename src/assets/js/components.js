@@ -117,9 +117,6 @@ function createCourseCard(course) {
                     ${course.description}
                 </p>
                 <div class="flex flex-col gap-3 justify-between">
-                    <div class="flex items-center gap-4 text-sm text-muted-foreground">
-                        ${createBadge(course.level, 'secondary')}
-                    </div>
                     ${createButton(`Ver detalles ${createChevronRightIcon()}`, 'default', 'default', `selectCourse('${course.id}')`, 'group')}
                 </div>
                
@@ -141,14 +138,9 @@ function createCourseDetails(course) {
         </div>
         <div class="px-6 pb-2">
             <h2 class="text-2xl font-bold mb-2">${course.title}</h2>
-            <p class="text-base text-muted-foreground">
+            <p class="text-base text-muted-foreground mb-3">
                 ${course.description}
             </p>
-        </div>
-        <div class="px-6 pb-6">
-            <div class="flex items-center gap-6 mb-6">
-                ${createBadge(course.level, 'secondary')}
-            </div>
         </div>
     `;
 }
@@ -302,10 +294,6 @@ function createOtherCoursesCard(otherCourses = []) {
 
 // Componente para conocimientos esenciales
 function createPrerequisitesCard(course) {
-    if (!course.prerequisites) {
-        return '';
-    }
-    
     const topicsHTML = course.prerequisites.topics.map(topic => `
         <li class="flex items-center gap-2">
             <svg class="h-4 w-4 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -8897,10 +8897,6 @@ video {
   right:0px
 }
 
-.right-2{
-  right:0.5rem
-}
-
 .right-3{
   right:0.75rem
 }
@@ -8917,20 +8913,12 @@ video {
   top:50%
 }
 
-.top-2{
-  top:0.5rem
-}
-
 .top-3{
   top:0.75rem
 }
 
 .top-4{
   top:1rem
-}
-
-.top-full{
-  top:100%
 }
 
 .z-50{
@@ -9015,10 +9003,6 @@ video {
 
 .block{
   display:block
-}
-
-.inline-block{
-  display:inline-block
 }
 
 .inline{
@@ -9147,10 +9131,6 @@ video {
 
 .w-5{
   width:1.25rem
-}
-
-.w-56{
-  width:14rem
 }
 
 .w-6{
@@ -9324,12 +9304,6 @@ video {
   margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))
 }
 
-.space-y-16 > :not([hidden]) ~ :not([hidden]){
-  --tw-space-y-reverse:0;
-  margin-top:calc(4rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom:calc(4rem * var(--tw-space-y-reverse))
-}
-
 .space-y-2 > :not([hidden]) ~ :not([hidden]){
   --tw-space-y-reverse:0;
   margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
@@ -9372,10 +9346,6 @@ video {
 
 .rounded{
   border-radius:0.25rem
-}
-
-.rounded-2xl{
-  border-radius:1rem
 }
 
 .rounded-full{
@@ -9421,6 +9391,11 @@ video {
 
 .border-t{
   border-top-width:1px
+}
+
+.border-blue-200{
+  --tw-border-opacity:1;
+  border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))
 }
 
 .border-blue-500{
@@ -9539,6 +9514,10 @@ video {
   --tw-bg-opacity:0.95
 }
 
+.bg-gradient-to-r{
+  background-image:linear-gradient(to right, var(--tw-gradient-stops))
+}
+
 .bg-gradient-to-t{
   background-image:linear-gradient(to top, var(--tw-gradient-stops))
 }
@@ -9547,6 +9526,16 @@ video {
   --tw-gradient-from:rgb(0 0 0 / 0.5) var(--tw-gradient-from-position);
   --tw-gradient-to:rgb(0 0 0 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)
+}
+
+.from-blue-50{
+  --tw-gradient-from:#eff6ff var(--tw-gradient-from-position);
+  --tw-gradient-to:rgb(239 246 255 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)
+}
+
+.to-indigo-50{
+  --tw-gradient-to:#eef2ff var(--tw-gradient-to-position)
 }
 
 .to-transparent{
@@ -9585,11 +9574,6 @@ video {
 
 .p-8{
   padding:2rem
-}
-
-.px-2{
-  padding-left:0.5rem;
-  padding-right:0.5rem
 }
 
 .px-2\.5{

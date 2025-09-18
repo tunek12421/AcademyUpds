@@ -82,7 +82,7 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
         <!-- Page Header -->
         <div class="text-center space-y-4">
             <h1 class="text-4xl font-bold tracking-tight">Cursos de ${categoryName}</h1>
-            <p class="text-xl text-muted-foreground text-justify">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
+            <p class="text-justify bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
         </div>
         
         <!-- Courses Grid -->
@@ -298,28 +298,22 @@ function renderCourseDetails(course) {
                     <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createCourseDetails(course)}
                     </div>
-
-                    <!-- Instructor Card -->
-                    <div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    ${course.instructor?`<div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createInstructorCard(course)}
-                    </div>
+                    </div>`: ""}
 
-                    <!-- Course Content -->
-                    <div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    ${course.modules?`<div id="course-content-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createCourseContentCard(course)}
-                    </div>
+                    </div>`: ""}
 
-                    <!-- Skills -->
-                    <div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    ${course.skills?`<div id="skills-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createSkillsCard(course)}
-                    </div>
+                    </div>`: ""}
 
-                    <!-- Prerequisites -->
                     ${course.prerequisites ? `<div id="prerequisites-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createPrerequisitesCard(course)}
                     </div>` : ''}
 
-                    <!-- FAQ -->
                     ${course.faq ? `<div id="faq-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createFAQCard(course)}
                     </div>` : ''}

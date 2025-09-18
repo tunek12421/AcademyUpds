@@ -92,67 +92,28 @@ class SPARouter {
                 link.classList.contains('upds-contact-link') || 
                 (href && href.startsWith('#'))) {
                 
-                console.log('🔗 [DEBUG] Link de sección detectado - INTERCEPTANDO');
                 e.preventDefault();
-                e.stopPropagation();
+                
+                console.log('🔗 [DEBUG] Detectado link potencial de sección:', {
+                    href: href,
+                    classes: link.className,
+                    dataSection: link.getAttribute('data-section'),
+                    textContent: link.textContent
+                });
                 
                 // Obtener el ID de la sección
                 let sectionId = '';
                 if (href && href.startsWith('#')) {
-                    sectionId = href.substring(1); // Remover el #
+                    sectionId = href.substring(1);
                 } else if (link.hasAttribute('data-section')) {
                     sectionId = link.getAttribute('data-section');
                 }
                 
-                console.log('🎯 [DEBUG] SectionId extraído:', sectionId);
-
                 if (sectionId) {
-                    // Verificar si es una sección de curso (course-main-card, instructor-card, course-content-card, skills-card)
-                    const courseSections = ['course-main-card', 'instructor-card', 'course-content-card', 'skills-card'];
-                    const isCourseSection = courseSections.includes(sectionId);
-
-                    // Verificar si es una sección de cursos usando normalización
-                    const cursosCategories = ['Academias', 'Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
-                    const cursosSections = cursosCategories.map(cat => this.normalizeToId(cat) + '-section');
-                    const isCursosSection = cursosSections.includes(sectionId);
-
-                    console.log('🔍 [DEBUG] Verificación de secciones:');
-                    console.log('   - Sección buscada:', sectionId);
-                    console.log('   - Secciones válidas de cursos:', cursosSections);
-                    console.log('   - Es sección de cursos?:', isCursosSection);
-                    console.log('   - Ruta actual:', this.currentRoute);
-
-                    if (isCourseSection && this.currentRoute && this.currentRoute.includes('/curso/')) {
-                        // Si estamos en una página de curso y es una sección de curso, hacer scroll directo
-                        console.log('📚 [DEBUG] Estamos en curso, scroll directo a sección de curso:', sectionId);
-                        this.scrollToSection(sectionId);
-                    } else if (isCursosSection && this.currentRoute === '/cursos') {
-                        // Si estamos en la página de cursos y es una sección de cursos, hacer scroll directo
-                        console.log('📚 [DEBUG] Estamos en página cursos, scroll directo a sección:', sectionId);
-                        this.scrollToSection(sectionId);
-                    } else if (isCursosSection && this.currentRoute !== '/cursos') {
-                        // Si es una sección de cursos pero no estamos en la página cursos, navegar primero
-                        console.log('📍 [DEBUG] Navegando a página cursos primero, luego scroll a:', sectionId);
-                        this.navigate('/cursos');
-                        setTimeout(() => {
-                            console.log('⏰ [DEBUG] Timeout completado, haciendo scroll a:', sectionId);
-                            this.scrollToSection(sectionId);
-                        }, 500);
-                    } else if (this.currentRoute !== '/' && this.currentRoute !== '/home' && !isCourseSection && !isCursosSection) {
-                        // Solo navegar a home si no estamos allí y NO es una sección de curso o cursos
-                        console.log('📍 [DEBUG] No estamos en home, navegando primero...');
-                        this.navigate('/');
-                        setTimeout(() => {
-                            console.log('⏰ [DEBUG] Timeout completado, haciendo scroll a:', sectionId);
-                            this.scrollToSection(sectionId);
-                        }, 300);
-                    } else {
-                        console.log('🏠 [DEBUG] Scroll directo a sección:', sectionId);
-                        // Hacer scroll directamente
-                        this.scrollToSection(sectionId);
-                    }
+                    console.log('� [DEBUG] Scroll a sección:', sectionId);
+                    this.scrollToSection(sectionId);
                 } else {
-                    console.warn('⚠️ [DEBUG] No se pudo extraer sectionId del enlace');
+                    console.warn('⚠️ [DEBUG] No se pudo extraer sectionId del enlace - href:', href, 'data-section:', link.getAttribute('data-section'));
                 }
                 return;
             }
@@ -191,6 +152,18 @@ class SPARouter {
                 }
                 
                 // Si no es una navegación externa, continuar con la navegación normal
+                if (href && !href.startsWith('http') && !href.startsWith('mailto') && !href.startsWith('tel')) {
+                    this.navigate(href);
+                }
+                return;
+            }
+            
+            // Interceptar clicks en navegación de breadcrumb (upds-breadcrumb-nav)
+            if (link.classList.contains('upds-breadcrumb-nav')) {
+                console.log('🍞 [DEBUG] Navegación de breadcrumb detectada:', href);
+                e.preventDefault();
+                
+                // Navegación normal a la página
                 if (href && !href.startsWith('http') && !href.startsWith('mailto') && !href.startsWith('tel')) {
                     this.navigate(href);
                 }
@@ -578,79 +551,17 @@ class SPARouter {
         this.showMainContent();
     }
 
-    scrollToSection(sectionId) {
-        console.log(`🎯 [SCROLL] Navegando a sección: ${sectionId}`);
-        
-        // Función que realiza el scroll
-        const performScroll = (attempt = 1) => {
-            console.log(`🔍 [SCROLL] Intento ${attempt} - Buscando elemento: #${sectionId}`);
-            const element = document.getElementById(sectionId);
-            
-            if (element) {
-                // Calcular la posición teniendo en cuenta el header sticky
-                const elementPosition = Math.max(0, element.offsetTop - 80);
-                
-                console.log(`📍 [SCROLL] Elemento encontrado. Posición calculada: ${elementPosition}px`);
-                
-                // Scroll suave
-                window.scrollTo({
-                    top: elementPosition,
-                    behavior: 'smooth'
-                });
-                
-                console.log(`✅ [SCROLL] Scroll suave a ${sectionId} completado (posición: ${elementPosition}px)`);
-                
-                // Actualizar el estado de la sección actual manualmente
-                // para que el header se actualice inmediatamente
-                if (this.currentRoute === '/' || this.currentRoute === '/home') {
-                    // Encontrar la sección correspondiente en navLinks
-                    const homeSections = navLinks[0].sections;
-                    const section = homeSections.find(s => s.id === sectionId);
-                    if (section) {
-                        console.log(`🎨 [SCROLL] Actualizando header para sección: ${section.name}`);
-                        this.updateHeaderForHomeSection(section);
-                    }
-                } else if (this.currentRoute && this.currentRoute.includes('/curso/')) {
-                    // Si estamos en una página de curso, actualizar header para sección de curso
-                    const courseSections = [
-                        { id: 'course-main-card', name: 'Información' },
-                        { id: 'instructor-card', name: 'Instructor' },
-                        { id: 'course-content-card', name: 'Contenido' },
-                        { id: 'skills-card', name: 'Habilidades' }
-                    ];
-                    const section = courseSections.find(s => s.id === sectionId);
-                    if (section) {
-                        console.log(`🎨 [SCROLL] Actualizando header para sección de curso: ${section.name}`);
-                        this.updateHeaderForCourseSection(section);
-                    }
-                }
-                return true;
-            } else {
-                console.warn(`⚠️ [SCROLL] Intento ${attempt} - Sección no encontrada: ${sectionId}`);
-                return false;
-            }
-        };
-        
-        // Intentar scroll inmediato
-        if (!performScroll(1)) {
-            // Si no se encuentra la sección, esperar un poco y reintentar hasta 3 veces
-            console.log(`🔄 [SCROLL] Reintentando scroll a ${sectionId} en 200ms...`);
-            setTimeout(() => {
-                if (!performScroll(2)) {
-                    console.log(`🔄 [SCROLL] Segundo reintento a ${sectionId} en 500ms...`);
-                    setTimeout(() => {
-                        if (!performScroll(3)) {
-                            console.error(`❌ [SCROLL] No se pudo encontrar la sección después de 3 intentos: ${sectionId}`);
-                            // Como último recurso, intentar scroll al inicio de la página
-                            console.log(`🏠 [SCROLL] Fallback: navegando al inicio de la página`);
-                            window.scrollTo({
-                                top: 0,
-                                behavior: 'smooth'
-                            });
-                        }
-                    }, 500);
-                }
-            }, 200);
+    scrollToSection(sectionId, offset=0) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
     }
 
@@ -793,32 +704,22 @@ class SPARouter {
                 const currentSections = currentNav?.sections || [];
                 
                 if (currentNavs.length > 0) {
-                    // Mostrar navegación de subcategorías como enlaces de sección (sin dropdowns)
-                    navBottom.innerHTML = currentNavs.map(link => {
-                        // Convertir nombre a ID de sección usando función centralizada
-                        const sectionId = this.normalizeToId(link.name) + '-section';
-
-                        // Si estamos en página de cursos, hacer que naveguen a secciones
-                        if (window.DATA.name === 'cursos') {
-                            return `<a href="#${sectionId}" data-section="${sectionId}" class="upds-section-link hover:text-primary-hover transition-colors">${link.name}</a>`;
-                        } else {
-                            // En otras páginas, usar navegación normal
-                            return `<a href="${link.href}" class="upds-contact-link hover:text-primary-hover transition-colors">${link.name}</a>`;
-                        }
-                    }).join('');
-
-                    // Si estamos en página de cursos, inicializar detección de scroll para secciones
-                    if (window.DATA.name === 'cursos') {
-                        setTimeout(() => this.initCursosScrollDetection(), 100);
-                    }
+                    // NAVS: Para navegación a otras páginas/URLs
+                    console.log('🔗 [HEADER] Generando enlaces de navegación (navs)');
+                    navBottom.innerHTML = currentNavs.map(nav => 
+                        `<a href="${nav.href}" class="upds-breadcrumb-nav hover:text-primary-hover transition-colors">${nav.name}</a>`
+                    ).join('');
+                    
+                    // Para navs no hay scroll detection, solo navegación normal
                 } else if (currentSections.length > 0) {
-                    // Mostrar navegación de secciones (como en Inicio)
+                    // SECTIONS: Para scroll dentro de la misma página
+                    console.log('🎯 [HEADER] Generando enlaces de sección (sections)');
                     navBottom.innerHTML = currentSections.map(section => 
                         `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`
                     ).join('');
                     
-                    // Si estamos en home, inicializar scroll detection
-                    if (window.DATA.name === 'home') {
+                    // Para sections, inicializar scroll detection
+                    if (window.DATA.name === 'home' || window.DATA.name === 'cursos') {
                         this.initHomeScrollDetection();
                     }
                 }
@@ -831,8 +732,8 @@ class SPARouter {
                         this.initCursosScrollNavigation();
                     }, 2000);
                 } else if (window.DATA.name === 'home') {
-                    // Fallback para home si no hay sections definidas
-                    this.initHomeSectionNavigation();
+                    // Para home, solo inicializar scroll detection ya que updateHeaderBreadcrumbs() 
+                    // maneja la generación de enlaces
                     this.initHomeScrollDetection();
                 }
             }
@@ -852,7 +753,7 @@ class SPARouter {
         import('./data.js').then(module => {
             const { navLinks } = module;
             const cursosNavigation = navLinks[1]; // navLinks[1] es "Cursos"
-            const cursosSections = cursosNavigation.navs || [];
+            const cursosSections = cursosNavigation.sections || []; // Usar sections en lugar de navs
 
             console.log('📋 [CURSOS-SECTIONS] Secciones cargadas:', cursosSections.map(s => s.name));
 
@@ -863,8 +764,7 @@ class SPARouter {
 
                 // Encontrar la sección actual basada en scroll
                 for (const section of cursosSections) {
-                    const sectionId = this.normalizeToId(section.name) + '-section';
-                    const element = document.getElementById(sectionId);
+                    const element = document.getElementById(section.id); // Usar section.id directamente
                     if (element) {
                         const elementTop = element.offsetTop - 150;
                         if (scrollPosition >= elementTop) {
@@ -874,10 +774,9 @@ class SPARouter {
                 }
 
                 // Actualizar header solo si cambió la sección
-                const currentSectionId = this.normalizeToId(currentSection.name) + '-section';
-                if (this.currentCursosSection !== currentSectionId) {
-                    console.log('📍 [CURSOS-SECTIONS] Cambio de sección:', this.currentCursosSection, '→', currentSectionId);
-                    this.currentCursosSection = currentSectionId;
+                if (this.currentCursosSection !== currentSection.id) {
+                    console.log('📍 [CURSOS-SECTIONS] Cambio de sección:', this.currentCursosSection, '→', currentSection.id);
+                    this.currentCursosSection = currentSection.id;
                     this.updateHeaderForCursosSection(currentSection);
                 }
             };
@@ -905,16 +804,22 @@ class SPARouter {
         // Importar configuración de secciones
         import('./data.js').then(module => {
             const { navLinks } = module;
-            const homeSections = navLinks[0].sections; // Obtener secciones de la página de inicio
-            // console.log('📋 [HOME-SECTIONS] Secciones cargadas:', homeSections.map(s => s.id));
+            
+            // Detectar las secciones de la página actual
+            let currentSections = [];
+            if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
+                currentSections = navLinks[window.DATA.headIndex].sections || [];
+            }
+            
+            console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
             
             this.scrollListener = () => {
                 const scrollY = window.scrollY;
                 const scrollPosition = scrollY + 100; // Offset para activar antes
-                let currentSection = homeSections[0]; // Default: hero section
+                let currentSection = currentSections[0]; // Default: primera sección
                 
                 // Encontrar la sección actual basada en scroll
-                for (const section of homeSections) {
+                for (const section of currentSections) {
                     const element = document.getElementById(section.id);
                     if (element) {
                         const elementTop = element.offsetTop - 100;
@@ -925,48 +830,29 @@ class SPARouter {
                 }
                 
                 // Actualizar header solo si cambió la sección
-                if (this.currentHomeSection !== currentSection.id) {
-                    // console.log('📍 [HOME-SECTIONS] Cambio de sección:', this.currentHomeSection, '→', currentSection.id);
-                    this.currentHomeSection = currentSection.id;
-                    this.updateHeaderForHomeSection(currentSection);
+                if (this.currentActiveSection !== currentSection.id) {
+                    console.log('📍 [SECTIONS] Cambio de sección:', this.currentActiveSection, '→', currentSection.id);
+                    this.currentActiveSection = currentSection.id;
+                    this.updateHeaderForSection(currentSection);
                 }
             };
             
             // Agregar listener
             window.addEventListener('scroll', this.scrollListener);
-            // console.log('👂 [HOME-SECTIONS] Listener de scroll agregado');
+            console.log('👂 [SECTIONS] Listener de scroll agregado para', window.DATA.name);
             
             // Ejecutar una vez para inicializar
             this.scrollListener();
         });
     }
 
-    initHomeSectionNavigation() {
+    updateHeaderForSection(section) {
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
-            // console.log('🔄 [HOME-SECTIONS] Inicializando navegación de secciones');
-            
-            // Obtener secciones de navLinks
-            const homeSections = navLinks[0].sections;
-            
-            // Crear enlaces de navegación dinámicamente
-            navBottom.innerHTML = homeSections.map(section => 
-                `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">
-                    ${section.name}
-                </a>`
-            ).join('');
-            
-            // console.log('✅ [HOME-SECTIONS] Navegación de secciones inicializada');
-        }
-    }
-
-    updateHeaderForHomeSection(section) {
-        const navBottom = document.querySelector(".upds-header-contact");
-        if (navBottom) {
-            // console.log('🎨 [HOME-SECTIONS] Resaltando sección activa:', section.name);
+            console.log('🎨 [SECTIONS] Resaltando sección activa:', section.name);
 
             // Remover clase activa de todos los enlaces
-            const allLinks = navBottom.querySelectorAll('.upds-section-link');
+            const allLinks = navBottom.querySelectorAll('.upds-section-link, .upds-contact-link');
             allLinks.forEach(link => {
                 link.classList.remove('text-primary-hover', 'font-bold');
                 link.classList.add('text-white');
@@ -977,9 +863,16 @@ class SPARouter {
             if (activeLink) {
                 activeLink.classList.remove('text-white');
                 activeLink.classList.add('text-primary-hover', 'font-bold');
-                // console.log('✅ [HOME-SECTIONS] Sección resaltada:', section.name);
+                console.log('✅ [SECTIONS] Sección resaltada:', section.name);
+            } else {
+                console.warn('⚠️ [SECTIONS] No se encontró enlace para sección:', section.id);
             }
         }
+    }
+
+    // Mantener función legacy para compatibilidad
+    updateHeaderForHomeSection(section) {
+        this.updateHeaderForSection(section);
     }
 
     updateHeaderForCursosSection(section) {
@@ -993,14 +886,13 @@ class SPARouter {
                 link.classList.remove('text-primary-hover', 'font-bold', 'text-blue-600', 'bg-blue-50', 'px-3', 'py-1', 'rounded-md', 'text-white');
             });
 
-            // Encontrar el enlace correspondiente por el texto del nombre de la sección
-            const sectionId = this.normalizeToId(section.name) + '-section';
-            const activeLink = navBottom.querySelector(`[data-section="${sectionId}"]`);
+            // Encontrar el enlace correspondiente por el ID de la sección
+            const activeLink = navBottom.querySelector(`[data-section="${section.id}"]`);
             if (activeLink) {
                 activeLink.classList.add('text-primary-hover', 'font-bold');
                 console.log('✅ [CURSOS-SECTIONS] Sección resaltada:', section.name);
             } else {
-                console.warn('⚠️ [CURSOS-SECTIONS] No se encontró enlace para sección:', sectionId);
+                console.warn('⚠️ [CURSOS-SECTIONS] No se encontró enlace para sección:', section.id);
             }
         }
     }
@@ -1038,137 +930,12 @@ class SPARouter {
             return mapping[linkText] || null;
         };
 
-        // Función para hacer scroll suave
+        // Usar la función principal de scroll del router
         const scrollToSection = (sectionId) => {
-            console.log(`🎯 [CURSOS-SCROLL] Intentando scroll a: ${sectionId}`);
-            
-            let targetElement = document.getElementById(sectionId);
-            
-            // Si no se encuentra, intentar con el ID alternativo (-section en lugar de -courses)
-            if (!targetElement) {
-                const altSectionId = sectionId.replace('-courses', '-section');
-                console.log(`🔄 [CURSOS-SCROLL] Probando ID alternativo: ${altSectionId}`);
-                targetElement = document.getElementById(altSectionId);
-            }
-            
-            if (!targetElement) {
-                console.warn(`⚠️ [CURSOS-SCROLL] Elemento ${sectionId} no encontrado`);
-                // Listar todos los elementos con ID para debug
-                const allIds = Array.from(document.querySelectorAll('[id]')).map(el => el.id);
-                console.log('🔍 [CURSOS-SCROLL] IDs disponibles:', allIds);
-                return false;
-            }
-
-            console.log(`✅ [CURSOS-SCROLL] Elemento encontrado:`, targetElement.id);
-
-            // Calcular posición con offset
-            const headerHeight = 100;
-            const elementRect = targetElement.getBoundingClientRect();
-            const currentScrollY = window.pageYOffset;
-            const targetPosition = currentScrollY + elementRect.top - headerHeight;
-
-            console.log(`📍 [CURSOS-SCROLL] Posiciones:`, {
-                elementTop: elementRect.top,
-                currentScroll: currentScrollY,
-                targetPosition: targetPosition,
-                headerOffset: headerHeight
-            });
-
-            // Hacer scroll
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-
-            // Verificar después de 500ms
-            setTimeout(() => {
-                const newScrollY = window.pageYOffset;
-                console.log(`✅ [CURSOS-SCROLL] Scroll completado. Posición actual: ${newScrollY}`);
-            }, 500);
-
-            return true;
+            this.scrollToSection(sectionId, 100);
         };
 
-        // Función principal para configurar enlaces
-        const setupScrollLinks = () => {
-            console.log('🔧 [CURSOS-SCROLL] Configurando enlaces de scroll...');
-            
-            // Buscar todos los enlaces del navbar
-            const navLinks = document.querySelectorAll('.upds-contact-link');
-            console.log(`🔍 [CURSOS-SCROLL] Enlaces encontrados: ${navLinks.length}`);
-
-            if (navLinks.length === 0) {
-                console.warn('⚠️ [CURSOS-SCROLL] No se encontraron enlaces del navbar');
-                return;
-            }
-
-            navLinks.forEach((link, index) => {
-                const linkText = link.textContent.trim();
-                const sectionId = getSectionId(linkText);
-                
-                console.log(`� [CURSOS-SCROLL] Procesando enlace ${index + 1}: "${linkText}" → ${sectionId}`);
-
-                if (sectionId) {
-                    // Remover event listeners existentes clonando el elemento
-                    const newLink = link.cloneNode(true);
-                    link.parentNode.replaceChild(newLink, link);
-
-                    // Configurar el nuevo enlace
-                    newLink.style.cursor = 'pointer';
-                    newLink.removeAttribute('href');
-                    newLink.setAttribute('data-scroll-target', sectionId);
-
-                    // Agregar event listener
-                    newLink.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        console.log(`🖱️ [CURSOS-SCROLL] Click en "${linkText}" → scrolling a ${sectionId}`);
-                        scrollToSection(sectionId);
-                    });
-
-                    console.log(`✅ [CURSOS-SCROLL] Configurado: "${linkText}"`);
-                } else {
-                    console.log(`❌ [CURSOS-SCROLL] No mapeado: "${linkText}"`);
-                }
-            });
-
-            console.log('✅ [CURSOS-SCROLL] Configuración de enlaces completada');
-        };
-
-        // Función para verificar que las secciones existen
-        const verifySections = () => {
-            console.log('🔍 [CURSOS-SCROLL] Verificando existencia de secciones...');
-            const expectedSections = [
-                'mikrotik-courses',
-                'ciencias-de-la-salud-courses', 
-                'ingenieria-courses',
-                'ciencias-empresariales-courses',
-                'ciencias-juridicas-courses'
-            ];
-
-            expectedSections.forEach(id => {
-                const element = document.getElementById(id);
-                console.log(`   ${id}: ${element ? '✅ Existe' : '❌ No encontrado'}`);
-                if (element) {
-                    const rect = element.getBoundingClientRect();
-                    console.log(`      Posición: top=${rect.top}, height=${rect.height}`);
-                }
-            });
-        };
-
-        // Ejecutar con múltiples intentos para asegurar que funcione
-        const attempts = [100, 500, 1000, 2000, 3000];
-        
-        attempts.forEach((delay, index) => {
-            setTimeout(() => {
-                console.log(`🔄 [CURSOS-SCROLL] Intento ${index + 1} (${delay}ms)`);
-                verifySections();
-                setupScrollLinks();
-            }, delay);
-        });
-
-        console.log('🎯 [CURSOS-SCROLL] Sistema de scroll robusto inicializado con múltiples intentos');
+        console.log('🎯 [CURSOS] Usando función de scroll simplificada del router');
     }
 
     initCourseScrollDetection(course) {
@@ -1359,34 +1126,6 @@ class SPARouter {
                         }).join('');
                         
                         navBottom.innerHTML = `
-                            <div class="dropdown-container relative inline-block">
-                                <button class="upds-contact-link dropdown-trigger hover:text-primary-hover transition-colors flex items-center" 
-                                        data-dropdown="Facultades">
-                                    Facultades
-                                    <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </button>
-                                <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                    <div class="py-2">
-                                        ${allFacultiesHTML}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown-container relative inline-block">
-                                <button class="upds-contact-link dropdown-trigger hover:text-primary-hover transition-colors flex items-center" 
-                                        data-dropdown="Academias">
-                                    Academias
-                                    <svg class="w-4 h-4 ml-1 transition-transform dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </button>
-                                <div class="dropdown-menu absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                    <div class="py-2">
-                                        ${allAcademiesHTML}
-                                    </div>
-                                </div>
-                            </div>
                             <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
                                 Información
                             </a>
@@ -1610,25 +1349,19 @@ class SPARouter {
         
         // Crear la estructura con secciones de Academias y Facultades
         contentContainer.innerHTML = `
-            <div class="space-y-16">
+            <div class="space-y-8">
                 <!-- Page Header -->
                 <div class="text-center space-y-4">
                     <h1 class="text-4xl font-bold text-gray-900">Todos los Cursos</h1>
                 </div>
                 
                 <!-- Academias Section -->
-                <div id="academias-section" class="rounded-2xl p-6 border border-gray-200">
-                    <div class="text-center mb-6">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Academias Especializadas</h2>
-                        <p class="text-gray-700 text-lg">Cursos técnicos especializados en tecnologías específicas</p>
-                    </div>
-                    <div id="academias-content" class="space-y-8"></div>
-                </div>
+                <div id="academias-content" class="space-y-8"></div>
                 
                 <!-- Facultades Section -->
-                <div id="facultades-section" class="rounded-2xl p-6 border border-gray-200">
+                <div id="facultades-section">
                     <div class="text-center mb-6">
-                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Facultades Universitarias</h2>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Facultades Universitarias</h3>
                         <p class="text-gray-700 text-lg">Cursos profesionales organizados por áreas académicas tradicionales</p>
                     </div>
                     <div id="facultades-content" class="space-y-8"></div>
@@ -1740,7 +1473,7 @@ class SPARouter {
             if (academies && academies.length > 0) {
                 // Crear sección de academias con el mismo ID que en inicio para navegación
                 const academiasHTML = `
-                    <div id="academias-section" class="category-item bg-white rounded-xl p-6 border border-gray-200">
+                    <div id="academias-section">
                         <div class="text-center mb-6">
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
                             <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
@@ -1865,11 +1598,6 @@ class SPARouter {
                          alt="${course.title}"
                          class="w-full h-full object-cover"
                          onerror="this.src='/assets/images/cursos/default.jpg'">
-                    <div class="absolute top-2 right-2">
-                        <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                            ${course.level || 'Intermedio'}
-                        </span>
-                    </div>
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">${course.title}</h3>
@@ -2604,7 +2332,6 @@ class SPARouter {
         
         console.log(`📱 [MOBILE-DROPDOWNS] ${triggers.length} dropdowns móviles inicializados`);
     }
-
     // Método para navegación programática
     goTo(path) {
         this.navigate(path);
@@ -2647,14 +2374,9 @@ class SPARouter {
                         }
                         
                         if (sectionId) {
-                            if (this.currentRoute !== '/' && this.currentRoute !== '/home') {
-                                this.navigate('/');
-                                setTimeout(() => {
-                                    this.scrollToSection(sectionId);
-                                }, 300);
-                            } else {
-                                this.scrollToSection(sectionId);
-                            }
+                            // Simplificado: solo hacer scroll, sin navegar
+                            console.log('🎯 [BACKUP] Scroll directo a sección:', sectionId);
+                            this.scrollToSection(sectionId, 100);
                         }
                     }, true);
                 }

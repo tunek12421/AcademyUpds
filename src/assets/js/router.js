@@ -1137,7 +1137,6 @@ class SPARouter {
             { id: 'instructor-card', name: 'Instructor' },
             { id: 'course-content-card', name: 'Contenido' },
             { id: 'skills-card', name: 'Habilidades' },
-            { id: 'prerequisites-card', name: 'Prerrequisitos' },
             { id: 'faq-card', name: 'Preguntas Frecuentes' }
         ];
         

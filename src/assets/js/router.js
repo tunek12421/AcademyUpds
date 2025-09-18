@@ -6,6 +6,11 @@ import { createAcademyCard } from './components.js';
 
 class SPARouter {
     constructor() {
+        // Variables para control de navegación
+        this.isNavigating = false;
+        this.lastNavigationTime = 0;
+        this.navigationDelay = 300; // 300ms entre navegaciones
+        
         // Función centralizada para normalizar nombres a IDs
         this.normalizeToId = (name) => {
             return name.toLowerCase()
@@ -63,6 +68,12 @@ class SPARouter {
         // Interceptar clicks en enlaces (usando capture phase para mayor prioridad)
         // console.log('🎯 [ROUTER] Registrando event listener global de clicks con CAPTURE');
         document.addEventListener('click', (e) => {
+            // Prevenir procesamiento múltiple del mismo evento
+            if (e._routerProcessed) {
+                return;
+            }
+            e._routerProcessed = true;
+            
             // console.log('🖱️ [DEBUG] CLICK GLOBAL detectado en:', e.target);
             
             // Buscar el enlace más cercano (incluyendo el elemento clickeado)
@@ -73,6 +84,18 @@ class SPARouter {
             }
             
             const href = link.getAttribute('href');
+            
+            // Prevenir clicks múltiples en el mismo enlace
+            if (link.hasAttribute('data-router-processing')) {
+                console.log('⚠️ [ROUTER] Enlace ya siendo procesado, ignorando...');
+                return;
+            }
+            
+            // Marcar enlace como siendo procesado
+            link.setAttribute('data-router-processing', 'true');
+            setTimeout(() => {
+                link.removeAttribute('data-router-processing');
+            }, 1000);
             
             // DEBUG: Log detallado de todos los clicks en enlaces
             console.log('🖱️ [DEBUG] Click detectado:', {
@@ -360,7 +383,7 @@ class SPARouter {
 
     async loadPageContent(pageName) {
         try {
-            // console.log(`🔄 [ROUTER] Cargando página: ${pageName}`);
+            console.log(`🔄 [ROUTER] Cargando página: ${pageName}, desde ruta actual: ${this.currentRoute}`);
             
             // 1. Preservar la altura actual del contenedor
             const currentHeight = this.mainSection.offsetHeight;
@@ -371,7 +394,7 @@ class SPARouter {
             if (currentContent) {
                 currentContent.style.transition = 'opacity 0.2s ease-out';
                 currentContent.style.opacity = '0';
-                // console.log('👻 [ROUTER] Contenido actual ocultado');
+                console.log('👻 [ROUTER] Contenido actual ocultado');
             }
             
             // 3. Mostrar indicador discreto de carga
@@ -381,12 +404,16 @@ class SPARouter {
             await new Promise(resolve => setTimeout(resolve, 200));
             
             // 5. Cargar el nuevo contenido
+            console.log(`📥 [ROUTER] Fetching: /assets/pages/${pageName}.html`);
             const response = await fetch(`/assets/pages/${pageName}.html`);
+            console.log(`📥 [ROUTER] Response status: ${response.status} ${response.statusText}`);
+            
             if (!response.ok) {
                 throw new Error(`Error ${response.status}: ${response.statusText}`);
             }
             
             const content = await response.text();
+            console.log(`📄 [ROUTER] Contenido cargado, tamaño: ${content.length} caracteres`);
             
             // 6. Insertar el nuevo contenido (invisible inicialmente)
             this.mainSection.innerHTML = content;
@@ -569,10 +596,36 @@ class SPARouter {
     }
 
     navigate(path) {
+        // Throttling para prevenir navegaciones muy rápidas
+        const now = Date.now();
+        
+        // Si ya estamos navegando, ignorar
+        if (this.isNavigating) {
+            console.log('⚠️ [ROUTER] Navegación en progreso, ignorando...');
+            return;
+        }
+        
+        // Si la última navegación fue muy reciente, ignorar
+        if (now - this.lastNavigationTime < this.navigationDelay) {
+            console.log('⚠️ [ROUTER] Navegación muy rápida, aplicando throttle...');
+            return;
+        }
+        
         if (path !== this.currentRoute) {
+            console.log(`🚀 [ROUTER] Navegando de ${this.currentRoute} a ${path}`);
+            
+            // Marcar como navegando
+            this.isNavigating = true;
+            this.lastNavigationTime = now;
+            
             this.currentRoute = path;
             window.history.pushState({}, '', path);
             this.loadRoute(path);
+            
+            // Liberar el flag después de un breve período
+            setTimeout(() => {
+                this.isNavigating = false;
+            }, 150);
         }
     }
 
@@ -792,6 +845,12 @@ class SPARouter {
     initHomeScrollDetection() {
         // console.log('🔄 [HOME-SECTIONS] Inicializando detección de scroll para secciones');
 
+        // Verificar que tenemos el estado necesario
+        if (!window.DATA) {
+            console.warn('⚠️ [SECTIONS] window.DATA no está inicializado');
+            return;
+        }
+
         // Remover listener anterior si existe
         if (this.scrollListener) {
             window.removeEventListener('scroll', this.scrollListener);
@@ -801,35 +860,54 @@ class SPARouter {
         // Usar navLinks importado estáticamente
         // Detectar las secciones de la página actual
         let currentSections = [];
-        if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
+        if (window.DATA.headIndex !== undefined && navLinks && navLinks[window.DATA.headIndex]) {
             currentSections = navLinks[window.DATA.headIndex].sections || [];
+        }
+        
+        // Verificar que tenemos secciones válidas
+        if (!currentSections || currentSections.length === 0) {
+            console.log('📋 [SECTIONS] No hay secciones para trackear en', window.DATA.name);
+            return;
         }
         
         console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
         
         this.scrollListener = () => {
-                const scrollY = window.scrollY;
-                const scrollPosition = scrollY + 100; // Offset para activar antes
-                let currentSection = currentSections[0]; // Default: primera sección
+            const scrollY = window.scrollY;
+            const scrollPosition = scrollY + 100; // Offset para activar antes
+            
+            // Verificar que tenemos secciones disponibles
+            if (!currentSections || currentSections.length === 0) {
+                return; // No hay secciones que trackear
+            }
+            
+            let currentSection = currentSections[0]; // Default: primera sección
+            
+            // Encontrar la sección actual basada en scroll
+            for (const section of currentSections) {
+                if (!section || !section.id) continue; // Saltear secciones inválidas
                 
-                // Encontrar la sección actual basada en scroll
-                for (const section of currentSections) {
-                    const element = document.getElementById(section.id);
-                    if (element) {
-                        const elementTop = element.offsetTop - 100;
-                        if (scrollPosition >= elementTop) {
-                            currentSection = section;
-                        }
+                const element = document.getElementById(section.id);
+                if (element) {
+                    const elementTop = element.offsetTop - 100;
+                    if (scrollPosition >= elementTop) {
+                        currentSection = section;
                     }
                 }
-                
-                // Actualizar header solo si cambió la sección
-                if (this.currentActiveSection !== currentSection.id) {
-                    console.log('📍 [SECTIONS] Cambio de sección:', this.currentActiveSection, '→', currentSection.id);
-                    this.currentActiveSection = currentSection.id;
-                    this.updateHeaderForSection(currentSection);
-                }
-            };
+            }
+            
+            // Verificar que currentSection es válido antes de acceder a sus propiedades
+            if (!currentSection || !currentSection.id) {
+                return; // No hay sección válida
+            }
+            
+            // Actualizar header solo si cambió la sección
+            if (this.currentActiveSection !== currentSection.id) {
+                console.log('📍 [SECTIONS] Cambio de sección:', this.currentActiveSection, '→', currentSection.id);
+                this.currentActiveSection = currentSection.id;
+                this.updateHeaderForSection(currentSection);
+            }
+        };
             
             // Agregar listener
             window.addEventListener('scroll', this.scrollListener);
@@ -840,6 +918,12 @@ class SPARouter {
     }
 
     updateHeaderForSection(section) {
+        // Verificar que tenemos una sección válida
+        if (!section || !section.id || !section.name) {
+            console.warn('⚠️ [SECTIONS] updateHeaderForSection: sección inválida', section);
+            return;
+        }
+        
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
             console.log('🎨 [SECTIONS] Resaltando sección activa:', section.name);
@@ -1279,27 +1363,54 @@ class SPARouter {
     }
 
     async loadMikrotik() {
+        console.log('🎯 [ROUTER] loadMikrotik() iniciado desde:', this.currentRoute);
+        console.log('🎯 [ROUTER] Estado actual del DOM:', {
+            mainSection: !!this.mainSection,
+            currentContent: this.mainSection?.innerHTML?.length || 0,
+            headIndex: window.DATA?.headIndex
+        });
+        
         updateState({ selectedCourse: null });
         window.DATA.name = "category";
         this.cleanupScrollDetection(); // Limpiar scroll detection de home/curso
         
+        // Verificar que tenemos el contenedor principal
+        if (!this.mainSection) {
+            console.error('❌ [ROUTER] Mikrotik: No hay mainSection disponible');
+            this.mainSection = document.getElementById('main-section');
+            if (!this.mainSection) {
+                console.error('❌ [ROUTER] Mikrotik: No se pudo encontrar #main-section');
+                return;
+            }
+        }
+        
         // Actualizar header INMEDIATAMENTE al inicio
-        // console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
+        console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
         window.DATA.headIndex = 2; // Índice para Mikrotik
         this.updateHeaderArrow();
         this.updateHeaderBreadcrumbs();
         
         // Cargar contenido HTML primero
+        console.log('📄 [ROUTER] Mikrotik: Cargando página mikrotik.html...');
         const loaded = await this.loadPageContent('mikrotik');
+        console.log('📄 [ROUTER] Mikrotik: loadPageContent resultado:', loaded);
+        
         if (loaded) {
             // Renderizar el contenido de mikrotik después de cargar la página
             setTimeout(async () => {
                 try {
+                    console.log('🎨 [ROUTER] Mikrotik: Ejecutando renderCategoryView...');
+                    console.log('🎨 [ROUTER] Mikrotik: DOM después de carga:', {
+                        mainSection: !!this.mainSection,
+                        currentContent: this.mainSection?.innerHTML?.substring(0, 100) + '...'
+                    });
+                    
                     renderCategoryView('Mikrotik');
+                    console.log('✅ [ROUTER] Mikrotik: renderCategoryView completado');
                     
                     // Asegurar que el header se mantiene correcto después del renderizado
                     setTimeout(() => {
-                        // console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
+                        console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
                         window.DATA.headIndex = 2; // Re-confirmar
                         this.updateHeaderArrow();
                         this.updateHeaderBreadcrumbs();
@@ -1308,6 +1419,8 @@ class SPARouter {
                     console.error('❌ [ROUTER] Error al renderizar mikrotik:', error);
                 }
             }, 100);
+        } else {
+            console.error('❌ [ROUTER] Mikrotik: loadPageContent falló');
         }
     }
 

@@ -275,7 +275,7 @@ function createOtherCoursesCard(otherCourses = []) {
             ${createImageWithFallback(course.image, course.title, 'w-16 h-12 object-cover rounded')}
             <div class="flex-1 min-w-0">
                 <h4 class="font-medium text-sm truncate">${course.title}</h4>
-                <p class="text-muted-foreground text-xs">${course.instructor}</p>
+                ${course.instructor ? `<p class="text-muted-foreground text-xs">${course.instructor}</p>` : ''}
             </div>
         </div>
     `).join('');

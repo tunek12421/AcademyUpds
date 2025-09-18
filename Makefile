@@ -7,7 +7,7 @@ all: tailwind
 debug: tailwind
 	@npm run dev
 
-tailwind: init
+tailwind:
 	@echo "Compilando Tailwind CSS..."
 	@npx tailwindcss -i ./input.css -o ./src/assets/css/styles/tailwind.css
 

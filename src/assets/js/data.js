@@ -99,11 +99,14 @@ const courses = [
         category: 'Ciencias de la Salud',
         objectives: 'Capacitar a los participantes en el correcto tratamiento de cuerpos cumpliendo la normativa boliviana y aplicando medidas de bioseguridad adecuadas.',
         modules: [
-            'Comprender la importancia del manejo correcto de cadáveres en contextos clínicos, forenses y comunitarios.',
-            'Conocer la Legislación Boliviana y Protocolos del IDIF.',
-            'Aplicar medidas de bioseguridad y uso de equipo de protección personal.',
-            'Ejecutar correctamente procedimientos de levantamiento, transporte, conservación y almacenamiento de cuerpos.',
-            'Manejar documentación y cadena de custodia de acuerdo con la normativa legal.'
+            'Introducción al manejo de cadáveres y marco legal boliviano',
+            'Legislación boliviana y protocolos del IDIF',
+            'Medidas de bioseguridad y equipo de protección personal',
+            'Procedimientos de levantamiento y transporte de cuerpos',
+            'Técnicas de conservación y almacenamiento',
+            'Documentación legal y cadena de custodia',
+            'Ética en el manejo post-mortem',
+            'Casos especiales y situaciones de emergencia'
         ],
         completion: 'Al finalizar este curso, los participantes estarán capacitados para manejar cadáveres de manera profesional, cumpliendo con todos los protocolos de bioseguridad y normativa legal boliviana.',
         prerequisites: {
@@ -124,11 +127,14 @@ const courses = [
         category: 'Ciencias de la Salud',
         objectives: 'Capacitar a los participantes en técnicas básicas de primeros auxilios para brindar atención oportuna y efectiva en situaciones de emergencia.',
         modules: [
-            'Capacitar a los participantes en técnicas básicas de primeros auxilios para brindar una atención oportuna y efectiva en situaciones de emergencia, minimizando riesgos y preservando la vida.',
-            'Ejecutar correctamente maniobras de Reanimación Cardiopulmonar (RCP) básica.',
-            'Aplicar técnicas para el control de hemorragias y tratamiento de heridas.',
-            'Identificar y actuar ante emergencias médicas frecuentes.',
-            'Reconocer y evaluar el estado inicial del paciente y activar el sistema de emergencias.'
+            'Introducción a primeros auxilios y evaluación inicial del paciente',
+            'Reanimación Cardiopulmonar (RCP) básica y uso de DEA',
+            'Control de hemorragias y tratamiento de heridas',
+            'Atención de fracturas, esguinces y traumatismos',
+            'Manejo de emergencias médicas frecuentes',
+            'Intoxicaciones y envenenamientos',
+            'Quemaduras y lesiones por temperatura',
+            'Activación del sistema de emergencias médicas'
         ],
         completion: 'Al finalizar este curso, los participantes podrán responder efectivamente ante emergencias médicas básicas, aplicando técnicas de primeros auxilios y RCP.',
         prerequisites: {
@@ -149,11 +155,14 @@ const courses = [
         category: 'Ingeniería',
         objectives: 'Dominar las herramientas avanzadas de Microsoft Excel para análisis de datos, automatización de procesos y creación de reportes profesionales.',
         modules: [
-            'Introducción al entorno de Excel',
-            'Primeros pasos con fórmulas y funciones',
-            'Manejo de datos básicos',
-            'Formato de hojas y presentación',
-            'Gráficos simples y validación'
+            'Fórmulas y funciones avanzadas (BUSCARV, INDICE, COINCIDIR)',
+            'Tablas dinámicas y gráficos dinámicos profesionales',
+            'Automatización con macros y programación VBA básica',
+            'Análisis de datos con herramientas de What-If',
+            'Validación de datos y formularios interactivos',
+            'Conectividad con bases de datos y Power Query',
+            'Dashboards profesionales y reporting ejecutivo',
+            'Solver y análisis de escenarios complejos'
         ],
         completion: 'Al finalizar este curso, los participantes dominarán Excel a nivel experto, pudiendo crear análisis complejos, automatizar tareas y generar reportes profesionales.',
         prerequisites: {

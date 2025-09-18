@@ -1,5 +1,8 @@
 // Router SPA para navegación sin recargar página
-import { updateState, getState, getCourseById, navLinks } from './data.js';
+import { updateState, getState, getCourseById, navLinks, facultyStructure, academyCourses, courses, getCoursesByCategory, academies } from './data.js';
+import { renderCoursesGridByCategory, renderCourseView, renderCategoryView } from './modules/app.js';
+import { renderHomeView } from './modules/home.js';
+import { createAcademyCard } from './components.js';
 
 class SPARouter {
     constructor() {
@@ -695,13 +698,12 @@ class SPARouter {
     }
 
     updateHeaderBreadcrumbs() {
-        // Importar navLinks desde data.js
-        import('./data.js').then(module => {
-            const navBottom = document.querySelector(".upds-header-contact");
-            if (navBottom && module.navLinks) {
-                const currentNav = module.navLinks[window.DATA.headIndex];
-                const currentNavs = currentNav?.navs || [];
-                const currentSections = currentNav?.sections || [];
+        // Usar navLinks importado estáticamente
+        const navBottom = document.querySelector(".upds-header-contact");
+        if (navBottom && navLinks) {
+            const currentNav = navLinks[window.DATA.headIndex];
+            const currentNavs = currentNav?.navs || [];
+            const currentSections = currentNav?.sections || [];
                 
                 if (currentNavs.length > 0) {
                     // NAVS: Para navegación a otras páginas/URLs
@@ -737,8 +739,8 @@ class SPARouter {
                     this.initHomeScrollDetection();
                 }
             }
-        });
-    }
+        }
+    
 
     initCursosScrollDetection() {
         console.log('🔄 [CURSOS-SECTIONS] Inicializando detección de scroll para secciones de cursos');
@@ -749,26 +751,24 @@ class SPARouter {
             console.log('🧹 [CURSOS-SECTIONS] Listener anterior removido');
         }
 
-        // Importar configuración de navegación
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            const cursosNavigation = navLinks[1]; // navLinks[1] es "Cursos"
-            const cursosSections = cursosNavigation.sections || []; // Usar sections en lugar de navs
+        // Usar navLinks importado estáticamente
+        const cursosNavigation = navLinks[1]; // navLinks[1] es "Cursos"
+        const cursosSections = cursosNavigation.sections || []; // Usar sections en lugar de navs
 
-            console.log('📋 [CURSOS-SECTIONS] Secciones cargadas:', cursosSections.map(s => s.name));
+        console.log('📋 [CURSOS-SECTIONS] Secciones cargadas:', cursosSections.map(s => s.name));
 
-            this.scrollListener = () => {
-                const scrollY = window.scrollY;
-                const scrollPosition = scrollY + 150; // Offset para activar antes
-                let currentSection = cursosSections[0]; // Default: primera sección
+        this.scrollListener = () => {
+            const scrollY = window.scrollY;
+            const scrollPosition = scrollY + 150; // Offset para activar antes
+            let currentSection = cursosSections[0]; // Default: primera sección
 
-                // Encontrar la sección actual basada en scroll
-                for (const section of cursosSections) {
-                    const element = document.getElementById(section.id); // Usar section.id directamente
-                    if (element) {
-                        const elementTop = element.offsetTop - 150;
-                        if (scrollPosition >= elementTop) {
-                            currentSection = section;
+            // Encontrar la sección actual basada en scroll
+            for (const section of cursosSections) {
+                const element = document.getElementById(section.id); // Usar section.id directamente
+                if (element) {
+                    const elementTop = element.offsetTop - 150;
+                    if (scrollPosition >= elementTop) {
+                        currentSection = section;
                         }
                     }
                 }
@@ -787,9 +787,6 @@ class SPARouter {
 
             // Ejecutar una vez para inicializar
             this.scrollListener();
-        }).catch(error => {
-            console.error('❌ [CURSOS-SECTIONS] Error cargando secciones:', error);
-        });
     }
 
     initHomeScrollDetection() {
@@ -801,19 +798,16 @@ class SPARouter {
             // console.log('🧹 [HOME-SECTIONS] Listener anterior removido');
         }
 
-        // Importar configuración de secciones
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            
-            // Detectar las secciones de la página actual
-            let currentSections = [];
-            if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
-                currentSections = navLinks[window.DATA.headIndex].sections || [];
-            }
-            
-            console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
-            
-            this.scrollListener = () => {
+        // Usar navLinks importado estáticamente
+        // Detectar las secciones de la página actual
+        let currentSections = [];
+        if (window.DATA.headIndex !== undefined && navLinks[window.DATA.headIndex]) {
+            currentSections = navLinks[window.DATA.headIndex].sections || [];
+        }
+        
+        console.log('📋 [SECTIONS] Secciones cargadas para', window.DATA.name + ':', currentSections.map(s => s.id));
+        
+        this.scrollListener = () => {
                 const scrollY = window.scrollY;
                 const scrollPosition = scrollY + 100; // Offset para activar antes
                 let currentSection = currentSections[0]; // Default: primera sección
@@ -843,7 +837,6 @@ class SPARouter {
             
             // Ejecutar una vez para inicializar
             this.scrollListener();
-        });
     }
 
     updateHeaderForSection(section) {
@@ -1019,159 +1012,176 @@ class SPARouter {
                     console.log(`🎓 [COURSE-SECTIONS] Curso de academia detectado: ${course.category}`);
                 }
                 
-                // Guardar referencia a this para usar dentro del import
-                const self = this;
-                
-                // Importar estructura de facultades y academias
-                import('./data.js').then(module => {
-                    const { facultyStructure, academyCourses } = module;
-                    
-                    // Siempre mostrar los dropdowns de Facultades y Academias
-                    // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
-                        const allFacultiesHTML = facultyStructure.map((fac, index) => {
-                            if (fac.submenu && fac.submenu.length > 0) {
-                                // Verificar si esta es la facultad actual
-                                const isCurrentFaculty = fac.name === course.category;
-                                
-                                // Facultad con submenu de cursos (estructura anidada)
-                                const nestedSubmenuHTML = fac.submenu.map((courseItem, courseIndex) => {
-                                    // Verificar si este es el curso actual
-                                    const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
-                                    
-                                    // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
-                                    const currentCourseStyles = isCurrentCourse 
-                                        ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
-                                    
-                                    return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
-                                }).join('');
-                                
-                                // Estilos para la facultad actual: bg-primary-50 (fondo azul muy claro)
-                                const currentFacultyStyles = isCurrentFaculty 
-                                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
-                                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
-                                
-                                return `
-                                    <div class="nested-dropdown-container relative">
-                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentFacultyStyles}" 
-                                             data-nested-dropdown="${fac.name}">
-                                            <span>${fac.name}</span>
-                                            <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                            <div class="py-1">
-                                                ${nestedSubmenuHTML}
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                            } else {
-                                // Facultad sin submenu (enlace simple)
-                                return `<a href="${fac.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${fac.name}</a>`;
-                            }
+                // Usar datos importados estáticamente en lugar de import dinámico
+                // Siempre mostrar los dropdowns de Facultades y Academias
+                // Crear dropdown "Facultades" con sub-dropdowns anidados (igual que el nav original)
+                const allFacultiesHTML = facultyStructure.map((fac, index) => {
+                    if (fac.submenu && fac.submenu.length > 0) {
+                        // Verificar si esta es la facultad actual
+                        const isCurrentFaculty = fac.name === course.category;
+                        
+                        // Facultad con submenu de cursos (estructura anidada)
+                        const nestedSubmenuHTML = fac.submenu.map((courseItem, courseIndex) => {
+                            // Verificar si este es el curso actual
+                            const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
+                            
+                            // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
+                            const currentCourseStyles = isCurrentCourse 
+                                ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
+                            
+                            return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < fac.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
                         }).join('');
                         
-                        // Crear dropdown "Academias" con sub-dropdowns anidados
-                        const academyStructure = [
-                            {name: "Mikrotik", href: "/mikrotik", submenu: module.academyCourses.mikrotik},
-                            // Solo mostrar Huawei si está habilitado
-                            // {name: "Huawei", href: "/huawei", submenu: module.academyCourses.huawei}
-                        ];
+                        // Estilos para la facultad actual: bg-primary-50 (fondo azul muy claro)
+                        const currentFacultyStyles = isCurrentFaculty 
+                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
                         
-                        const allAcademiesHTML = academyStructure.map((academy, index) => {
-                            if (academy.submenu && academy.submenu.length > 0) {
-                                // Verificar si esta es la academia actual
-                                const isCurrentAcademy = academy.name === course.category;
-                                
-                                // Academia con submenu de cursos (estructura anidada)
-                                const nestedSubmenuHTML = academy.submenu.map((courseItem, courseIndex) => {
-                                    // Verificar si este es el curso actual
-                                    const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
-                                    
-                                    // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
-                                    const currentCourseStyles = isCurrentCourse 
-                                        ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
-                                    
-                                    return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < academy.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
-                                }).join('');
-                                
-                                // Estilos para la academia actual: bg-primary-50 (fondo azul muy claro)
-                                const currentAcademyStyles = isCurrentAcademy 
-                                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
-                                    : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
-                                
-                                return `
-                                    <div class="nested-dropdown-container relative">
-                                        <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentAcademyStyles}" 
-                                             data-nested-dropdown="${academy.name}">
-                                            <span>${academy.name}</span>
-                                            <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
-                                            <div class="py-1">
-                                                ${nestedSubmenuHTML}
-                                            </div>
-                                        </div>
+                        return `
+                            <div class="nested-dropdown-container relative">
+                                <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentFacultyStyles}" 
+                                     data-nested-dropdown="${fac.name}">
+                                    <span>${fac.name}</span>
+                                    <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                    <div class="py-1">
+                                        ${nestedSubmenuHTML}
                                     </div>
-                                `;
-                            } else {
-                                // Academia sin submenu (enlace simple)
-                                return `<a href="${academy.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${academy.name}</a>`;
-                            }
-                        }).join('');
-                        
-                        navBottom.innerHTML = `
-                            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Información
-                            </a>
-                            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Instructor
-                            </a>
-                            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Contenido
-                            </a>
-                            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                                Habilidades
-                            </a>
+                                </div>
+                            </div>
                         `;
+                    } else {
+                        // Facultad sin submenu (enlace simple)
+                        return `<a href="${fac.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < facultyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${fac.name}</a>`;
+                    }
+                }).join('');
+                
+                // Crear dropdown "Academias" con sub-dropdowns anidados
+                const academyStructure = [
+                    {name: "Mikrotik", href: "/mikrotik", submenu: academyCourses.mikrotik},
+                    // Solo mostrar Huawei si está habilitado
+                    // {name: "Huawei", href: "/huawei", submenu: academyCourses.huawei}
+                ];
+                
+                const allAcademiesHTML = academyStructure.map((academy, index) => {
+                    if (academy.submenu && academy.submenu.length > 0) {
+                        // Verificar si esta es la academia actual
+                        const isCurrentAcademy = academy.name === course.category;
                         
-                        // Inicializar funcionalidad de dropdown después de crear el HTML
-                        setTimeout(() => self.initDropdownFunctionality(), 10);
+                        // Academia con submenu de cursos (estructura anidada)
+                        const nestedSubmenuHTML = academy.submenu.map((courseItem, courseIndex) => {
+                            // Verificar si este es el curso actual
+                            const isCurrentCourse = courseItem.href === `/curso?id=${course.id}`;
+                            
+                            // Estilos para el curso actual: bg-primary-100 + border-left-4 + font-semibold
+                            const currentCourseStyles = isCurrentCourse 
+                                ? 'bg-blue-100 border-l-4 border-blue-500 font-semibold text-blue-700' 
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-primary';
+                            
+                            return `<a href="${courseItem.href}" class="nested-dropdown-item block px-4 py-2 text-sm transition-colors ${courseIndex < academy.submenu.length - 1 ? 'border-b border-gray-100' : ''} ${currentCourseStyles}">${courseItem.name}</a>`;
+                        }).join('');
                         
-                        console.log(`✅ [COURSE-SECTIONS] Navegación completa inicializada para curso: ${course.title}`);
-                }).catch(error => {
-                    console.error('❌ [COURSE-SECTIONS] Error cargando estructura de navegación:', error);
-                    self.createDefaultCourseNavigation(navBottom);
-                });
+                        // Estilos para la academia actual: bg-primary-50 (fondo azul muy claro)
+                        const currentAcademyStyles = isCurrentAcademy 
+                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' 
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-primary';
+                        
+                        return `
+                            <div class="nested-dropdown-container relative">
+                                <div class="dropdown-item-with-submenu flex items-center justify-between px-6 py-4 text-base transition-colors cursor-pointer ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''} ${currentAcademyStyles}" 
+                                     data-nested-dropdown="${academy.name}">
+                                    <span>${academy.name}</span>
+                                    <svg class="w-4 h-4 transition-transform nested-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="nested-dropdown-menu absolute left-full top-0 ml-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible transform scale-95 transition-all duration-200 z-9">
+                                    <div class="py-1">
+                                        ${nestedSubmenuHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Academia sin submenu (enlace simple)
+                        return `<a href="${academy.href}" class="dropdown-item block px-6 py-4 text-base text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors ${index < academyStructure.length - 1 ? 'border-b-2 border-gray-200' : ''}">${academy.name}</a>`;
+                    }
+                }).join('');
+                
+                // Usar navegación dinámica en lugar de hardcodeada
+                this.createDefaultCourseNavigation(navBottom, course);
+                
+                // Inicializar funcionalidad de dropdown después de crear el HTML
+                setTimeout(() => this.initDropdownFunctionality(), 10);
+                
+                console.log(`✅ [COURSE-SECTIONS] Navegación completa inicializada para curso: ${course.title}`);
             } else {
                 // Si no es un curso de facultad ni academia, mostrar navegación normal de curso
-                this.createDefaultCourseNavigation(navBottom);
+                this.createDefaultCourseNavigation(navBottom, course);
             }
         }
     }
     
-    createDefaultCourseNavigation(navBottom) {
-        navBottom.innerHTML = `
-            <a href="#course-main-card" data-section="course-main-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Información
-            </a>
-            <a href="#instructor-card" data-section="instructor-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Instructor
-            </a>
-            <a href="#course-content-card" data-section="course-content-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Contenido
-            </a>
-            <a href="#skills-card" data-section="skills-card" class="upds-course-link hover:text-primary-hover transition-colors">
-                Habilidades
-            </a>
-        `;
+    createDefaultCourseNavigation(navBottom, course) {
+        console.log('🔄 [COURSE-NAV] Iniciando detección dinámica de secciones para:', course.title);
         
-        console.log('✅ [COURSE-SECTIONS] Navegación de curso por defecto inicializada');
+        // Detectar qué secciones realmente existen en el DOM para este curso
+        const possibleSections = [
+            { id: 'course-main-card', name: 'Información' },
+            { id: 'instructor-card', name: 'Instructor' },
+            { id: 'course-content-card', name: 'Contenido' },
+            { id: 'skills-card', name: 'Habilidades' },
+            { id: 'faq-card', name: 'Preguntas Frecuentes' }
+        ];
+        
+        // Filtrar solo las secciones que realmente existen en el DOM
+        const existingSections = [];
+        possibleSections.forEach(section => {
+            const element = document.getElementById(section.id);
+            if (element) {
+                existingSections.push(section);
+                console.log(`✅ [COURSE-NAV] Sección encontrada: ${section.name} (${section.id})`);
+            } else {
+                console.log(`❌ [COURSE-NAV] Sección no encontrada: ${section.name} (${section.id})`);
+            }
+        });
+        
+        console.log(`📋 [COURSE-NAV] Total de secciones detectadas: ${existingSections.length} de ${possibleSections.length}`);
+        
+        if (existingSections.length === 0) {
+            // Si no hay secciones, crear navegación mínima
+            navBottom.innerHTML = `
+                <span class="text-white opacity-75">Sin navegación disponible</span>
+            `;
+            console.log('⚠️ [COURSE-NAV] No se detectaron secciones, navegación mínima creada');
+            return;
+        }
+        
+        // Crear navegación solo para las secciones que existen
+        const navigationHTML = existingSections.map(section => 
+            `<a href="#${section.id}" data-section="${section.id}" class="upds-course-link hover:text-primary-hover transition-colors">
+                ${section.name}
+            </a>`
+        ).join('');
+        
+        navBottom.innerHTML = navigationHTML;
+        
+        // Agregar event listeners para scroll suave
+        existingSections.forEach(section => {
+            const link = navBottom.querySelector(`a[data-section="${section.id}"]`);
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.scrollToSection(section.id, 80); // 80px offset para el header
+                });
+            }
+        });
+        
+        console.log(`✅ [COURSE-NAV] Navegación dinámica creada con ${existingSections.length} secciones para: ${course.title}`);
     }
 
     updateHeaderForCourseSection(section) {
@@ -1221,7 +1231,6 @@ class SPARouter {
                 // Inicializar vista home después de cargar el contenido
                 setTimeout(async () => {
                     try {
-                        const { renderHomeView } = await import('./modules/home.js');
                         renderHomeView();
                         this.initHomeScrollDetection();
                     } catch (error) {
@@ -1252,7 +1261,6 @@ class SPARouter {
                     // Renderizar el contenido del curso después de cargar la página
                     setTimeout(async () => {
                         try {
-                            const { renderCourseView } = await import('./modules/app.js');
                             renderCourseView(course);
                             this.initCourseScrollDetection(course);
                         } catch (error) {
@@ -1285,7 +1293,6 @@ class SPARouter {
             // Renderizar el contenido de mikrotik después de cargar la página
             setTimeout(async () => {
                 try {
-                    const { renderCategoryView } = await import('./modules/app.js');
                     renderCategoryView('Mikrotik');
                     
                     // Asegurar que el header se mantiene correcto después del renderizado
@@ -1374,41 +1381,28 @@ class SPARouter {
     }
 
     loadOrganizedCategories() {
-        // Importar datos y funciones necesarias
-        Promise.all([
-            import('./data.js'),
-            import('./modules/app.js')
-        ]).then(([dataModule, appModule]) => {
-            const { courses, getCoursesByCategory } = dataModule;
-            const { renderCoursesGridByCategory } = appModule;
-            
-            // Definir categorías de academias y facultades
-            const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
-            const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
-            
-            // Obtener todas las categorías únicas de los cursos
-            const allCategories = [...new Set(courses.map(course => course.category))];
-            console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
-            console.log('📋 [ROUTER] Total de cursos:', courses.length);
-            
-            // Separar categorías
-            const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
-            const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
-            
-            console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
-            console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
-            
-            // Renderizar Academias
-            this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
-            
-            // Renderizar Facultades
-            this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
-            
-        }).catch(error => {
-            console.error('❌ [ROUTER] Error al cargar categorías organizadas:', error);
-            // Fallback al método anterior si falla
-            this.generateCursosContentFallback();
-        });
+        // Usar funciones importadas estáticamente
+        // Definir categorías de academias y facultades
+        const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
+        const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
+        
+        // Obtener todas las categorías únicas de los cursos
+        const allCategories = [...new Set(courses.map(course => course.category))];
+        console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
+        console.log('📋 [ROUTER] Total de cursos:', courses.length);
+        
+        // Separar categorías
+        const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
+        const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
+        
+        console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
+        console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
+        
+        // Renderizar Academias
+        this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
+        
+        // Renderizar Facultades
+        this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
     }
 
     renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
@@ -1462,46 +1456,31 @@ class SPARouter {
     renderAcademiasFromHome(container) {
         console.log('🎓 [ROUTER] Renderizando academias usando contenido de inicio');
 
-        // Importar lo necesario para renderizar academias
-        Promise.all([
-            import('./data.js'),
-            import('./components.js')
-        ]).then(([dataModule, componentsModule]) => {
-            const { academies } = dataModule;
-            const { createAcademyCard } = componentsModule;
-
-            if (academies && academies.length > 0) {
-                // Crear sección de academias con el mismo ID que en inicio para navegación
-                const academiasHTML = `
-                    <div id="academias-section">
-                        <div class="text-center mb-6">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
-                            <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
-                        </div>
-                        <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
-                            ${academies.map(academy => createAcademyCard(academy)).join('')}
-                        </div>
+        // Usar imports estáticos
+        if (academies && academies.length > 0) {
+            // Crear sección de academias con el mismo ID que en inicio para navegación
+            const academiasHTML = `
+                <div id="academias-section">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                        <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
                     </div>
-                `;
-
-                container.innerHTML = academiasHTML;
-                console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
-            } else {
-                console.error('❌ [ROUTER] No se encontraron datos de academias');
-                container.innerHTML = `
-                    <div class="text-center py-8">
-                        <p class="text-gray-500">No hay academias disponibles.</p>
+                    <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
+                        ${academies.map(academy => createAcademyCard(academy)).join('')}
                     </div>
-                `;
-            }
-        }).catch(error => {
-            console.error('❌ [ROUTER] Error al cargar academias:', error);
-            container.innerHTML = `
-                <div class="text-center py-8">
-                    <p class="text-gray-500">Error al cargar academias.</p>
                 </div>
             `;
-        });
+
+            container.innerHTML = academiasHTML;
+            console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
+        } else {
+            console.error('❌ [ROUTER] No se encontraron datos de academias');
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-500">No hay academias disponibles.</p>
+                </div>
+            `;
+        }
     }
 
     renderCategoryUsingExistingFunction(categoryName, containerId, renderFunction, getCoursesByCategoryFunc) {
@@ -1700,7 +1679,6 @@ class SPARouter {
             // Renderizar el contenido de la facultad después de cargar la página
             setTimeout(async () => {
                 try {
-                    const { renderCategoryView } = await import('./modules/app.js');
                     renderCategoryView(facultadNames[nombre], categoryMappings[nombre]);
                 } catch (error) {
                     console.error(`❌ [ROUTER] Error al renderizar facultad ${nombre}:`, error);
@@ -2146,25 +2124,22 @@ class SPARouter {
         const mobileContent = document.getElementById('mobile-menu-content');
         if (!mobileContent) return;
 
-        // Importar navLinks
-        import('./data.js').then(module => {
-            const { navLinks } = module;
-            
-            let mobileMenuHTML = '';
+        // Usar navLinks importado estáticamente
+        let mobileMenuHTML = '';
 
-            // PRIMERO: Agregar las secciones de la página actual al inicio
-            const currentPageSections = this.getCurrentPageSections();
-            if (currentPageSections && currentPageSections.length > 0) {
-                mobileMenuHTML += `<div class="mobile-nav-section">`;
-                mobileMenuHTML += `<div class="mobile-nav-title">Navegación de Página</div>`;
-                currentPageSections.forEach(section => {
-                    mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
-                });
-                mobileMenuHTML += `</div>`;
-            }
+        // PRIMERO: Agregar las secciones de la página actual al inicio
+        const currentPageSections = this.getCurrentPageSections();
+        if (currentPageSections && currentPageSections.length > 0) {
+            mobileMenuHTML += `<div class="mobile-nav-section">`;
+            mobileMenuHTML += `<div class="mobile-nav-title">Navegación de Página</div>`;
+            currentPageSections.forEach(section => {
+                mobileMenuHTML += `<a href="#${section.id}" class="mobile-nav-link">${section.name}</a>`;
+            });
+            mobileMenuHTML += `</div>`;
+        }
 
-            // SEGUNDO: Agregar las categorías principales
-            navLinks.forEach((navItem, index) => {
+        // SEGUNDO: Agregar las categorías principales
+        navLinks.forEach((navItem, index) => {
                 if (navItem.name === 'Cochabamba') {
                     // Enlace externo especial
                     mobileMenuHTML += `
@@ -2249,18 +2224,15 @@ class SPARouter {
                     });
                 }
 
-                mobileMenuHTML += `</div>`;
-            });
-
-            mobileContent.innerHTML = mobileMenuHTML;
-            
-            // Inicializar funcionalidad de dropdowns móviles
-            this.initMobileDropdowns();
-            
-            console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
-        }).catch(error => {
-            console.error('❌ [MOBILE-MENU] Error generando contenido:', error);
+            mobileMenuHTML += `</div>`;
         });
+
+        mobileContent.innerHTML = mobileMenuHTML;
+        
+        // Inicializar funcionalidad de dropdowns móviles
+        this.initMobileDropdowns();
+        
+        console.log('📱 [MOBILE-MENU] Contenido generado con secciones dinámicas al inicio');
     }
 
     // Nueva función para obtener las secciones de la página actual

@@ -83,7 +83,7 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
     const categoryHTML = `
         <!-- Page Header -->
         <div class="text-center space-y-4">
-            <h1 class="text-4xl font-bold tracking-tight">Cursos de ${categoryName}</h1>
+            <h1 class="text-4xl font-bold tracking-tight">Academia ${categoryName}</h1>
             <p class="text-justify bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
         </div>
         

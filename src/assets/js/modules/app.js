@@ -92,7 +92,7 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
                 <div class="flex-shrink-0 w-full flex justify-center items-center bg-white p-4">
                     <img src="${images[category] || 'assets/images/cursos/default.png'}" 
                         alt="${categoryName}" 
-                        class="object-contain rounded-xl shadow w-32 h-32 sm:w-40 sm:h-40 max-w-[260px] mx-auto" />
+                        class="object-contain w-32 h-32 sm:w-40 sm:h-40 max-w-[260px] mx-auto" />
                 </div>
                 <div class="w-full p-4">
                     <p class="text-justify text-sm leading-relaxed">
@@ -103,15 +103,15 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
             
             <!-- Layout para pantallas grandes: Imagen a la derecha (flex-row) -->
             <div class="hidden md:flex items-center gap-0 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden">
-                <div class="w-4/5 p-8">
+                <div class="w-3/5 p-8">
                     <p class="text-justify text-base">
                         ${descriptions[category] || 'Descubre nuestros cursos especializados'}
                     </p>
                 </div>
-                <div class="flex-shrink-0 w-1/3 flex justify-center items-center bg-white h-full p-6">
+                <div class="flex-shrink-0 w-2/5 flex justify-center items-center bg-white h-full p-6">
                     <img src="${images[category] || 'assets/images/cursos/default.png'}" 
                         alt="${categoryName}" 
-                        class="object-contain rounded-xl shadow w-full h-64 max-w-[260px]" />
+                        class="object-contain w-full h-64 max-w-[260px]" />
                 </div>
             </div>
         </div>

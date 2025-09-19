@@ -79,12 +79,24 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
         'Ciencias Jurídicas': 'Formación especializada en derecho y ciencias jurídicas'
     };
     
+    const images = {
+        'Mikrotik': 'assets/images/cursos/mikro.png',
+    }
     // Crear la estructura de la vista de categoría
     const categoryHTML = `
         <!-- Page Header -->
         <div class="text-center space-y-4">
             <h1 class="text-4xl font-bold tracking-tight">Academia ${categoryName}</h1>
-            <p class="text-justify bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8">${descriptions[category] || 'Descubre nuestros cursos especializados'}</p>
+            <div class="flex items-center gap-0 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden">
+                <div class="w-4/5 p-8">
+                    <p class="text-justify text-base">
+                        ${descriptions[category] || 'Descubre nuestros cursos especializados'}
+                    </p>
+                </div>
+                <div class="flex-shrink-0 w-1/3 flex justify-center items-center bg-white h-full p-6">
+                    <img src="${images[category] || 'assets/images/cursos/default.png'}" alt="${categoryName}" class="object-contain rounded-xl shadow w-full h-64 max-w-[260px]" />
+                </div>
+            </div>
         </div>
         
         <!-- Courses Grid -->

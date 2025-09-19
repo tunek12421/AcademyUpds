@@ -84,22 +84,37 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
     }
     // Crear la estructura de la vista de categoría
     const categoryHTML = `
-        <!-- Page Header -->
         <div class="text-center space-y-4">
-            <h1 class="text-4xl font-bold tracking-tight">Academia ${categoryName}</h1>
-            <div class="flex items-center gap-0 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden">
+            <h1 class="text-2xl md:text-4xl font-bold tracking-tight px-4">Academia ${categoryName}</h1>
+            
+            <!-- Layout para pantallas pequeñas: Imagen arriba (flex-col) -->
+            <div class="flex flex-col items-center gap-0 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden mx-2 md:hidden">
+                <div class="flex-shrink-0 w-full flex justify-center items-center bg-white p-4">
+                    <img src="${images[category] || 'assets/images/cursos/default.png'}" 
+                        alt="${categoryName}" 
+                        class="object-contain rounded-xl shadow w-32 h-32 sm:w-40 sm:h-40 max-w-[260px] mx-auto" />
+                </div>
+                <div class="w-full p-4">
+                    <p class="text-justify text-sm leading-relaxed">
+                        ${descriptions[category] || 'Descubre nuestros cursos especializados'}
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Layout para pantallas grandes: Imagen a la derecha (flex-row) -->
+            <div class="hidden md:flex items-center gap-0 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-lg overflow-hidden">
                 <div class="w-4/5 p-8">
                     <p class="text-justify text-base">
                         ${descriptions[category] || 'Descubre nuestros cursos especializados'}
                     </p>
                 </div>
                 <div class="flex-shrink-0 w-1/3 flex justify-center items-center bg-white h-full p-6">
-                    <img src="${images[category] || 'assets/images/cursos/default.png'}" alt="${categoryName}" class="object-contain rounded-xl shadow w-full h-64 max-w-[260px]" />
+                    <img src="${images[category] || 'assets/images/cursos/default.png'}" 
+                        alt="${categoryName}" 
+                        class="object-contain rounded-xl shadow w-full h-64 max-w-[260px]" />
                 </div>
             </div>
         </div>
-        
-        <!-- Courses Grid -->
         <div id="courses-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Los cursos se cargarán dinámicamente aquí -->
         </div>

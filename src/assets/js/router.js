@@ -30,23 +30,8 @@ class SPARouter {
             '/cursos': () => this.loadCursos(),
             '/curso': () => this.loadCourse(),
             '/mikrotik': () => this.loadMikrotik(),
-            '/facultades': () => this.loadFacultades(),
-            '/facultades/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
-            '/facultades/ciencias-salud/manejo-cadaveres': () => this.loadCursoFacultad('ciencias-salud', 'manejo-cadaveres'),
-            '/facultades/ciencias-salud/primeros-auxilios': () => this.loadCursoFacultad('ciencias-salud', 'primeros-auxilios'),
-            '/facultades/ingenieria': () => this.loadFacultad('ingenieria'),
-            '/facultades/ingenieria/excel-experto': () => this.loadCursoFacultad('ingenieria', 'excel-experto'),
-            '/facultades/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
-            '/facultades/ciencias-empresariales/tributacion-aplicada': () => this.loadCursoFacultad('ciencias-empresariales', 'tributacion-aplicada'),
-            '/facultades/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
-            '/facultades/ciencias-juridicas/estrategias-litigacion': () => this.loadCursoFacultad('ciencias-juridicas', 'estrategias-litigacion'),
-            '/ciencias-salud': () => this.loadFacultad('ciencias-salud'),
-            '/ingenieria': () => this.loadFacultad('ingenieria'),
-            '/ciencias-empresariales': () => this.loadFacultad('ciencias-empresariales'),
-            '/ciencias-juridicas': () => this.loadFacultad('ciencias-juridicas'),
-            '/academias': () => this.loadAcademias(),
-            '/academias/mikrotik': () => this.loadAcademia('mikrotik'),
             // '/academias/huawei': () => this.loadAcademia('huawei'), // Temporalmente oculto
+            'aula-virtual': () => { window.location.href = 'https://Virtual.upds.tech'; }
         };
         
         this.currentRoute = window.location.pathname;
@@ -171,7 +156,7 @@ class SPARouter {
                         // console.log(`🎯 [DEBUG] Actualizando headIndex de ${window.DATA.headIndex} a ${clickedIndex}`);
                         window.DATA.headIndex = clickedIndex;
                         // Actualizar la posición de la flecha inmediatamente
-                        this.updateHeaderArrow();
+                        //this.updateHeaderArrow();
                         // Actualizar los breadcrumbs
                         this.updateHeaderBreadcrumbs();
                     }
@@ -643,7 +628,7 @@ class SPARouter {
         const routeFunction = this.routes[route];
         if (routeFunction) {
             routeFunction(params);
-        } else {
+        }else{
             // Ruta no encontrada - redirigir completamente a home
             console.log(`⚠️ [ROUTER] Ruta no encontrada: ${route}, redirigiendo a home`);
             this.redirectToHome();
@@ -651,7 +636,6 @@ class SPARouter {
         }
         
         // Actualizar flecha del header
-        this.updateHeaderArrow();
         this.updateHeaderBreadcrumbs();
     }
 
@@ -1306,8 +1290,6 @@ class SPARouter {
         
         if (isAlreadyHome) {
             // Ya tenemos contenido de home cargado, solo actualizar navegación
-            this.updateHeaderArrow();
-            this.updateHeaderBreadcrumbs();
             this.initHomeScrollDetection();
             console.log('✅ [ROUTER] Home: Solo actualización de header (sin recarga)');
         } else {
@@ -1325,6 +1307,9 @@ class SPARouter {
                 }, 100);
             }
         }
+        this.updateHeaderBreadcrumbs();
+        this.updateHeaderArrow();
+
     }
 
     async loadCourse(params) {
@@ -1360,6 +1345,8 @@ class SPARouter {
         } else {
             this.loadHome(); // Sin ID
         }
+        this.updateHeaderBreadcrumbs();
+        this.updateHeaderArrow();
     }
 
     async loadMikrotik() {
@@ -1387,8 +1374,6 @@ class SPARouter {
         // Actualizar header INMEDIATAMENTE al inicio
         console.log('🔄 [ROUTER] Mikrotik: Actualizando header inmediatamente');
         window.DATA.headIndex = 2; // Índice para Mikrotik
-        this.updateHeaderArrow();
-        this.updateHeaderBreadcrumbs();
         
         // Cargar contenido HTML primero
         console.log('📄 [ROUTER] Mikrotik: Cargando página mikrotik.html...');
@@ -1412,8 +1397,6 @@ class SPARouter {
                     setTimeout(() => {
                         console.log('🔄 [ROUTER] Re-verificando header post-renderizado');
                         window.DATA.headIndex = 2; // Re-confirmar
-                        this.updateHeaderArrow();
-                        this.updateHeaderBreadcrumbs();
                     }, 50);
                 } catch (error) {
                     console.error('❌ [ROUTER] Error al renderizar mikrotik:', error);
@@ -1422,6 +1405,9 @@ class SPARouter {
         } else {
             console.error('❌ [ROUTER] Mikrotik: loadPageContent falló');
         }
+        this.updateHeaderBreadcrumbs();
+        this.updateHeaderArrow();
+
     }
 
     async loadCursos() {
@@ -1448,8 +1434,6 @@ class SPARouter {
                 this.generateCursosContent();
                 
                 // Actualizar navegación
-                this.updateHeaderArrow();
-                this.updateHeaderBreadcrumbs();
                 
                 // Inicializar navegación por scroll después de que todo esté cargado
                 setTimeout(() => {
@@ -1463,6 +1447,8 @@ class SPARouter {
             console.error('❌ [ROUTER] Error al cargar cursos:', error);
             this.handleError('Error al cargar la página de cursos');
         }
+        this.updateHeaderBreadcrumbs();
+        this.updateHeaderArrow();
     }
 
     generateCursosContent() {

@@ -387,7 +387,11 @@ const navLinks = [
         href: '/mikrotik', 
         navs: academyCourses.mikrotik.map(course => ({name: course.name, href: course.href})),
         sections: []
-    }
+    },
+    { 
+        name: 'Aula virtual', 
+        href: 'aula-virtual'
+    },
 ];
 
 

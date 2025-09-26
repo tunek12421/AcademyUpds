@@ -753,12 +753,26 @@ class SPARouter {
                     gridContainer.id = 'courses-grid';
                     try {
                         renderCoursesGridByCategory(categoryName);
+
+                        // Actualizar contador en el header después del fallback
+                        const categoryId = this.normalizeToId(categoryName);
+                        const countElement = document.getElementById(`${categoryId}-count`);
+                        if (countElement) {
+                            countElement.textContent = `${categoryCourses.length} curso${categoryCourses.length !== 1 ? 's' : ''}`;
+                        }
                     } finally {
                         gridContainer.id = originalId;
                     }
                 }
             } else {
                 container.innerHTML = '<p class="text-gray-500 text-center">No hay cursos disponibles en esta categoría.</p>';
+
+                // Actualizar contador a 0 cuando no hay cursos
+                const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const countElement = document.getElementById(`${categoryId}-count`);
+                if (countElement) {
+                    countElement.textContent = '0 cursos';
+                }
             }
         }
     }

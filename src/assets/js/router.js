@@ -360,6 +360,7 @@ class SPARouter {
                 // Solo animar la primera vez
                 if (!hasAnimatedOnce) {
                     stickyLogos.classList.add('first-time-active');
+                    stickySection.classList.add('first-sticky-load');
                     hasAnimatedOnce = true;
                     console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
                 } else {

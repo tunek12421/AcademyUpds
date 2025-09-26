@@ -269,9 +269,13 @@
 
 /* === STICKY HEADER ANIMATIONS === */
 .sticky-logos {
+  z-index: 20; /* Asegurar que esté por encima del contenido de contacto pero debajo del hamburger */
+}
+
+/* Solo transiciones en la primera activación */
+.sticky-logos.first-time-active {
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
   will-change: opacity, transform;
-  z-index: 20; /* Asegurar que esté por encima del contenido de contacto pero debajo del hamburger */
 }
 
 .sticky-logos.active {
@@ -280,8 +284,9 @@
   pointer-events: auto !important;
 }
 
-.sticky-logo-left,
-.sticky-logo-right {
+/* Solo transiciones en los logos la primera vez */
+.sticky-logos.first-time-active .sticky-logo-left,
+.sticky-logos.first-time-active .sticky-logo-right {
   transition: all 0.3s ease-in-out;
   will-change: transform, opacity;
 }
@@ -319,9 +324,13 @@
 
 /* Mejoras para la sección sticky */
 .bg-primary.sticky {
-  transition: all 0.3s ease-in-out;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* Solo transición en la primera carga del sticky */
+.bg-primary.sticky.first-sticky-load {
+  transition: all 0.3s ease-in-out;
 }
 
 /* Altura adicional solo cuando los logos sticky están activos */

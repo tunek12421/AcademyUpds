@@ -325,6 +325,12 @@ class SPARouter {
     initStickyHeaderDetection() {
         // console.log('🔄 [ROUTER] Inicializando detección de sticky header');
 
+        // Limpiar listener anterior si existe
+        if (this.stickyScrollHandler) {
+            window.removeEventListener('scroll', this.stickyScrollHandler);
+            console.log('🧹 [STICKY] Limpiando listener anterior');
+        }
+
         const stickySection = document.querySelector('.bg-primary.sticky');
         const stickyLogos = document.getElementById('sticky-logos');
 
@@ -336,12 +342,31 @@ class SPARouter {
         let isSticky = false;
         let hasAnimatedOnce = false;
 
+        // Calcular el punto de activación UNA SOLA VEZ al inicio
+        let activationPoint = null;
+
+        const calculateActivationPoint = () => {
+            const rect = stickySection.getBoundingClientRect();
+            activationPoint = window.scrollY + rect.top;
+            console.log('📐 [STICKY] Punto de activación calculado:', activationPoint);
+        };
+
         const handleScroll = () => {
-            const stickyRect = stickySection.getBoundingClientRect();
-            const shouldShowLogos = stickyRect.top <= 0;
+            // Usar solo scrollY - NO getBoundingClientRect()
+            const currentScroll = window.scrollY;
+            const shouldShowLogos = currentScroll >= activationPoint;
+
+            console.log('📊 [SCROLL DEBUG]', {
+                'currentScroll': currentScroll,
+                'activationPoint': activationPoint,
+                'shouldShowLogos': shouldShowLogos,
+                'isSticky': isSticky,
+                'timestamp': Date.now()
+            });
 
             if (shouldShowLogos && !isSticky) {
                 // Activar logos sticky
+                console.log('🟢 [STICKY] ACTIVANDO logos sticky');
                 isSticky = true;
                 stickySection.classList.add('sticky-mode');
                 stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
@@ -359,6 +384,7 @@ class SPARouter {
 
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
+                console.log('🔴 [STICKY] DESACTIVANDO logos sticky');
                 isSticky = false;
                 stickySection.classList.remove('sticky-mode');
                 stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
@@ -367,23 +393,34 @@ class SPARouter {
             }
         };
 
+        // Calcular punto de activación al inicio
+        calculateActivationPoint();
+
         // Simple throttling - máximo una vez cada 100ms
         let lastExecuted = 0;
+        let scrollCallCount = 0;
         const throttledScrollHandler = () => {
+            scrollCallCount++;
             const now = Date.now();
             if (now - lastExecuted >= 100) {
+                console.log(`⚡ [THROTTLE] Ejecutando handleScroll (llamada #${scrollCallCount}, última hace ${now - lastExecuted}ms)`);
                 handleScroll();
                 lastExecuted = now;
+            } else {
+                console.log(`⏭️ [THROTTLE] Saltando ejecución (llamada #${scrollCallCount}, hace ${now - lastExecuted}ms)`);
             }
         };
 
-        // Agregar listener con throttling simple
-        window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+        // Guardar referencia para poder limpiar después
+        this.stickyScrollHandler = throttledScrollHandler;
 
-        // Ejecutar una vez para inicializar
+        // Agregar listener con throttling simple
+        window.addEventListener('scroll', this.stickyScrollHandler, { passive: true });
+
+        // Ejecutar una vez para inicializar (después de calcular el punto)
         handleScroll();
 
-        // console.log('✅ [ROUTER] Detección de sticky header inicializada');
+        console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 
     async loadPageContent(pageName) {
@@ -980,14 +1017,21 @@ class SPARouter {
 
     cleanupScrollDetection() {
         if (this.scrollListener) {
-            // console.log('🧹 [SECTIONS] Limpiando detección de scroll');
+            console.log('🧹 [SECTIONS] Limpiando detección de scroll de secciones');
             window.removeEventListener('scroll', this.scrollListener);
             this.scrollListener = null;
             this.currentHomeSection = null;
             this.currentCourseSection = null;
             this.currentCursosSection = null;
-            // console.log('✅ [SECTIONS] Scroll detection limpiado');
         }
+
+        if (this.stickyScrollHandler) {
+            console.log('🧹 [STICKY] Limpiando detección de scroll sticky');
+            window.removeEventListener('scroll', this.stickyScrollHandler);
+            this.stickyScrollHandler = null;
+        }
+
+        console.log('✅ [CLEANUP] Todos los listeners de scroll limpiados');
     }
 
     // Mantener compatibilidad con el nombre anterior

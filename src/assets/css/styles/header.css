@@ -326,6 +326,7 @@
 .bg-primary.sticky {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  overflow-anchor: none; /* Desactivar scroll anchoring de Chrome */
 }
 
 /* Solo transición en la primera carga del sticky */

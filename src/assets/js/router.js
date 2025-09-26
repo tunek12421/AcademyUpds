@@ -335,62 +335,54 @@ class SPARouter {
 
         let isSticky = false;
         let hasAnimatedOnce = false;
-        let lastScrollY = window.scrollY;
-        let scrollTimeout;
 
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
+        // Crear elemento sentinel para Intersection Observer
+        const sentinel = document.createElement('div');
+        sentinel.style.height = '1px';
+        sentinel.style.position = 'absolute';
+        sentinel.style.top = '0';
+        sentinel.style.width = '100%';
+        stickySection.appendChild(sentinel);
 
-            // Solo ejecutar si el scroll cambió significativamente (más de 5px)
-            if (Math.abs(currentScrollY - lastScrollY) < 5) {
-                return;
-            }
+        // Usar Intersection Observer en lugar de scroll events
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const shouldShowLogos = !entry.isIntersecting;
 
-            const stickyRect = stickySection.getBoundingClientRect();
-            const shouldShowLogos = stickyRect.top <= 0;
+                if (shouldShowLogos && !isSticky) {
+                    // Activar logos sticky
+                    isSticky = true;
+                    stickySection.classList.add('sticky-mode');
+                    stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+                    stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
 
-            // Solo ejecutar si hay un cambio de estado real
-            if (shouldShowLogos && !isSticky) {
-                // Activar logos sticky
-                isSticky = true;
-                stickySection.classList.add('sticky-mode');
-                stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
-                stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                    // Solo animar la primera vez
+                    if (!hasAnimatedOnce) {
+                        stickyLogos.classList.add('first-time-active');
+                        stickySection.classList.add('first-sticky-load');
+                        hasAnimatedOnce = true;
+                        console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
+                    } else {
+                        console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
+                    }
 
-                // Solo animar la primera vez
-                if (!hasAnimatedOnce) {
-                    stickyLogos.classList.add('first-time-active');
-                    stickySection.classList.add('first-sticky-load');
-                    hasAnimatedOnce = true;
-                    console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
-                } else {
-                    console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
+                } else if (!shouldShowLogos && isSticky) {
+                    // Desactivar logos sticky
+                    isSticky = false;
+                    stickySection.classList.remove('sticky-mode');
+                    stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                    stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                    console.log('🔽 [STICKY] Logos desactivados');
                 }
+            });
+        }, {
+            rootMargin: '0px 0px 0px 0px',
+            threshold: [0, 1]
+        });
 
-            } else if (!shouldShowLogos && isSticky) {
-                // Desactivar logos sticky
-                isSticky = false;
-                stickySection.classList.remove('sticky-mode');
-                stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-                stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
-                console.log('🔽 [STICKY] Logos desactivados');
-            }
+        observer.observe(sentinel);
 
-            lastScrollY = currentScrollY;
-        };
-
-        const optimizedScrollHandler = () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(handleScroll, 16); // ~60fps pero solo cuando para
-        };
-
-        // Agregar listener optimizado
-        window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
-
-        // Ejecutar una vez para inicializar
-        handleScroll();
-
-        // console.log('✅ [ROUTER] Detección de sticky header inicializada');
+        // console.log('✅ [ROUTER] Detección de sticky header inicializada con Intersection Observer');
     }
 
     async loadPageContent(pageName) {

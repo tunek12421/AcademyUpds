@@ -334,40 +334,48 @@ class SPARouter {
         }
 
         let isSticky = false;
-        let ticking = false;
+        let lastScrollY = window.scrollY;
+        let scrollTimeout;
 
         const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            // Solo ejecutar si el scroll cambió significativamente (más de 5px)
+            if (Math.abs(currentScrollY - lastScrollY) < 5) {
+                return;
+            }
+
             const stickyRect = stickySection.getBoundingClientRect();
             const shouldShowLogos = stickyRect.top <= 0;
 
+            // Solo ejecutar si hay un cambio de estado real
             if (shouldShowLogos && !isSticky) {
                 // Activar logos sticky
                 isSticky = true;
-                stickySection.classList.add('sticky-mode'); // Agregar clase para altura aumentada
+                stickySection.classList.add('sticky-mode');
                 stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
                 stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-                console.log('✨ [STICKY] Logos activados');
+                console.log('✨ [STICKY] Logos activados - UNA VEZ');
 
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
                 isSticky = false;
-                stickySection.classList.remove('sticky-mode'); // Quitar clase de altura aumentada
+                stickySection.classList.remove('sticky-mode');
                 stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
                 stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
-                console.log('🔽 [STICKY] Logos desactivados');
+                console.log('🔽 [STICKY] Logos desactivados - UNA VEZ');
             }
-            ticking = false;
+
+            lastScrollY = currentScrollY;
         };
 
-        const throttledScrollHandler = () => {
-            if (!ticking) {
-                requestAnimationFrame(handleScroll);
-                ticking = true;
-            }
+        const optimizedScrollHandler = () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(handleScroll, 16); // ~60fps pero solo cuando para
         };
 
-        // Agregar listener de scroll con throttling (respuesta inmediata pero limitada)
-        window.addEventListener('scroll', throttledScrollHandler);
+        // Agregar listener optimizado
+        window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
 
         // Ejecutar una vez para inicializar
         handleScroll();

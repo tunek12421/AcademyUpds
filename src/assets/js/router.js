@@ -324,21 +324,22 @@ class SPARouter {
 
     initStickyHeaderDetection() {
         // console.log('🔄 [ROUTER] Inicializando detección de sticky header');
-        
+
         const stickySection = document.querySelector('.bg-primary.sticky');
         const stickyLogos = document.getElementById('sticky-logos');
-        
+
         if (!stickySection || !stickyLogos) {
             console.warn('⚠️ [ROUTER] No se encontraron elementos sticky header necesarios');
             return;
         }
-        
+
         let isSticky = false;
-        
+        let scrollTimeout;
+
         const handleScroll = () => {
             const stickyRect = stickySection.getBoundingClientRect();
             const shouldShowLogos = stickyRect.top <= 0;
-            
+
             if (shouldShowLogos && !isSticky) {
                 // Activar logos sticky
                 isSticky = true;
@@ -346,7 +347,7 @@ class SPARouter {
                 stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
                 stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
                 console.log('✨ [STICKY] Logos activados');
-                
+
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
                 isSticky = false;
@@ -356,13 +357,18 @@ class SPARouter {
                 console.log('🔽 [STICKY] Logos desactivados');
             }
         };
-        
-        // Agregar listener de scroll
-        window.addEventListener('scroll', handleScroll);
-        
+
+        const debouncedScrollHandler = () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(handleScroll, 100); // Ejecutar solo después de 100ms sin scroll
+        };
+
+        // Agregar listener de scroll con debouncing
+        window.addEventListener('scroll', debouncedScrollHandler);
+
         // Ejecutar una vez para inicializar
         handleScroll();
-        
+
         // console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 

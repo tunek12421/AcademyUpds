@@ -334,6 +334,7 @@ class SPARouter {
         }
 
         let isSticky = false;
+        let hasAnimatedOnce = false;
         let lastScrollY = window.scrollY;
         let scrollTimeout;
 
@@ -355,7 +356,15 @@ class SPARouter {
                 stickySection.classList.add('sticky-mode');
                 stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
                 stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-                console.log('✨ [STICKY] Logos activados - UNA VEZ');
+
+                // Solo animar la primera vez
+                if (!hasAnimatedOnce) {
+                    stickyLogos.classList.add('first-time-active');
+                    hasAnimatedOnce = true;
+                    console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
+                } else {
+                    console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
+                }
 
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
@@ -363,7 +372,7 @@ class SPARouter {
                 stickySection.classList.remove('sticky-mode');
                 stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
                 stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
-                console.log('🔽 [STICKY] Logos desactivados - UNA VEZ');
+                console.log('🔽 [STICKY] Logos desactivados');
             }
 
             lastScrollY = currentScrollY;

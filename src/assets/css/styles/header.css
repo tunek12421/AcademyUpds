@@ -286,12 +286,12 @@
   will-change: transform, opacity;
 }
 
-/* Animación de entrada escalonada para los logos */
-.sticky-logos.active .sticky-logo-left {
+/* Animación de entrada escalonada para los logos - SOLO LA PRIMERA VEZ */
+.sticky-logos.first-time-active .sticky-logo-left {
   animation: slideInLeft 0.5s ease-out;
 }
 
-.sticky-logos.active .sticky-logo-right {
+.sticky-logos.first-time-active .sticky-logo-right {
   animation: slideInRight 0.5s ease-out 0.1s both;
 }
 

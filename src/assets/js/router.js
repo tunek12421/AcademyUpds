@@ -336,53 +336,54 @@ class SPARouter {
         let isSticky = false;
         let hasAnimatedOnce = false;
 
-        // Crear elemento sentinel para Intersection Observer
-        const sentinel = document.createElement('div');
-        sentinel.style.height = '1px';
-        sentinel.style.position = 'absolute';
-        sentinel.style.top = '0';
-        sentinel.style.width = '100%';
-        stickySection.appendChild(sentinel);
+        const handleScroll = () => {
+            const stickyRect = stickySection.getBoundingClientRect();
+            const shouldShowLogos = stickyRect.top <= 0;
 
-        // Usar Intersection Observer en lugar de scroll events
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const shouldShowLogos = !entry.isIntersecting;
+            if (shouldShowLogos && !isSticky) {
+                // Activar logos sticky
+                isSticky = true;
+                stickySection.classList.add('sticky-mode');
+                stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+                stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
 
-                if (shouldShowLogos && !isSticky) {
-                    // Activar logos sticky
-                    isSticky = true;
-                    stickySection.classList.add('sticky-mode');
-                    stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
-                    stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-
-                    // Solo animar la primera vez
-                    if (!hasAnimatedOnce) {
-                        stickyLogos.classList.add('first-time-active');
-                        stickySection.classList.add('first-sticky-load');
-                        hasAnimatedOnce = true;
-                        console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
-                    } else {
-                        console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
-                    }
-
-                } else if (!shouldShowLogos && isSticky) {
-                    // Desactivar logos sticky
-                    isSticky = false;
-                    stickySection.classList.remove('sticky-mode');
-                    stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-                    stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
-                    console.log('🔽 [STICKY] Logos desactivados');
+                // Solo animar la primera vez
+                if (!hasAnimatedOnce) {
+                    stickyLogos.classList.add('first-time-active');
+                    stickySection.classList.add('first-sticky-load');
+                    hasAnimatedOnce = true;
+                    console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
+                } else {
+                    console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
                 }
-            });
-        }, {
-            rootMargin: '0px 0px 0px 0px',
-            threshold: [0, 1]
-        });
 
-        observer.observe(sentinel);
+            } else if (!shouldShowLogos && isSticky) {
+                // Desactivar logos sticky
+                isSticky = false;
+                stickySection.classList.remove('sticky-mode');
+                stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                console.log('🔽 [STICKY] Logos desactivados');
+            }
+        };
 
-        // console.log('✅ [ROUTER] Detección de sticky header inicializada con Intersection Observer');
+        // Simple throttling - máximo una vez cada 100ms
+        let lastExecuted = 0;
+        const throttledScrollHandler = () => {
+            const now = Date.now();
+            if (now - lastExecuted >= 100) {
+                handleScroll();
+                lastExecuted = now;
+            }
+        };
+
+        // Agregar listener con throttling simple
+        window.addEventListener('scroll', throttledScrollHandler, { passive: true });
+
+        // Ejecutar una vez para inicializar
+        handleScroll();
+
+        // console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 
     async loadPageContent(pageName) {

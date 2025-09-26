@@ -485,8 +485,16 @@ class SPARouter {
                 newContent.style.opacity = '1';
                 // console.log('✨ [ROUTER] Nuevo contenido mostrado');
             }
-            
-            
+
+            // 12. Reinicializar sticky header para la nueva página (con delay para asegurar DOM renderizado)
+            setTimeout(() => {
+                // Limpiar solo el sticky handler antes de reinicializar
+                if (this.stickyScrollHandler) {
+                    window.removeEventListener('scroll', this.stickyScrollHandler);
+                }
+                this.initStickyHeaderDetection();
+            }, 100);
+
             // 13. Remover la altura mínima fija después de que termine la transición
             setTimeout(() => {
                 this.mainSection.style.minHeight = '';
@@ -1477,7 +1485,6 @@ class SPARouter {
     async loadCursos() {
         updateState({ selectedCourse: null });
         window.DATA.name = "cursos";
-        this.cleanupScrollDetection();
         
         try {
             console.log('🔄 [ROUTER] Cargando página de cursos...');

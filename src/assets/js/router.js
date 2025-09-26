@@ -631,6 +631,138 @@ class SPARouter {
         this.showMainContent();
     }
 
+    // Función específica para cargar cursos de 'Ciencias de la Salud' desde backend
+    async fetchCoursesByCategoryFromBackend(category) {
+        try {
+            console.log(`🔄 [BACKEND] Cargando cursos de "${category}" desde backend...`);
+
+            // Fetch con timeout de 2 segundos
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 200); // 200ms - súper rápido
+
+        const response = await fetch('http://localhost:8080/api/courses', {
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const coursesData = await response.json();
+
+            // Filtrar cursos por categoría
+            const categoryCourses = coursesData.filter(course => course.category === category);
+
+            // Transformar datos del backend para compatibilidad con frontend
+            const transformedCourses = categoryCourses.map(course => ({
+                ...course,
+                students: course.students || Math.floor(Math.random() * 500) + 100,
+                rating: course.rating || (4.5 + Math.random() * 0.5).toFixed(1),
+                instructor: course.instructor?.name || course.instructor || 'Instructor no especificado',
+                instructorBio: course.instructor?.description || 'Información no disponible',
+                instructorImage: course.instructor?.image || '/assets/images/instructor/default.jpg'
+            }));
+
+            console.log(`✅ [BACKEND] ${transformedCourses.length} cursos de "${category}" cargados desde backend`);
+            return transformedCourses;
+        } catch (error) {
+            console.error(`❌ [BACKEND] Error al cargar cursos de "${category}" desde backend:`, error);
+            throw error;
+        }
+    }
+
+    // Función para renderizar cursos desde backend
+    async renderCategoryFromBackend(categoryName, containerId) {
+        console.log(`🎨 [BACKEND] Renderizando "${categoryName}" desde backend en: ${containerId}`);
+
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`❌ [BACKEND] Contenedor no encontrado: ${containerId}`);
+            return;
+        }
+
+        try {
+            // Mostrar estado de carga
+            container.innerHTML = `
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <span class="ml-3 text-muted-foreground">Cargando cursos de ${categoryName}...</span>
+                </div>
+            `;
+
+            // Cargar cursos desde backend
+            const categoryCourses = await this.fetchCoursesByCategoryFromBackend(categoryName);
+
+            if (categoryCourses && categoryCourses.length > 0) {
+                // Crear grid adaptativo basado en el número de cursos
+                let gridCols = 'md:grid-cols-2 lg:grid-cols-3';
+                if (categoryCourses.length === 1) {
+                    gridCols = 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl mx-auto';
+                } else if (categoryCourses.length === 2) {
+                    gridCols = 'md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto';
+                }
+
+                // Importar createCourseCard desde components.js
+                const { createCourseCard } = await import('./components.js');
+
+                // Renderizar cursos usando createCourseCard
+                const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
+
+                container.innerHTML = `<div class="grid ${gridCols} gap-8 justify-items-center">${coursesHTML}</div>`;
+
+                // Actualizar contador en el header
+                const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+                const countElement = document.getElementById(`${categoryId}-count`);
+                if (countElement) {
+                    countElement.textContent = `${categoryCourses.length} curso${categoryCourses.length !== 1 ? 's' : ''}`;
+                }
+
+                console.log(`✅ [BACKEND] ${categoryCourses.length} cursos de "${categoryName}" renderizados desde backend`);
+            } else {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <p class="text-muted-foreground">No hay cursos disponibles en ${categoryName} en este momento</p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error(`❌ [BACKEND] Error al renderizar "${categoryName}":`, error);
+
+            // Fallback: usar datos locales
+            console.warn(`🔄 [BACKEND] Usando datos locales como fallback para "${categoryName}"`);
+            const { getCoursesByCategory } = await import('./data.js');
+            const { renderCoursesGridByCategory } = await import('./modules/app.js');
+
+            const categoryCourses = getCoursesByCategory(categoryName);
+
+            if (categoryCourses.length > 0) {
+                let gridCols = 'md:grid-cols-2 lg:grid-cols-3';
+                if (categoryCourses.length === 1) {
+                    gridCols = 'md:grid-cols-1 lg:grid-cols-1 max-w-2xl mx-auto';
+                } else if (categoryCourses.length === 2) {
+                    gridCols = 'md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto';
+                }
+
+                const uniqueGridId = `courses-grid-${categoryName.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`;
+                container.innerHTML = `<div id="${uniqueGridId}" class="grid ${gridCols} gap-8 justify-items-center"></div>`;
+
+                const gridContainer = document.getElementById(uniqueGridId);
+                if (gridContainer) {
+                    const originalId = gridContainer.id;
+                    gridContainer.id = 'courses-grid';
+                    try {
+                        renderCoursesGridByCategory(categoryName);
+                    } finally {
+                        gridContainer.id = originalId;
+                    }
+                }
+            } else {
+                container.innerHTML = '<p class="text-gray-500 text-center">No hay cursos disponibles en esta categoría.</p>';
+            }
+        }
+    }
+
     scrollToSection(sectionId, offset=0) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -1371,7 +1503,7 @@ class SPARouter {
                 // Inicializar vista home después de cargar el contenido
                 setTimeout(async () => {
                     try {
-                        renderHomeView();
+                        await renderHomeView(); // Ahora es asíncrono
                         this.initHomeScrollDetection();
                     } catch (error) {
                         console.error('❌ [ROUTER] Error al configurar vista home:', error);
@@ -1462,7 +1594,7 @@ class SPARouter {
                         currentContent: this.mainSection?.innerHTML?.substring(0, 100) + '...'
                     });
                     
-                    renderCategoryView('Mikrotik');
+                    await renderCategoryView('Mikrotik');
                     console.log('✅ [ROUTER] Mikrotik: renderCategoryView completado');
                     
                     // Asegurar que el header se mantiene correcto después del renderizado
@@ -1548,36 +1680,36 @@ class SPARouter {
             </div>
         `;
         
-        // Luego cargar las categorías organizadas
+        // Luego cargar las categorías organizadas (ahora asíncrono)
         this.loadOrganizedCategories();
     }
 
-    loadOrganizedCategories() {
+    async loadOrganizedCategories() {
         // Usar funciones importadas estáticamente
         // Definir categorías de academias y facultades
         const academiasCategories = []; // Ya no incluimos cursos específicos, sino las academias completas
         const facultadesCategories = ['Ciencias de la Salud', 'Ingeniería', 'Ciencias Empresariales', 'Ciencias Jurídicas'];
-        
+
         // Obtener todas las categorías únicas de los cursos
         const allCategories = [...new Set(courses.map(course => course.category))];
         console.log('📋 [ROUTER] Categorías encontradas:', allCategories);
         console.log('📋 [ROUTER] Total de cursos:', courses.length);
-        
+
         // Separar categorías
         const academiasFound = allCategories.filter(cat => academiasCategories.includes(cat));
         const facultadesFound = allCategories.filter(cat => facultadesCategories.includes(cat));
-        
+
         console.log('🎓 [ROUTER] Academias encontradas:', academiasFound);
         console.log('🏛️ [ROUTER] Facultades encontradas:', facultadesFound);
-        
-        // Renderizar Academias
-        this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
-        
+
+        // Renderizar Academias (ahora asíncrono)
+        await this.renderCategorySection('academias-content', academiasFound, getCoursesByCategory, renderCoursesGridByCategory, 'academia');
+
         // Renderizar Facultades
-        this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
+        await this.renderCategorySection('facultades-content', facultadesFound, getCoursesByCategory, renderCoursesGridByCategory, 'facultad');
     }
 
-    renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
+    async renderCategorySection(containerId, categories, getCoursesByCategoryFunc, renderFunction, sectionType) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
@@ -1585,7 +1717,7 @@ class SPARouter {
 
         // Si es la sección de academias, usar el contenido de la página de inicio
         if (sectionType === 'academia' || containerId === 'academias-content') {
-            this.renderAcademiasFromHome(container);
+            await this.renderAcademiasFromHome(container);
             return;
         }
 
@@ -1596,15 +1728,26 @@ class SPARouter {
 
         categories.forEach(category => {
             const categoryId = this.normalizeToId(category);
-            const coursesInCategory = getCoursesByCategoryFunc(category);
+            let coursesCount;
+            let countDisplay;
+
+            // Para todas las facultades universitarias que cargan desde backend mostrar un contador genérico
+            if (category === 'Ciencias de la Salud' || category === 'Ingeniería' || category === 'Ciencias Empresariales' || category === 'Ciencias Jurídicas') {
+                // Mostrar un contador placeholder para backend
+                countDisplay = `<span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full" id="${categoryId}-count">Cargando...</span>`;
+            } else {
+                // Para las demás categorías usar datos locales
+                const coursesInCategory = getCoursesByCategoryFunc(category);
+                countDisplay = `<span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                    ${coursesInCategory.length} curso${coursesInCategory.length !== 1 ? 's' : ''}
+                </span>`;
+            }
 
             categoriesHTML += `
                 <div id="${categoryId}-section" class="category-item bg-white rounded-xl p-6 border border-gray-200">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-2xl font-bold text-gray-800">${category}</h3>
-                        <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                            ${coursesInCategory.length} curso${coursesInCategory.length !== 1 ? 's' : ''}
-                        </span>
+                        ${countDisplay}
                     </div>
                     <div id="${categoryId}-courses" class="mb-4"></div>
                 </div>
@@ -1614,44 +1757,141 @@ class SPARouter {
         container.innerHTML = categoriesHTML;
 
         // Renderizar cursos para cada categoría
-        categories.forEach(category => {
+        for (const category of categories) {
             const categoryId = this.normalizeToId(category);
             const containerId = `${categoryId}-courses`;
 
             console.log(`🎨 [ROUTER] Renderizando categoría: ${category} en contenedor: ${containerId}`);
-            this.renderCategoryUsingExistingFunction(category, containerId, renderFunction, getCoursesByCategoryFunc);
-        });
+
+            // Usar backend para todas las facultades universitarias
+            if (category === 'Ciencias de la Salud' || category === 'Ingeniería' || category === 'Ciencias Empresariales' || category === 'Ciencias Jurídicas') {
+                console.log(`🔄 [ROUTER] Usando backend para categoría: ${category}`);
+                await this.renderCategoryFromBackend(category, containerId);
+            } else {
+                console.log(`📁 [ROUTER] Usando datos locales para categoría: ${category}`);
+                this.renderCategoryUsingExistingFunction(category, containerId, renderFunction, getCoursesByCategoryFunc);
+            }
+        }
 
         console.log(`✅ [ROUTER] Sección ${sectionType} renderizada con ${categories.length} categorías`);
     }
 
-    renderAcademiasFromHome(container) {
-        console.log('🎓 [ROUTER] Renderizando academias usando contenido de inicio');
+    async renderAcademiasFromHome(container) {
+        console.log('🎓 [ROUTER] Renderizando academias desde backend para página de cursos');
 
-        // Usar imports estáticos
-        if (academies && academies.length > 0) {
-            // Crear sección de academias con el mismo ID que en inicio para navegación
-            const academiasHTML = `
+        try {
+            // Mostrar estado de carga inicial
+            container.innerHTML = `
                 <div id="academias-section">
                     <div class="text-center mb-6">
                         <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
                         <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
                     </div>
                     <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
-                        ${academies.map(academy => createAcademyCard(academy)).join('')}
+                        <div class="col-span-full flex items-center justify-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                            <span class="ml-3 text-muted-foreground">Cargando academias...</span>
+                        </div>
                     </div>
                 </div>
             `;
 
-            container.innerHTML = academiasHTML;
-            console.log(`✅ [ROUTER] ${academies.length} academias renderizadas desde inicio`);
-        } else {
-            console.error('❌ [ROUTER] No se encontraron datos de academias');
+            // Cargar academias desde el backend usando la misma función que en home
+            const academiasData = await this.fetchAcademiasFromBackend();
+
+            if (academiasData && academiasData.length > 0) {
+                // Renderizar academias exitosamente
+                const academiasHTML = `
+                    <div id="academias-section">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                            <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
+                        </div>
+                        <div id="academias-grid" class="grid md:grid-cols-2 gap-6">
+                            ${academiasData.map(academy => createAcademyCard(academy)).join('')}
+                        </div>
+                    </div>
+                `;
+
+                container.innerHTML = academiasHTML;
+                console.log(`✅ [ROUTER] ${academiasData.length} academias renderizadas desde backend en página de cursos`);
+            } else {
+                // No hay academias disponibles
+                container.innerHTML = `
+                    <div id="academias-section">
+                        <div class="text-center mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                            <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
+                        </div>
+                        <div class="text-center py-8">
+                            <p class="text-gray-500">No hay academias disponibles en este momento</p>
+                        </div>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('❌ [ROUTER] Error al renderizar academias en página de cursos:', error);
+
+            // Mostrar estado de error
             container.innerHTML = `
-                <div class="text-center py-8">
-                    <p class="text-gray-500">No hay academias disponibles.</p>
+                <div id="academias-section">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Nuestras Academias</h3>
+                        <p class="text-gray-600">Academias especializadas en tecnologías específicas</p>
+                    </div>
+                    <div class="text-center py-8">
+                        <p class="text-red-500">Error al cargar las academias</p>
+                        <button onclick="location.reload()" class="mt-2 text-primary hover:text-primary/90 underline">
+                            Intentar de nuevo
+                        </button>
+                    </div>
                 </div>
             `;
+        }
+    }
+
+    // Función específica para cargar academias desde el backend (reutilizada desde home.js)
+    async fetchAcademiasFromBackend() {
+        try {
+            // console.log('🔄 [ROUTER] Cargando academias desde backend...');
+
+            // Endpoint del backend Go corriendo en puerto 8080 con timeout de 2 segundos
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 200); // 200ms - súper rápido
+
+            const response = await fetch('http://localhost:8080/api/academies', {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const academiasData = await response.json();
+
+            // Transformar datos del backend para compatibilidad con frontend
+            const transformedData = academiasData.map(academy => ({
+                ...academy,
+                coursesCount: academy.courses_count, // Mapear courses_count a coursesCount
+                showCourseCount: academy.courses_count > 0 || !academy.disabled // Solo mostrar contador si hay cursos o está habilitada
+            }));
+
+            // Ordenar para mantener consistencia con el orden original (MIKROTIK primero, HUAWEI segundo)
+            const orderedData = transformedData.sort((a, b) => {
+                const order = { 'mikrotik': 1, 'huawei': 2 };
+                return (order[a.id] || 999) - (order[b.id] || 999);
+            });
+
+            // console.log('✅ [ROUTER] Academias cargadas desde backend:', orderedData);
+
+            return orderedData;
+        } catch (error) {
+            console.error('❌ [ROUTER] Error al cargar academias desde backend:', error);
+
+            // Fallback: usar datos locales si el backend falla
+            console.warn('🔄 [ROUTER] Usando datos locales como fallback');
+            return academies; // Importado desde data.js
         }
     }
 

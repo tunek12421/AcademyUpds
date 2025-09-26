@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Backend Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        .academy { margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test de Conexión con Backend Go</h1>
+    <button onclick="testBackendConnection()">Probar Conexión</button>
+    <div id="results"></div>
+
+    <script>
+        async function testBackendConnection() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>🔄 Probando conexión con backend...</p>';
+
+            try {
+                // Usar la misma función que el frontend real
+                const response = await fetch('http://localhost:8080/api/academies');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const academiasData = await response.json();
+
+                // Transformar datos igual que en el frontend
+                const transformedData = academiasData.map(academy => ({
+                    ...academy,
+                    coursesCount: academy.courses_count,
+                    showCourseCount: academy.courses_count > 0 || !academy.disabled
+                }));
+
+                // Mostrar resultados
+                let html = `<h2 class="success">✅ Conexión exitosa!</h2>`;
+                html += `<p><strong>Academias encontradas:</strong> ${transformedData.length}</p>`;
+
+                transformedData.forEach(academy => {
+                    html += `
+                        <div class="academy">
+                            <h3>${academy.title}</h3>
+                            <p><strong>ID:</strong> ${academy.id}</p>
+                            <p><strong>Descripción:</strong> ${academy.description}</p>
+                            <p><strong>Cursos:</strong> ${academy.coursesCount}</p>
+                            <p><strong>Estado:</strong> ${academy.disabled ? 'Deshabilitada' : 'Activa'}</p>
+                            <p><strong>Mostrar contador:</strong> ${academy.showCourseCount ? 'Sí' : 'No'}</p>
+                        </div>
+                    `;
+                });
+
+                resultsDiv.innerHTML = html;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h2 class="error">❌ Error de conexión</h2>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Asegúrate de que el backend Go esté corriendo en http://localhost:8080</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

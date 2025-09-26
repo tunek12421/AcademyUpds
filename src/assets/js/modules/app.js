@@ -20,6 +20,47 @@ import { navigateTo } from '../router.js';
 
 // Aplicación principal - Manejo de estado y eventos
 
+// Función específica para cargar cursos desde backend por categoría
+async function fetchCoursesByCategoryFromBackend(category) {
+    try {
+        console.log(`🔄 [BACKEND] Cargando cursos de "${category}" desde backend...`);
+
+        // Fetch con timeout de 2 segundos
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 200); // 200ms - súper rápido
+
+        const response = await fetch('http://localhost:8080/api/courses', {
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const coursesData = await response.json();
+
+        // Filtrar cursos por categoría
+        const categoryCourses = coursesData.filter(course => course.category === category);
+
+        // Transformar datos del backend para compatibilidad con frontend
+        const transformedCourses = categoryCourses.map(course => ({
+            ...course,
+            students: course.students || Math.floor(Math.random() * 500) + 100,
+            rating: course.rating || (4.5 + Math.random() * 0.5).toFixed(1),
+            instructor: course.instructor?.name || course.instructor || 'Instructor no especificado',
+            instructorBio: course.instructor?.description || 'Información no disponible',
+            instructorImage: course.instructor?.image || '/assets/images/instructor/default.jpg'
+        }));
+
+        console.log(`✅ [BACKEND] ${transformedCourses.length} cursos de "${category}" cargados desde backend`);
+        return transformedCourses;
+    } catch (error) {
+        console.error(`❌ [BACKEND] Error al cargar cursos de "${category}" desde backend:`, error);
+        throw error;
+    }
+}
+
 // Función para mostrar mensajes de error
 function showErrorMessage(message) {
     const errorDiv = document.createElement('div');
@@ -58,8 +99,61 @@ function selectCourse(courseId) {
     }
 }
 
+// Función para renderizar cursos desde backend con estados de carga
+async function renderCoursesFromBackend(category, coursesGrid) {
+    console.log(`🎨 [BACKEND] Renderizando "${category}" desde backend`);
+
+    try {
+        // Mostrar estado de carga
+        coursesGrid.innerHTML = `
+            <div class="col-span-full flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <span class="ml-3 text-muted-foreground">Cargando cursos de ${category}...</span>
+            </div>
+        `;
+
+        // Cargar cursos desde backend
+        const categoryCourses = await fetchCoursesByCategoryFromBackend(category);
+
+        if (categoryCourses && categoryCourses.length > 0) {
+            // Renderizar cursos usando createCourseCard
+            const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
+            coursesGrid.innerHTML = coursesHTML;
+
+            console.log(`✅ [BACKEND] ${categoryCourses.length} cursos de "${category}" renderizados desde backend`);
+        } else {
+            coursesGrid.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <p class="text-muted-foreground">No hay cursos disponibles en ${category} en este momento</p>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error(`❌ [BACKEND] Error al renderizar "${category}":`, error);
+
+        // Fallback: usar datos locales
+        console.warn(`🔄 [BACKEND] Usando datos locales como fallback para "${category}"`);
+        const categoryCourses = courses.filter(course => course.category === category);
+
+        if (categoryCourses.length > 0) {
+            const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
+            coursesGrid.innerHTML = coursesHTML;
+            console.log(`✅ [FALLBACK] ${categoryCourses.length} cursos de "${category}" renderizados desde datos locales`);
+        } else {
+            coursesGrid.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <p class="text-red-500">Error al cargar los cursos de ${category}</p>
+                    <button onclick="renderCoursesGridByCategory('${category}')" class="mt-2 text-primary hover:text-primary/90 underline">
+                        Intentar de nuevo
+                    </button>
+                </div>
+            `;
+        }
+    }
+}
+
 // Función para renderizar la vista de categoría
-export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrotik") {
+export async function renderCategoryView(categoryName = "Mikrotik", category = "Mikrotik") {
     // Obtener el contenedor principal
     const mainContainer = document.querySelector('main .space-y-8');
     if (!mainContainer) {
@@ -121,9 +215,9 @@ export function renderCategoryView(categoryName = "Mikrotik", category = "Mikrot
     `;
     
     mainContainer.innerHTML = categoryHTML;
-    
+
     // Después de cargar el HTML, renderizar los cursos
-    renderCoursesGridByCategory(category);
+    await renderCoursesGridByCategory(category);
 }
 
 // Función para renderizar la grilla de cursos (solo para Mikrotik - legacy)
@@ -132,16 +226,22 @@ function renderCoursesGrid() {
 }
 
 // Función para renderizar la grilla de cursos por categoría
-function renderCoursesGridByCategory(category) {
+async function renderCoursesGridByCategory(category) {
     const coursesGrid = document.getElementById('courses-grid');
     if (!coursesGrid) return;
-    
-    // Filtrar cursos por categoría
-    const categoryCourses = courses.filter(course => course.category === category);
-    const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
-    coursesGrid.innerHTML = coursesHTML;
-    
-    // console.log(`✅ [COURSES] ${categoryCourses.length} cursos de ${category} renderizados`);
+
+    // Usar backend específicamente para "Mikrotik"
+    if (category === 'Mikrotik') {
+        console.log(`🔄 [COURSES] Usando backend para categoría: ${category}`);
+        await renderCoursesFromBackend(category, coursesGrid);
+    } else {
+        console.log(`📁 [COURSES] Usando datos locales para categoría: ${category}`);
+        // Filtrar cursos por categoría desde datos locales
+        const categoryCourses = courses.filter(course => course.category === category);
+        const coursesHTML = categoryCourses.map(course => createCourseCard(course)).join('');
+        coursesGrid.innerHTML = coursesHTML;
+        console.log(`✅ [COURSES] ${categoryCourses.length} cursos de ${category} renderizados desde datos locales`);
+    }
 }
 
 // Función para renderizar los detalles del curso
@@ -375,3 +475,8 @@ export {
     loadPageContent,
     renderCoursesGridByCategory
 };
+
+// Hacer disponible globalmente para botones "Intentar de nuevo"
+if (typeof window !== 'undefined') {
+    window.renderCoursesGridByCategory = renderCoursesGridByCategory;
+}

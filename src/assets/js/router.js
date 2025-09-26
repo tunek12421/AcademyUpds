@@ -334,7 +334,7 @@ class SPARouter {
         }
 
         let isSticky = false;
-        let scrollTimeout;
+        let ticking = false;
 
         const handleScroll = () => {
             const stickyRect = stickySection.getBoundingClientRect();
@@ -356,15 +356,18 @@ class SPARouter {
                 stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
                 console.log('🔽 [STICKY] Logos desactivados');
             }
+            ticking = false;
         };
 
-        const debouncedScrollHandler = () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(handleScroll, 100); // Ejecutar solo después de 100ms sin scroll
+        const throttledScrollHandler = () => {
+            if (!ticking) {
+                requestAnimationFrame(handleScroll);
+                ticking = true;
+            }
         };
 
-        // Agregar listener de scroll con debouncing
-        window.addEventListener('scroll', debouncedScrollHandler);
+        // Agregar listener de scroll con throttling (respuesta inmediata pero limitada)
+        window.addEventListener('scroll', throttledScrollHandler);
 
         // Ejecutar una vez para inicializar
         handleScroll();

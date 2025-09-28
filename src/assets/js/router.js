@@ -341,6 +341,7 @@ class SPARouter {
 
         let isSticky = false;
         let hasAnimatedOnce = false;
+        let scrollCallCount = 0;
 
         // Calcular el punto de activación UNA SOLA VEZ al inicio
         let activationPoint = null;
@@ -352,6 +353,11 @@ class SPARouter {
         };
 
         const handleScroll = () => {
+            // Recalcular el punto de activación ocasionalmente para manejar cambios dinámicos
+            if (scrollCallCount % 60 === 0) { // Cada ~1 segundo a 60fps
+                calculateActivationPoint();
+            }
+
             // Usar solo scrollY - NO getBoundingClientRect()
             const currentScroll = window.scrollY;
             const shouldShowLogos = currentScroll >= activationPoint;
@@ -369,8 +375,7 @@ class SPARouter {
                 console.log('🟢 [STICKY] ACTIVANDO logos sticky');
                 isSticky = true;
                 stickySection.classList.add('sticky-mode');
-                stickyLogos.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
-                stickyLogos.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
+                stickyLogos.classList.add('active');
 
                 // Solo animar la primera vez
                 if (!hasAnimatedOnce) {
@@ -387,8 +392,7 @@ class SPARouter {
                 console.log('🔴 [STICKY] DESACTIVANDO logos sticky');
                 isSticky = false;
                 stickySection.classList.remove('sticky-mode');
-                stickyLogos.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'active');
-                stickyLogos.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                stickyLogos.classList.remove('active');
                 console.log('🔽 [STICKY] Logos desactivados');
             }
         };
@@ -396,13 +400,12 @@ class SPARouter {
         // Calcular punto de activación al inicio
         calculateActivationPoint();
 
-        // Simple throttling - máximo una vez cada 100ms
+        // Reduced throttling - máximo una vez cada 16ms (~60fps)
         let lastExecuted = 0;
-        let scrollCallCount = 0;
         const throttledScrollHandler = () => {
             scrollCallCount++;
             const now = Date.now();
-            if (now - lastExecuted >= 100) {
+            if (now - lastExecuted >= 16) {
                 console.log(`⚡ [THROTTLE] Ejecutando handleScroll (llamada #${scrollCallCount}, última hace ${now - lastExecuted}ms)`);
                 handleScroll();
                 lastExecuted = now;
@@ -423,14 +426,49 @@ class SPARouter {
         console.log('✅ [ROUTER] Detección de sticky header inicializada');
     }
 
+    resetStickyHeaderState() {
+        // Remove any existing scroll handler to prevent conflicts
+        if (this.stickyScrollHandler) {
+            window.removeEventListener('scroll', this.stickyScrollHandler);
+            this.stickyScrollHandler = null;
+        }
+
+        // Reset sticky header elements to initial state
+        const bgPrimary = document.querySelector('.bg-primary');
+        const stickyLogos = document.querySelector('.sticky-logos');
+
+        if (bgPrimary) {
+            // Remove sticky classes and styles
+            bgPrimary.classList.remove('sticky-mode');
+            bgPrimary.style.backgroundColor = '';
+        }
+
+        if (stickyLogos) {
+            // Hide sticky logos and reset their state
+            stickyLogos.classList.remove('active', 'first-time-active');
+            // Reset inline styles - the CSS classes will handle the styling
+            stickyLogos.style.opacity = '';
+            stickyLogos.style.transform = '';
+            stickyLogos.style.pointerEvents = '';
+        }
+
+        console.log('🧹 [ROUTER] Sticky header state reset');
+    }
+
     async loadPageContent(pageName) {
         try {
             console.log(`🔄 [ROUTER] Cargando página: ${pageName}, desde ruta actual: ${this.currentRoute}`);
-            
+
+            // 0. IMPORTANT: Scroll to top immediately when changing pages
+            window.scrollTo(0, 0);
+
+            // 0.5. Reset sticky header state to prevent logo duplication
+            this.resetStickyHeaderState();
+
             // 1. Preservar la altura actual del contenedor
             const currentHeight = this.mainSection.offsetHeight;
             this.mainSection.style.minHeight = `${currentHeight}px`;
-            
+
             // 2. Hacer invisible el contenido actual manteniendo el espacio
             const currentContent = this.mainSection.firstElementChild;
             if (currentContent) {
@@ -438,10 +476,10 @@ class SPARouter {
                 currentContent.style.opacity = '0';
                 console.log('👻 [ROUTER] Contenido actual ocultado');
             }
-            
+
             // 3. Mostrar indicador discreto de carga
             this.showLoadingOverlay();
-            
+
             // 4. Pequeño delay para que se complete la transición de ocultado
             await new Promise(resolve => setTimeout(resolve, 200));
             
@@ -1497,17 +1535,22 @@ class SPARouter {
     async loadHome() {
         updateState({ selectedCourse: null });
         window.DATA.name = "home";
-        
+
+        // Always scroll to top when loading home page
+        window.scrollTo(0, 0);
+
         // Verificar si ya estamos en la página home específicamente (no solo que haya contenido)
         const currentContent = document.querySelector('#main-section main');
         const isAlreadyHome = currentContent && (
-            currentContent.querySelector('#hero-section') || 
+            currentContent.querySelector('#hero-section') ||
             currentContent.querySelector('#courses-section') ||
             currentContent.querySelector('#about-section')
         );
-        
+
         if (isAlreadyHome) {
             // Ya tenemos contenido de home cargado, solo actualizar navegación
+            // Also reset sticky header state for consistency
+            this.resetStickyHeaderState();
             this.initHomeScrollDetection();
             console.log('✅ [ROUTER] Home: Solo actualización de header (sin recarga)');
         } else {
@@ -1631,10 +1674,16 @@ class SPARouter {
     async loadCursos() {
         updateState({ selectedCourse: null });
         window.DATA.name = "cursos";
-        
+
+        // Always scroll to top when loading courses page
+        window.scrollTo(0, 0);
+
+        // Reset sticky header state
+        this.resetStickyHeaderState();
+
         try {
             console.log('🔄 [ROUTER] Cargando página de cursos...');
-            
+
             // Cargar el contenido HTML
             const response = await fetch('/assets/pages/cursos.html');
             if (!response.ok) {

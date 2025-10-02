@@ -106,9 +106,6 @@ function createCourseCard(course) {
             <div class="p-0">
                 <div class="relative overflow-hidden rounded-t-lg">
                     ${createImageWithFallback(course.image, course.title, 'w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300')}
-                    <div class="absolute top-3 left-3">
-                        ${createBadge(course.category)}
-                    </div>
                 </div>
             </div>
             <div class="p-6">
@@ -131,9 +128,6 @@ function createCourseDetails(course) {
         <div class="p-0 mb-4">
             <div class="relative overflow-hidden rounded-lg mb-4">
                 ${createImageWithFallback(course.image, course.title, 'w-full h-[28rem] max-h-[28rem] object-cover')}
-                <div class="absolute top-3 left-3">
-                    ${createBadge(course.category)}
-                </div>
             </div>
         </div>
         <div class="px-6 pb-2">

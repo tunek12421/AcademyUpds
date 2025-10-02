@@ -246,7 +246,7 @@ async function renderCoursesGridByCategory(category) {
 
 // Función para renderizar los detalles del curso
 export function renderCourseView(course) {
-    console.log('📖 [COURSE] Iniciando renderizado de vista de curso:', course?.title);
+    // console.log('📖 [COURSE] Iniciando renderizado de vista de curso:', course?.title);
     
     if (!course) {
         console.error('❌ [COURSE] No se proporcionó información del curso');
@@ -254,7 +254,7 @@ export function renderCourseView(course) {
     }
 
    
-    console.log('✅ [COURSE] Contenedor principal encontrado');
+    // console.log('✅ [COURSE] Contenedor principal encontrado');
 
     // Renderizar componentes directamente con contenido
     renderCourseDetails(course);
@@ -273,7 +273,7 @@ function renderCourseDetails(course) {
     
     // Crear la estructura del curso directamente con contenido
     try {
-        console.log('🔨 [COURSE] Construyendo HTML del curso...');
+        // console.log('🔨 [COURSE] Construyendo HTML del curso...');
         
         const courseHTML = `
             <div class="grid lg:grid-cols-3 gap-8">
@@ -282,7 +282,7 @@ function renderCourseDetails(course) {
                     <div id="course-main-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createCourseDetails(course)}
                     </div>
-                    ${course.instructor?`<div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                    ${course.instructor || course.instructors?`<div id="instructor-card" class="rounded-lg border bg-card text-card-foreground shadow-sm">
                         ${createInstructorCard(course)}
                     </div>`: ""}
 
@@ -316,10 +316,10 @@ function renderCourseDetails(course) {
             </div>
         `;
         
-        console.log('✅ [COURSE] Insertando HTML completo...');
+        // console.log('✅ [COURSE] Insertando HTML completo...');
         mainContainer.innerHTML = courseHTML;
         
-        console.log('🎉 [COURSE] Renderizado completado exitosamente');
+        // console.log('🎉 [COURSE] Renderizado completado exitosamente');
     } catch (error) {
         console.error('❌ [COURSE] Error al renderizar curso:', error);
         mainContainer.innerHTML = `

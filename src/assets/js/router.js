@@ -328,7 +328,7 @@ class SPARouter {
         // Limpiar listener anterior si existe
         if (this.stickyScrollHandler) {
             window.removeEventListener('scroll', this.stickyScrollHandler);
-            console.log('🧹 [STICKY] Limpiando listener anterior');
+            // console.log('🧹 [STICKY] Limpiando listener anterior');
         }
 
         const stickySection = document.querySelector('.bg-primary.sticky');
@@ -349,7 +349,7 @@ class SPARouter {
         const calculateActivationPoint = () => {
             const rect = stickySection.getBoundingClientRect();
             activationPoint = window.scrollY + rect.top;
-            console.log('📐 [STICKY] Punto de activación calculado:', activationPoint);
+            // console.log('📐 [STICKY] Punto de activación calculado:', activationPoint);
         };
 
         const handleScroll = () => {
@@ -362,17 +362,17 @@ class SPARouter {
             const currentScroll = window.scrollY;
             const shouldShowLogos = currentScroll >= activationPoint;
 
-            console.log('📊 [SCROLL DEBUG]', {
-                'currentScroll': currentScroll,
-                'activationPoint': activationPoint,
-                'shouldShowLogos': shouldShowLogos,
-                'isSticky': isSticky,
-                'timestamp': Date.now()
-            });
+            // console.log('📊 [SCROLL DEBUG]', {
+            //     'currentScroll': currentScroll,
+            //     'activationPoint': activationPoint,
+            //     'shouldShowLogos': shouldShowLogos,
+            //     'isSticky': isSticky,
+            //     'timestamp': Date.now()
+            // });
 
             if (shouldShowLogos && !isSticky) {
                 // Activar logos sticky
-                console.log('🟢 [STICKY] ACTIVANDO logos sticky');
+                // console.log('🟢 [STICKY] ACTIVANDO logos sticky');
                 isSticky = true;
                 stickySection.classList.add('sticky-mode');
                 stickyLogos.classList.add('active');
@@ -382,18 +382,18 @@ class SPARouter {
                     stickyLogos.classList.add('first-time-active');
                     stickySection.classList.add('first-sticky-load');
                     hasAnimatedOnce = true;
-                    console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
+                    // console.log('✨ [STICKY] Logos activados - PRIMERA VEZ CON ANIMACIÓN');
                 } else {
-                    console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
+                    // console.log('✨ [STICKY] Logos activados - SIN ANIMACIÓN');
                 }
 
             } else if (!shouldShowLogos && isSticky) {
                 // Desactivar logos sticky
-                console.log('🔴 [STICKY] DESACTIVANDO logos sticky');
+                // console.log('🔴 [STICKY] DESACTIVANDO logos sticky');
                 isSticky = false;
                 stickySection.classList.remove('sticky-mode');
                 stickyLogos.classList.remove('active');
-                console.log('🔽 [STICKY] Logos desactivados');
+                // console.log('🔽 [STICKY] Logos desactivados');
             }
         };
 
@@ -406,11 +406,11 @@ class SPARouter {
             scrollCallCount++;
             const now = Date.now();
             if (now - lastExecuted >= 16) {
-                console.log(`⚡ [THROTTLE] Ejecutando handleScroll (llamada #${scrollCallCount}, última hace ${now - lastExecuted}ms)`);
+                // console.log(`⚡ [THROTTLE] Ejecutando handleScroll (llamada #${scrollCallCount}, última hace ${now - lastExecuted}ms)`);
                 handleScroll();
                 lastExecuted = now;
             } else {
-                console.log(`⏭️ [THROTTLE] Saltando ejecución (llamada #${scrollCallCount}, hace ${now - lastExecuted}ms)`);
+                // console.log(`⏭️ [THROTTLE] Saltando ejecución (llamada #${scrollCallCount}, hace ${now - lastExecuted}ms)`);
             }
         };
 
@@ -993,7 +993,7 @@ class SPARouter {
                 
                 if (currentNavs.length > 0) {
                     // NAVS: Para navegación a otras páginas/URLs
-                    console.log('🔗 [HEADER] Generando enlaces de navegación (navs)');
+                    // console.log('🔗 [HEADER] Generando enlaces de navegación (navs)');
                     navBottom.innerHTML = currentNavs.map(nav => 
                         `<a href="${nav.href}" class="upds-breadcrumb-nav hover:text-primary-hover transition-colors">${nav.name}</a>`
                     ).join('');
@@ -1001,7 +1001,7 @@ class SPARouter {
                     // Para navs no hay scroll detection, solo navegación normal
                 } else if (currentSections.length > 0) {
                     // SECTIONS: Para scroll dentro de la misma página
-                    console.log('🎯 [HEADER] Generando enlaces de sección (sections)');
+                    // console.log('🎯 [HEADER] Generando enlaces de sección (sections)');
                     navBottom.innerHTML = currentSections.map(section => 
                         `<a href="#${section.id}" data-section="${section.id}" class="upds-section-link hover:text-primary-hover transition-colors">${section.name}</a>`
                     ).join('');
@@ -1218,12 +1218,12 @@ class SPARouter {
         }
 
         if (this.stickyScrollHandler) {
-            console.log('🧹 [STICKY] Limpiando detección de scroll sticky');
+            // console.log('🧹 [STICKY] Limpiando detección de scroll sticky');
             window.removeEventListener('scroll', this.stickyScrollHandler);
             this.stickyScrollHandler = null;
         }
 
-        console.log('✅ [CLEANUP] Todos los listeners de scroll limpiados');
+        // console.log('✅ [CLEANUP] Todos los listeners de scroll limpiados');
     }
 
     // Mantener compatibilidad con el nombre anterior
@@ -1295,7 +1295,7 @@ class SPARouter {
             
             // Actualizar header solo si cambió la sección
             if (this.currentCourseSection !== currentSection.id) {
-                console.log('📍 [COURSE-SECTIONS] Cambio de sección en curso:', this.currentCourseSection, '→', currentSection.id);
+                // console.log('📍 [COURSE-SECTIONS] Cambio de sección en curso:', this.currentCourseSection, '→', currentSection.id);
                 this.currentCourseSection = currentSection.id;
                 this.updateHeaderForCourseSection(currentSection);
             }
@@ -1453,7 +1453,7 @@ class SPARouter {
     }
     
     createDefaultCourseNavigation(navBottom, course) {
-        console.log('🔄 [COURSE-NAV] Iniciando detección dinámica de secciones para:', course.title);
+        // console.log('🔄 [COURSE-NAV] Iniciando detección dinámica de secciones para:', course.title);
         
         // Detectar qué secciones realmente existen en el DOM para este curso
         const possibleSections = [
@@ -1513,7 +1513,7 @@ class SPARouter {
     updateHeaderForCourseSection(section) {
         const navBottom = document.querySelector(".upds-header-contact");
         if (navBottom) {
-            console.log('🎨 [COURSE-SECTIONS] Resaltando sección activa del curso:', section.name);
+            // console.log('🎨 [COURSE-SECTIONS] Resaltando sección activa del curso:', section.name);
             
             // Remover clase activa de todos los enlaces
             const allLinks = navBottom.querySelectorAll('.upds-course-link');
@@ -1527,7 +1527,7 @@ class SPARouter {
             if (activeLink) {
                 activeLink.classList.remove('text-white');
                 activeLink.classList.add('text-primary-hover', 'font-bold');
-                console.log('✅ [COURSE-SECTIONS] Sección de curso resaltada:', section.name);
+                // console.log('✅ [COURSE-SECTIONS] Sección de curso resaltada:', section.name);
             }
         }
     }
@@ -2795,7 +2795,7 @@ class SPARouter {
             
             sectionLinks.forEach(link => {
                 if (!link.hasAttribute('data-router-handled')) {
-                    console.log('🆕 [ROUTER] Nuevo enlace de sección encontrado:', link.href, link.className);
+                    // console.log('🆕 [ROUTER] Nuevo enlace de sección encontrado:', link.href, link.className);
                     link.setAttribute('data-router-handled', 'true');
                     
                     // FORZAR CLICKEABILIDAD

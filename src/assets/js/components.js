@@ -119,7 +119,7 @@ function createCourseCard(course) {
                 <div class="flex flex-col gap-3 justify-between">
                     ${createButton(`Ver detalles ${createChevronRightIcon()}`, 'default', 'default', `selectCourse('${course.id}')`, 'group')}
                 </div>
-               
+
             </div>
         </div>
     `;
@@ -147,20 +147,48 @@ function createCourseDetails(course) {
 
 // Componente para instructor
 function createInstructorCard(course) {
-    return `
-        <div class="p-6">
-            <h3 class="text-xl font-bold mb-4">Instructor</h3>
-        </div>
-        <div class="px-6 pb-6">
-            <div class="flex items-start gap-4">
-                ${createImageWithFallback(course.instructorImage, course.instructor, 'aspect-square w-24 h-24 rounded-lg object-cover')}
+    // Soportar tanto el formato antiguo (instructor singular) como el nuevo (instructors array)
+    const hasMultipleInstructors = course.instructors && Array.isArray(course.instructors);
+    const instructorTitle = hasMultipleInstructors && course.instructors.length > 1 ? 'Instructores' : 'Instructor';
+
+    if (hasMultipleInstructors) {
+        // Nuevo formato con array de instructores
+        const instructorsHTML = course.instructors.map(instructor => `
+            <div class="flex items-start gap-4 mb-6 last:mb-0">
+                ${createImageWithFallback(instructor.image, instructor.name, 'aspect-square w-24 h-24 rounded-lg object-cover')}
                 <div>
-                    <h4 class="font-medium mb-2">${course.instructor}</h4>
-                    <p class="text-muted-foreground">${course.instructorBio}</p>
+                    <h4 class="font-medium mb-2">${instructor.name}</h4>
+                    <p class="text-muted-foreground text-sm mb-2">${instructor.bio}</p>
+                    ${instructor.orcid ? `<a href="${instructor.orcid}" target="_blank" class="text-primary hover:underline text-sm">ORCID: ${instructor.orcid}</a>` : ''}
                 </div>
             </div>
-        </div>
-    `;
+        `).join('');
+
+        return `
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">${instructorTitle}</h3>
+            </div>
+            <div class="px-6 pb-6">
+                ${instructorsHTML}
+            </div>
+        `;
+    } else {
+        // Formato antiguo con instructor singular
+        return `
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-4">Instructor</h3>
+            </div>
+            <div class="px-6 pb-6">
+                <div class="flex items-start gap-4">
+                    ${createImageWithFallback(course.instructorImage, course.instructor, 'aspect-square w-24 h-24 rounded-lg object-cover')}
+                    <div>
+                        <h4 class="font-medium mb-2">${course.instructor}</h4>
+                        <p class="text-muted-foreground">${course.instructorBio}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 }
 
 // Componente para contenido del curso

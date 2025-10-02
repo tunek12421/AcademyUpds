@@ -220,6 +220,57 @@ const courses = [
             topics: ['Derecho procesal penal', 'Código de procedimiento penal', 'Práctica jurídica']
         },
         skills: ['Litigación oral', 'Estrategias procesales', 'Medidas cautelares', 'Audiencias judiciales', 'Derecho penal', 'Oratoria jurídica']
+    },
+    {
+        id: '9',
+        title: 'Plataforma Moodle e Inteligencia Artificial para la Educación',
+        description: 'Fortalecer las competencias docentes en el uso de Moodle y la incorporación de herramientas de Inteligencia Artificial para la gestión de contenidos, evaluación, personalización del aprendizaje y optimización de tareas administrativas.',
+        instructors: [
+            {
+                name: 'Dr. Alex Cabello Ayzama',
+                bio: 'Máster en Derecho por la Universidad Federal de Uberlândia (Brasil). Jefe Nacional de Investigación en la Universidad Privada Domingo Savio. Experto en Inteligencia Artificial aplicada a la educación, desarrollo de plataformas académicas, OJS/OMP y herramientas digitales para investigación y docencia. Conferencista internacional y autor en temas de derecho, educación e IA.',
+                image: '/assets/images/instructor/thumbnail_Alex_Cabello_Ayzama.jpg',
+                orcid: 'https://orcid.org/0000-0002-0706-2293'
+            },
+            {
+                name: 'Ing. Roysi García Coca',
+                bio: 'Ingeniera Comercial. Cuenta con Diplomado en Educación Superior e Investigación y en Tutoría Académica. Actualmente se desempeña como Coordinadora de Entornos Digitales de la Universidad Privada Domingo Savio, con experiencia en la gestión académica y tecnológica de plataformas educativas virtuales.',
+                image: '/assets/images/instructor/rosy.png',
+                orcid: 'https://orcid.org/0009-0005-6898-3941'
+            }
+        ],
+        level: 'Intermedio',
+        students: 0,
+        rating: 5.0,
+        image: '/assets/images/cursos/moodle_inteligenciaartificial.jpg',
+        category: 'Ingeniería',
+        objectives: 'Fortalecer las competencias docentes en el uso de Moodle y la incorporación de herramientas de Inteligencia Artificial para la gestión de contenidos, evaluación, personalización del aprendizaje y optimización de tareas administrativas, integrando recursos prácticos y pedagógicos aplicables en entornos educativos virtuales y presenciales.',
+        modules: [
+            {
+                title: 'Unidad 1: Fundamentos y primeras aplicaciones de Moodle e IA en la Educación',
+                content: 'Rol de Moodle en la educación superior y virtual. Integración de IA en la enseñanza: conceptos y ejemplos reales. Retos éticos, pedagógicos y de accesibilidad en el uso de IA. Buenas prácticas en el uso de Moodle con apoyo de IA. Taller práctico: personalización básica de Moodle con HTML y Canva.'
+            },
+            {
+                title: 'Unidad 2: Inteligencia Artificial aplicada a la gestión educativa',
+                content: 'Transformación de la docencia y evaluación con IA. Ejemplos de IA en retroalimentación, personalización y analítica de aprendizaje. Herramientas emergentes: generación de cuestionarios, ZipGrade, corrección automática. Taller práctico: Uso de Google Notebook LM para audios/podcasts educativos. Integración de multimedia en Moodle. Diseño de un mini-curso con HTML + Canva + IA. Automatización de tareas administrativas y de evaluación.'
+            }
+        ],
+        completion: 'Al finalizar este curso, los participantes podrán integrar efectivamente herramientas de IA en plataformas Moodle para optimizar la gestión educativa, personalizar el aprendizaje y automatizar procesos administrativos y evaluativos.',
+        prerequisites: {
+            title: 'Conocimientos esenciales que debes tener para este curso',
+            description: 'Es recomendable tener conocimientos básicos de Moodle o plataformas LMS y estar familiarizado con herramientas digitales educativas.',
+            topics: ['Manejo básico de plataformas LMS', 'Herramientas digitales educativas', 'Conceptos básicos de pedagogía digital']
+        },
+        skills: ['Moodle', 'Inteligencia Artificial en Educación', 'Gestión de contenidos educativos', 'Evaluación automática', 'Personalización del aprendizaje', 'Google Notebook LM', 'Canva', 'HTML básico'],
+        startDate: '2025-10-23',
+        endDate: '2025-10-24',
+        academicHours: 8,
+        schedule: 'Dos sesiones de 2 horas cada una',
+        cost: {
+            upds: 80,
+            external: 120,
+            currency: 'Bs.'
+        }
     }
 ];
 
@@ -299,7 +350,8 @@ const facultyStructure = [
         {name: "Curso de Primeros Auxilios", href: "/curso?id=5"}
     ]},
     {name: "Ingeniería", href: "/facultades/ingenieria", submenu: [
-        {name: "Excel Experto", href: "/curso?id=6"}
+        {name: "Excel Experto", href: "/curso?id=6"},
+        {name: "Plataforma Moodle e Inteligencia Artificial para la Educación", href: "/curso?id=9"}
     ]},
     {name: "Ciencias Empresariales", href: "/facultades/ciencias-empresariales", submenu: [
         {name: "Tributación Aplicada y Llenado de Formularios", href: "/curso?id=7"}

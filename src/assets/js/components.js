@@ -130,7 +130,7 @@ function createCourseDetails(course) {
     return `
         <div class="p-0 mb-4">
             <div class="relative overflow-hidden rounded-lg mb-4">
-                ${createImageWithFallback(course.image, course.title, 'w-full h-64 max-h-64 object-cover')}
+                ${createImageWithFallback(course.image, course.title, 'w-full h-[28rem] max-h-[28rem] object-cover')}
                 <div class="absolute top-3 left-3">
                     ${createBadge(course.category)}
                 </div>

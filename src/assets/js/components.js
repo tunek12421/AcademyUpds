@@ -105,7 +105,7 @@ function createCourseCard(course) {
         <div class="rounded-lg border bg-card text-card-foreground shadow-sm group cursor-pointer hover:shadow-lg transition-shadow">
             <div class="p-0">
                 <div class="relative overflow-hidden rounded-t-lg">
-                    ${createImageWithFallback(course.image, course.title, 'w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300')}
+                    ${createImageWithFallback(course.image, course.title, 'w-full h-48 object-contain md:object-cover group-hover:scale-105 transition-transform duration-300')}
                 </div>
             </div>
             <div class="p-6">
@@ -126,8 +126,8 @@ function createCourseCard(course) {
 function createCourseDetails(course) {
     return `
         <div class="p-0 mb-4">
-            <div class="relative overflow-hidden rounded-lg mb-4">
-                ${createImageWithFallback(course.image, course.title, 'w-full h-[28rem] max-h-[28rem] object-cover')}
+            <div class="relative overflow-hidden rounded-lg mb-4 bg-gray-100">
+                ${createImageWithFallback(course.image, course.title, 'w-full h-48 md:h-64 lg:h-[28rem] object-contain md:object-cover')}
             </div>
         </div>
         <div class="px-6 pb-2">

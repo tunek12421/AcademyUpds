@@ -105,8 +105,8 @@ async function fetchFeaturedCoursesFromBackend() {
 
         const coursesData = await response.json();
 
-        // Filtrar solo los cursos destacados (mismos IDs que antes)
-        const featuredCourseIds = ['1', '4', '5']; // Curso Mikrotik MTCNA, Curso de Manejo de Cadáveres, Curso de Primeros Auxilios
+        // Filtrar solo los cursos destacados
+        const featuredCourseIds = ['9', '1', '4']; // Curso Moodle e IA, Curso Mikrotik MTCNA, Curso de Manejo de Cadáveres
         const featuredCourses = coursesData.filter(course => featuredCourseIds.includes(course.id));
 
         // Transformar datos del backend para compatibilidad con frontend si es necesario
@@ -122,7 +122,7 @@ async function fetchFeaturedCoursesFromBackend() {
 
         // Ordenar para mantener consistencia (orden específico de los destacados)
         const orderedCourses = transformedCourses.sort((a, b) => {
-            const order = { '1': 1, '4': 2, '5': 3 }; // Mikrotik, Manejo de Cadáveres, Primeros Auxilios
+            const order = { '9': 1, '1': 2, '4': 3 }; // Moodle e IA, Mikrotik, Manejo de Cadáveres
             return (order[a.id] || 999) - (order[b.id] || 999);
         });
 
@@ -134,8 +134,10 @@ async function fetchFeaturedCoursesFromBackend() {
 
         // Fallback: usar datos locales si el backend falla
         console.warn('🔄 [COURSES] Usando datos locales como fallback');
-        const featuredCourseIds = ['1', '4', '5'];
-        return courses.filter(course => featuredCourseIds.includes(course.id));
+        const featuredCourseIds = ['9', '1', '4'];
+        const filteredCourses = courses.filter(course => featuredCourseIds.includes(course.id));
+        // Ordenar según el orden de featuredCourseIds
+        return featuredCourseIds.map(id => filteredCourses.find(course => course.id === id)).filter(course => course !== undefined);
     }
 }
 

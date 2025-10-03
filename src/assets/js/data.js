@@ -10,7 +10,7 @@ const courses = [
         level: 'Intermedio',
         students: 756,
         rating: 4.7,
-        image: '/assets/images/cursos/Curso Mikrotik MTCNA.png',
+        image: '/assets/images/cursos/Curso_Mikrotik_MTCNA.jpg',
         category: 'Mikrotik',
         objectives: 'El Curso MTCNA (MikroTik Certified Network Associate) tiene como objetivo proporcionar a los participantes una comprensión sólida de la plataforma RouterOS y la configuración básica de los dispositivos MikroTik.',
         modules: [
@@ -95,7 +95,7 @@ const courses = [
         level: 'Básico',
         students: 124,
         rating: 4.5,
-        image: '/assets/images/cursos/Curso de Manejo de Cadáveres.jpg',
+        image: '/assets/images/cursos/Curso_de_Manejo_de_Cadáveres.jpg',
         category: 'Ciencias de la Salud',
         objectives: 'Capacitar a los participantes en el correcto tratamiento de cuerpos cumpliendo la normativa boliviana y aplicando medidas de bioseguridad adecuadas.',
         modules: [
@@ -123,7 +123,7 @@ const courses = [
         level: 'Básico',
         students: 342,
         rating: 4.8,
-        image: '/assets/images/cursos/Curso de Primeros Auxilios.jpg',
+        image: '/assets/images/cursos/Curso_de_Primeros_Auxilios.jpg',
         category: 'Ciencias de la Salud',
         objectives: 'Capacitar a los participantes en técnicas básicas de primeros auxilios para brindar atención oportuna y efectiva en situaciones de emergencia.',
         modules: [
@@ -151,7 +151,7 @@ const courses = [
         level: 'Avanzado',
         students: 289,
         rating: 4.6,
-        image: '/assets/images/cursos/Excel Experto.jpg',
+        image: '/assets/images/cursos/Excel_Experto.jpg',
         category: 'Ingeniería',
         objectives: 'Dominar las herramientas avanzadas de Microsoft Excel para análisis de datos, automatización de procesos y creación de reportes profesionales.',
         modules: [
@@ -179,7 +179,7 @@ const courses = [
         level: 'Intermedio',
         students: 156,
         rating: 4.4,
-        image: '/assets/images/cursos/Tributación Aplicada y Llenado de Formularios.jpg',
+        image: '/assets/images/cursos/Tributación_Aplicada_y_Llenado_de_Formularios.jpg',
         category: 'Ciencias Empresariales',
         objectives: 'Proporcionar conocimientos prácticos sobre la normativa tributaria boliviana y el correcto llenado de formularios fiscales.',
         modules: [
@@ -204,7 +204,7 @@ const courses = [
         level: 'Avanzado',
         students: 89,
         rating: 4.9,
-        image: '/assets/images/cursos/Estrategias de Litigación y Simulacros de Audiencias.jpg',
+        image: '/assets/images/cursos/Estrategias_de_Litigación_y_Simulacros_de_Audiencias.jpg',
         category: 'Ciencias Jurídicas',
         objectives: 'Fortalecer las competencias jurídicas en litigación y defensa en procesos penales mediante análisis práctico y simulacros.',
         modules: [

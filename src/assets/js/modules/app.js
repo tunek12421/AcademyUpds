@@ -174,7 +174,7 @@ export async function renderCategoryView(categoryName = "Mikrotik", category = "
     };
     
     const images = {
-        'Mikrotik': 'assets/images/cursos/mikro.png',
+        'Mikrotik': 'assets/images/academias/mikro-logo.png',
     }
     // Crear la estructura de la vista de categoría
     const categoryHTML = `

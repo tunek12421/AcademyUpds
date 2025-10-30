@@ -78,6 +78,10 @@ export default defineConfig({
           dest: 'assets/images/cursos'
         },
         {
+          src: 'assets/images/academias/*',
+          dest: 'assets/images/academias'
+        },
+        {
           src: 'assets/images/logos/UPDS2.png',
           dest: 'assets/images/logos'
         },

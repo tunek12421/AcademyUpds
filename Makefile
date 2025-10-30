@@ -9,7 +9,7 @@ build: tailwind
 	@npm run build
 
 upload:
-	@echo "Aviso: Instalar sshpass si no lo tienes."
+	@echo "Aviso: Instalar sshpass."
 	@sshpass -p '$(VPS_PASSWORD)' scp dist/index.html $(VPS_USER):$(VPS_PATH)
 	@sshpass -p '$(VPS_PASSWORD)' scp -r dist/assets/ $(VPS_USER):$(VPS_PATH)
 
